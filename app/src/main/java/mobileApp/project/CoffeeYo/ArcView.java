@@ -27,9 +27,7 @@ import android.widget.TextView;
 
 import java.lang.reflect.Field;
 
-/**
- * Created by rom4ek on 10.01.2017.
- */
+
 
 class ArcNavigationView extends NavigationView {
 
