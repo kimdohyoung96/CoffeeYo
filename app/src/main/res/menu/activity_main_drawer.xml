@@ -4,17 +4,17 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_reserve"
-            android:icon="@drawable/ic_reserve"
-            android:title="자리 예약" />
-        <item
-            android:id="@+id/nav_menu"
-            android:icon="@drawable/ic_coffee"
-            android:title="메뉴보기" />
-        <item
             android:id="@+id/nav_searchmap"
             android:icon="@drawable/ic_map"
-            android:title="지도검색" />
+            android:title="지도로 카페 찾기" />
+        <item
+            android:id="@+id/nav_reserve"
+            android:icon="@drawable/ic_coffee"
+            android:title="등록 카페 보기" />
+        <item
+            android:id="@+id/nav_menu"
+            android:icon="@drawable/ic_reserve"
+            android:title="ㅇㅇㅇ" />
         <item
             android:id="@+id/nav_star"
             android:icon="@drawable/ic_star"
