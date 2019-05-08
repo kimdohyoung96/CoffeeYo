@@ -1,5 +1,6 @@
 package mobileApp.project.CoffeeYo;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -30,14 +31,14 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        Intent intent = getIntent();
         reserveFragment = new ReserveFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.content_main, reserveFragment);
         transaction.addToBackStack(null);
         transaction.commit();
 
-
+        map_search a = new map_search();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -117,6 +118,8 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(MainActivity.this, "메뉴를 선택하셨습니다.", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_searchmap) {
             Toast.makeText(MainActivity.this, "지도검색을 선택하셨습니다.", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MainActivity.this, map_search.class);
+            startActivity(intent);
         } else if (id == R.id.nav_star) {
             Toast.makeText(MainActivity.this, "상품평을 선택하셨습니다.", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_check) {
