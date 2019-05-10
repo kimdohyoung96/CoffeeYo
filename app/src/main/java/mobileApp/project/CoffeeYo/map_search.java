@@ -1,6 +1,7 @@
 package mobileApp.project.CoffeeYo;
 
 
+import android.Manifest;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -31,7 +33,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
+import java.util.Locale;
 
 public class map_search extends AppCompatActivity implements GoogleMap.OnCameraMoveStartedListener,
         GoogleMap.OnCameraMoveListener,
@@ -40,12 +44,18 @@ public class map_search extends AppCompatActivity implements GoogleMap.OnCameraM
     private GoogleMap google = null;
     MarkerOptions markerOptions = new MarkerOptions();
     LatLng now = null;
-    ImageButton button;
-
+    private boolean LocationPermissionGranted;
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private ImageButton button;
+    private EditText edittext;
+    private Geocoder geocoder;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_search);
+        edittext = (EditText)findViewById(R.id.editPlace);
+        button = (ImageButton) findViewById(R.id.button);
+
         Intent intent = getIntent();
         FragmentManager fragmentManager = getFragmentManager();
         MapFragment mapFragment = (MapFragment) fragmentManager
@@ -56,9 +66,11 @@ public class map_search extends AppCompatActivity implements GoogleMap.OnCameraM
 
         if ( Build.VERSION.SDK_INT >= 23 &&
                 ContextCompat.checkSelfPermission( getApplicationContext(),
-                        android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
-            ActivityCompat.requestPermissions( map_search.this, new String[]
-                    { android.Manifest.permission.ACCESS_FINE_LOCATION },0 );
+                        android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(map_search.this, new String[]
+                    {android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+
         }
         else{
             Toast.makeText(map_search.this, "LocationManager is ready!", Toast.LENGTH_SHORT).show();
@@ -68,35 +80,31 @@ public class map_search extends AppCompatActivity implements GoogleMap.OnCameraM
                     networkLocationListener);
 
         }
-        button = (ImageButton)findViewById(R.id.imageButton);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                google.moveCamera(CameraUpdateFactory.newLatLng(now));
-                google.animateCamera(CameraUpdateFactory.zoomTo(16.0F));
-                google.addMarker(markerOptions);
-            }
-        });
+
     }
+    /*
     public void search(View v){
-        EditText id = map_search.this.findViewById(R.id.edittxt);
-        String place = id.getText().toString();
+
+        String place = edittext.getText().toString();
         Geocoder coder = new Geocoder(getApplicationContext());
         List<Address> addr = null;
         try{
             addr = coder.getFromLocationName(place, 1);
+            Address address = addr.get(0);
+            double lat = address.getLatitude();
+            double log = address.getLongitude();
+            LatLng searchPlace = new LatLng(lat,log);
+            google.animateCamera(CameraUpdateFactory.zoomTo(16.0F));
+            MarkerOptions marker = new MarkerOptions();
+            marker.position(searchPlace);
+            google.addMarker(marker);
         }catch(IOException e){
             e.printStackTrace();
         }
-        Address address = addr.get(0);
-        double lat = address.getLatitude();
-        double log = address.getLongitude();
-        LatLng searchPlace = new LatLng(lat,log);
-        google.animateCamera(CameraUpdateFactory.zoomTo(16.0F));
-        MarkerOptions marker = new MarkerOptions();
-        marker.position(searchPlace);
-        google.addMarker(marker);
     }
+*/
+
+
     @Override
     public void onMapReady(final GoogleMap map) {
         google = map;
@@ -107,15 +115,73 @@ public class map_search extends AppCompatActivity implements GoogleMap.OnCameraM
         map.addMarker(markerOptions);
         map.moveCamera(CameraUpdateFactory.newLatLng(SEOUL));
         map.animateCamera(CameraUpdateFactory.zoomTo(15));
+        if ( Build.VERSION.SDK_INT >= 23 &&
+                ContextCompat.checkSelfPermission( getApplicationContext(),
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(map_search.this, new String[]
+                    {android.Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
+
+        }
+        google.setMyLocationEnabled(true);
         //현재위치 표현 옵션
-        //google.setMyLocationEnabled(true);//권한체크때메 발생한오류
         google.setIndoorEnabled(true);
         google.setBuildingsEnabled(true);
         //줌 버튼 표시 여부
         google.getUiSettings().setZoomControlsEnabled(true);
 
+        button.setOnClickListener(new Button.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                String str=edittext.getText().toString();
+                List<Address> addr = null;
+                geocoder = new Geocoder(map_search.this, Locale.getDefault());
+                try {
+                    // editText에 입력한 텍스트(주소, 지역, 장소 등)을 지오 코딩을 이용해 변환
+                    addr = geocoder.getFromLocationName(
+                            str, // 주소
+                            1); // 최대 검색 결과 개수
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Address address = addr.get(0);
+                double lat = address.getLatitude();
+                double log = address.getLongitude();
+                // 좌표(위도, 경도) 생성
+                LatLng point = new LatLng(lat, log);
+                // 마커 생성
+                MarkerOptions mOptions2 = new MarkerOptions();
+                mOptions2.title("search result");
+                mOptions2.snippet(str);
+                mOptions2.position(point);
+                // 마커 추가
+                google.addMarker(mOptions2);
+                // 해당 좌표로 화면 줌
+                google.moveCamera(CameraUpdateFactory.newLatLngZoom(point,15));
+            }
+        });
+        google.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override//info 눌렀을때 무슨행동으로 넘어갈지.
+            public void onInfoWindowClick(Marker marker) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:01075178860"));
+                if(intent.resolveActivity(getPackageManager()) != null){
+                    startActivity(intent);
+                }
+            }
+        });
     }
+    private void getLocationPermission(){
+        if(ContextCompat.checkSelfPermission(this.getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        {
+            LocationPermissionGranted = true;
+        }else{
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+            PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
 
+    }
 
     @Override
     public void onCameraMoveStarted(int reason) {
