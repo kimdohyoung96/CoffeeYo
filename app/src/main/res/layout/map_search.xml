@@ -8,39 +8,59 @@
     tools:context=".map_search"
     android:paddingTop="22dp">
 
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_weight="1"
+        android:layout_height="57dp"
         android:orientation="horizontal">
 
         <EditText
             android:id="@+id/editPlace"
+            android:layout_weight="8"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
-            android:layout_width="match_parent"
-            android:layout_weight="10"
+
             android:hint="위치를 입력하세요"
-            android:singleLine="true"
-            android:lines="1"/>
+            android:lines="1"
+            android:singleLine="true" />
 
         <ImageButton
             android:id="@+id/button"
-            android:layout_height="match_parent"
-            android:layout_width="64dp"
             android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+
             android:scaleType="centerInside"
-            app:srcCompat="@drawable/ic_search"
-             />
+            app:srcCompat="@drawable/ic_search" />
     </LinearLayout>
 
-    <fragment
-        android:id="@+id/map"
-        class="com.google.android.gms.maps.MapFragment"
+    <FrameLayout
+        android:id="@+id/frame_map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="9" />
+        android:layout_marginTop="0dp">
+        android:layout_weight="9"
 
+        <fragment
+            android:id="@+id/map"
+            class="com.google.android.gms.maps.MapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            />
+
+        <Button
+            android:id="@+id/curbutton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="left|top"
+            android:background="@drawable/ic_coffee"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="5dp"
+            android:scaleType="centerInside"/>
+
+    </FrameLayout>
 
 
 </LinearLayout>

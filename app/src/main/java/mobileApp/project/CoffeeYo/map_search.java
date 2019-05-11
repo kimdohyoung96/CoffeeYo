@@ -34,27 +34,66 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+
+import noman.googleplaces.NRPlaces;
+import noman.googleplaces.Place;
+import noman.googleplaces.PlaceType;
+import noman.googleplaces.PlacesException;
+import noman.googleplaces.PlacesListener;
+
 
 public class map_search extends AppCompatActivity implements GoogleMap.OnCameraMoveStartedListener,
         GoogleMap.OnCameraMoveListener,
         GoogleMap.OnCameraMoveCanceledListener,
-        GoogleMap.OnCameraIdleListener,OnMapReadyCallback {
+        GoogleMap.OnCameraIdleListener,OnMapReadyCallback, LocationListener, PlacesListener {
     private GoogleMap google = null;
-    MarkerOptions markerOptions = new MarkerOptions();
     LatLng now = null;
-    private boolean LocationPermissionGranted;
-    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    List<Marker> prevMarkers;
+
     private ImageButton button;
+    private Button curbutton;
     private EditText edittext;
     private Geocoder geocoder;
+    double latitude;
+    double longitude;
+    double curlatitude;
+    double curlongitude;
+    LatLng currentPosition = new LatLng(37.56, 126.97);
+
+
+    @Override
+    public void onLocationChanged(Location location) {
+    }
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+    }
+    @Override
+    public void onProviderEnabled(String provider) {
+    }
+    @Override
+    public void onProviderDisabled(String provider) {
+    }
+    @Override
+    public void onPlacesFailure(PlacesException e) {
+    }
+    @Override
+    public void onPlacesStart() {
+    }
+    @Override
+    public void onPlacesFinished() {
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_search);
         edittext = (EditText)findViewById(R.id.editPlace);
         button = (ImageButton) findViewById(R.id.button);
+        curbutton = (Button)findViewById(R.id.curbutton);
+        prevMarkers = new ArrayList<>(); //마커 목록들
 
         Intent intent = getIntent();
         FragmentManager fragmentManager = getFragmentManager();
@@ -78,32 +117,8 @@ public class map_search extends AppCompatActivity implements GoogleMap.OnCameraM
                     100,
                     0,
                     networkLocationListener);
-
-        }
-
-    }
-    /*
-    public void search(View v){
-
-        String place = edittext.getText().toString();
-        Geocoder coder = new Geocoder(getApplicationContext());
-        List<Address> addr = null;
-        try{
-            addr = coder.getFromLocationName(place, 1);
-            Address address = addr.get(0);
-            double lat = address.getLatitude();
-            double log = address.getLongitude();
-            LatLng searchPlace = new LatLng(lat,log);
-            google.animateCamera(CameraUpdateFactory.zoomTo(16.0F));
-            MarkerOptions marker = new MarkerOptions();
-            marker.position(searchPlace);
-            google.addMarker(marker);
-        }catch(IOException e){
-            e.printStackTrace();
         }
     }
-*/
-
 
     @Override
     public void onMapReady(final GoogleMap map) {
@@ -111,10 +126,9 @@ public class map_search extends AppCompatActivity implements GoogleMap.OnCameraM
         LatLng SEOUL = new LatLng(37.56, 126.97);
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(SEOUL);
-
         map.addMarker(markerOptions);
         map.moveCamera(CameraUpdateFactory.newLatLng(SEOUL));
-        map.animateCamera(CameraUpdateFactory.zoomTo(15));
+        map.animateCamera(CameraUpdateFactory.zoomTo(16));
         if ( Build.VERSION.SDK_INT >= 23 &&
                 ContextCompat.checkSelfPermission( getApplicationContext(),
                         android.Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED
@@ -123,65 +137,134 @@ public class map_search extends AppCompatActivity implements GoogleMap.OnCameraM
                     {android.Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
 
         }
-        google.setMyLocationEnabled(true);
-        //현재위치 표현 옵션
-        google.setIndoorEnabled(true);
-        google.setBuildingsEnabled(true);
-        //줌 버튼 표시 여부
-        google.getUiSettings().setZoomControlsEnabled(true);
 
-        button.setOnClickListener(new Button.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                String str=edittext.getText().toString();
-                List<Address> addr = null;
-                geocoder = new Geocoder(map_search.this, Locale.getDefault());
-                try {
-                    // editText에 입력한 텍스트(주소, 지역, 장소 등)을 지오 코딩을 이용해 변환
-                    addr = geocoder.getFromLocationName(
-                            str, // 주소
-                            1); // 최대 검색 결과 개수
+            google.setMyLocationEnabled(true);
+            //현재위치 표현 옵션
+            google.setIndoorEnabled(true);
+            google.setBuildingsEnabled(true);
+            //줌 버튼 표시 여부
+            google.getUiSettings().setZoomControlsEnabled(true);
+            //showPlaceInformation(SEOUL);
+            //prepareMap();
+            //drawMap();
+            button.setOnClickListener(new Button.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String str = edittext.getText().toString();
+
+                    List<Address> addr = null;
+                    geocoder = new Geocoder(map_search.this, Locale.getDefault());
+                    try {
+                        // editText에 입력한 텍스트(주소, 지역, 장소 등)을 지오 코딩을 이용해 변환
+                        addr = geocoder.getFromLocationName(
+                                str, // 주소
+                                1); // 최대 검색 결과 개수
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if (addr != null) {
+                        Address address = addr.get(0);
+                        double lat = address.getLatitude();
+                        double log = address.getLongitude();
+                        // 좌표(위도, 경도) 생성
+                        LatLng point = new LatLng(lat, log);
+                        // 마커 생성
+                        MarkerOptions mOptions2 = new MarkerOptions();
+                        mOptions2.title("search result");
+                        mOptions2.snippet(str);
+                        mOptions2.position(point);
+                        // 마커 추가
+                        google.addMarker(mOptions2);
+                        // 해당 좌표로 화면 줌
+                        google.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 15));
+                        showPlaceInformation(point);
+                    } else {
+                        Toast.makeText(map_search.this, "검색할 키워드를 입력하세요", Toast.LENGTH_SHORT).show();
+                    }
                 }
-                catch (IOException e) {
-                    e.printStackTrace();
+            });
+
+            curbutton.setOnClickListener(new Button.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    curlatitude = google.getCameraPosition().target.latitude;
+                    curlongitude = google.getCameraPosition().target.longitude;
+                    currentPosition = new LatLng(curlatitude, curlongitude);
+                    showPlaceInformation(currentPosition);
                 }
-                Address address = addr.get(0);
-                double lat = address.getLatitude();
-                double log = address.getLongitude();
-                // 좌표(위도, 경도) 생성
-                LatLng point = new LatLng(lat, log);
-                // 마커 생성
-                MarkerOptions mOptions2 = new MarkerOptions();
-                mOptions2.title("search result");
-                mOptions2.snippet(str);
-                mOptions2.position(point);
-                // 마커 추가
-                google.addMarker(mOptions2);
-                // 해당 좌표로 화면 줌
-                google.moveCamera(CameraUpdateFactory.newLatLngZoom(point,15));
-            }
-        });
-        google.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override//info 눌렀을때 무슨행동으로 넘어갈지.
-            public void onInfoWindowClick(Marker marker) {
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:01075178860"));
-                if(intent.resolveActivity(getPackageManager()) != null){
-                    startActivity(intent);
+            });
+
+            google.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override//info 눌렀을때 무슨행동으로 넘어갈지.
+                public void onInfoWindowClick(Marker marker) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:01075178860"));
+                    if (intent.resolveActivity(getPackageManager()) != null) {
+                        startActivity(intent);
+                    }
                 }
-            }
-        });
-    }
-    private void getLocationPermission(){
-        if(ContextCompat.checkSelfPermission(this.getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-        {
-            LocationPermissionGranted = true;
-        }else{
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-            PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+            });
+
         }
 
+
+    public void showPlaceInformation(LatLng location) {
+        google.clear();
+        latitude = location.latitude;
+        longitude = location.longitude;
+        if (latitude != 0 && longitude != 0) {
+            if (prevMarkers != null) {
+                prevMarkers.clear();
+            }
+            new NRPlaces.Builder()
+                    .listener(this)
+                    .key("AIzaSyB3xYdMVp3_kLmqKhb6yCljg3I_uqg77kA")
+                    .latlng(latitude, longitude)
+                    .radius(1000)
+                    .type(PlaceType.CAFE)
+                    .language("ko", "KR")
+                    .build()
+                    .execute();
+        }
     }
+    @Override
+    public void onPlacesSuccess(final List<Place> places) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                for (noman.googleplaces.Place place : places) {
+                    LatLng latLng = new LatLng(place.getLatitude(), place.getLongitude());
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(latLng);
+                    markerOptions.title(place.getName());
+                    markerOptions.snippet(place.getVicinity());
+                    Marker item = google.addMarker(markerOptions);
+                    prevMarkers.add(item);
+                }
+                //중복 마커 제거
+                HashSet<Marker> hashSet = new HashSet<Marker>();
+                hashSet.addAll(prevMarkers);
+                prevMarkers.clear();
+                prevMarkers.addAll(hashSet);
+            }
+        });
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults){
+        switch(requestCode){
+            case 1:
+                if((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)){
+                    onMapReady(google);
+               // prepareMap();
+               // drawMap();
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+
 
     @Override
     public void onCameraMoveStarted(int reason) {
@@ -216,6 +299,7 @@ public class map_search extends AppCompatActivity implements GoogleMap.OnCameraM
     public void onCameraIdle() {
         Toast.makeText(this, "The camera has stopped moving.",
                 Toast.LENGTH_SHORT).show();
+
     }
 
 
