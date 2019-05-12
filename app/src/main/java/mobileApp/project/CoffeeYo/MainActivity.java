@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Coffee-Yo");
         Intent intent = getIntent();
         reserveFragment = new ReserveFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

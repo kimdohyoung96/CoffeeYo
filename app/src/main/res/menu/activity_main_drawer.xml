@@ -6,15 +6,15 @@
         <item
             android:id="@+id/nav_searchmap"
             android:icon="@drawable/ic_map"
-            android:title="지도로 카페 찾기" />
+            android:title="카페 등록/관리" />
         <item
             android:id="@+id/nav_reserve"
             android:icon="@drawable/ic_coffee"
-            android:title="등록 카페 보기" />
+            android:title="혼잡도 설정" />
         <item
             android:id="@+id/nav_menu"
             android:icon="@drawable/ic_reserve"
-            android:title="ㅇㅇㅇ" />
+            android:title="주문 내역" />
         <item
             android:id="@+id/nav_star"
             android:icon="@drawable/ic_star"
