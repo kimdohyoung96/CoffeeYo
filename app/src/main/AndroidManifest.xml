@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="mobileApp.project.CoffeeYo">
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
@@ -12,7 +11,7 @@
         android:theme="@style/AppTheme.NoActionBar">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAUQYLCQxDu6gKzhfBcUyhqZ9TULHcCYg0">
+            android:value="AIzaSyDEKKcTdEojuGYg1ubL6CkcKYVzePSaSHo">
         </meta-data>
         <activity android:name=".MainActivity" >
             <intent-filter>
@@ -21,7 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".map_search"/>
+        <activity android:name=".ManagerActivity"></activity>
     </application>
 
 </manifest>
