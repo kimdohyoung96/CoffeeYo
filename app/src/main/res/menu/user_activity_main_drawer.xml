@@ -6,11 +6,11 @@
         <item
             android:id="@+id/nav_searchmap"
             android:icon="@drawable/ic_map"
-            android:title="카페 등록/관리" />
+            android:title="지도로 카페찾기" />
         <item
             android:id="@+id/nav_reserve"
             android:icon="@drawable/ic_coffee"
-            android:title="혼잡도 설정" />
+            android:title="이름으로 카페찾기" />
         <item
             android:id="@+id/nav_menu"
             android:icon="@drawable/ic_reserve"

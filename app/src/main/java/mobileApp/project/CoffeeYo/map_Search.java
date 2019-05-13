@@ -1,7 +1,6 @@
 package mobileApp.project.CoffeeYo;
 
 
-import android.Manifest;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
@@ -33,7 +32,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -46,7 +44,7 @@ import noman.googleplaces.PlacesException;
 import noman.googleplaces.PlacesListener;
 
 
-public class map_search extends AppCompatActivity implements GoogleMap.OnCameraMoveStartedListener,
+public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraMoveStartedListener,
         GoogleMap.OnCameraMoveListener,
         GoogleMap.OnCameraMoveCanceledListener,
         GoogleMap.OnCameraIdleListener,OnMapReadyCallback, LocationListener, PlacesListener {
@@ -107,12 +105,12 @@ public class map_search extends AppCompatActivity implements GoogleMap.OnCameraM
                 ContextCompat.checkSelfPermission( getApplicationContext(),
                         android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED
         ) {
-            ActivityCompat.requestPermissions(map_search.this, new String[]
+            ActivityCompat.requestPermissions(map_Search.this, new String[]
                     {android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
 
         }
         else{
-            Toast.makeText(map_search.this, "LocationManager is ready!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(map_Search.this, "LocationManager is ready!", Toast.LENGTH_SHORT).show();
             lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
                     100,
                     0,
@@ -133,7 +131,7 @@ public class map_search extends AppCompatActivity implements GoogleMap.OnCameraM
                 ContextCompat.checkSelfPermission( getApplicationContext(),
                         android.Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED
         ) {
-            ActivityCompat.requestPermissions(map_search.this, new String[]
+            ActivityCompat.requestPermissions(map_Search.this, new String[]
                     {android.Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
 
         }
@@ -153,7 +151,7 @@ public class map_search extends AppCompatActivity implements GoogleMap.OnCameraM
                     String str = edittext.getText().toString();
 
                     List<Address> addr = null;
-                    geocoder = new Geocoder(map_search.this, Locale.getDefault());
+                    geocoder = new Geocoder(map_Search.this, Locale.getDefault());
                     try {
                         // editText에 입력한 텍스트(주소, 지역, 장소 등)을 지오 코딩을 이용해 변환
                         addr = geocoder.getFromLocationName(
@@ -179,7 +177,7 @@ public class map_search extends AppCompatActivity implements GoogleMap.OnCameraM
                         google.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 15));
                         showPlaceInformation(point);
                     } else {
-                        Toast.makeText(map_search.this, "검색할 키워드를 입력하세요", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(map_Search.this, "검색할 키워드를 입력하세요", Toast.LENGTH_SHORT).show();
                     }
                 }
             });

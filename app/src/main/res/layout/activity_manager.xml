@@ -10,7 +10,7 @@
     tools:openDrawer="start">
 
     <include
-        layout="@layout/app_bar_main1"
+        layout="@layout/app_bar_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
@@ -25,7 +25,7 @@
         app:arc_width="96dp"
         app:itemBackground="@android:color/white"
         app:headerLayout="@layout/nav_header_main"
-        app:menu="@menu/activity_main_drawer1"/>
+        app:menu="@menu/manager_activity_main_drawer"/>
 
 
 

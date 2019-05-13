@@ -15,7 +15,25 @@
             android:id="@+id/nav_congestion"
             android:icon="@drawable/ic_reserve"
             android:title="혼잡도 설정" />
+        <item
+            android:id="@+id/nav_star"
+            android:icon="@drawable/ic_star"
+            android:title="상품평" />
     </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_check"
+                android:icon="@drawable/ic_check"
+                android:title="조회" />
+            <item
+                android:id="@+id/nav_setting"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="설정" />
+        </menu>
+    </item>
+ 
 
     <TextView
         android:id="@+id/textView2"

@@ -20,26 +20,32 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ReserveFragment.OnFragmentInteractionListener {
+public class UserActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener, ReserveFragment.OnFragmentInteractionListener, NameSearch.OnFragmentInteractionListener {
     private Fragment reserveFragment;
+    private Fragment NameSearch;
 
     DrawerLayout drawer;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_user);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Coffee-Yo");
+        getSupportActionBar().setTitle("User Mode");
         Intent intent = getIntent();
         reserveFragment = new ReserveFragment();
+        NameSearch = new NameSearch();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.content_main, reserveFragment);
+        transaction.add(R.id.content_main, NameSearch);
         transaction.addToBackStack(null);
         transaction.commit();
 
-        map_search a = new map_search();
+
+        map_Search a = new map_Search();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -112,21 +118,23 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_reserve) {
             // Handle the camera action
-            Toast.makeText(MainActivity.this, "예약을 선택하셨습니다.", Toast.LENGTH_SHORT).show();
-            transaction.replace(R.id.content_main, reserveFragment);
+            Toast.makeText(UserActivity.this, "이름검색을 선택하셨습니다.", Toast.LENGTH_SHORT).show();
+            transaction.replace(R.id.content_main, NameSearch);
             transaction.commit();
         } else if (id == R.id.nav_menu) {
-            Toast.makeText(MainActivity.this, "메뉴를 선택하셨습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserActivity.this, "주문 내역를 선택하셨습니다.", Toast.LENGTH_SHORT).show();
+            transaction.replace(R.id.content_main, reserveFragment);
+            transaction.commit();
         } else if (id == R.id.nav_searchmap) {
-            Toast.makeText(MainActivity.this, "지도검색을 선택하셨습니다.", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(MainActivity.this, map_search.class);
+            Toast.makeText(UserActivity.this, "지도검색을 선택하셨습니다.", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(UserActivity.this, map_Search.class);
             startActivity(intent);
         } else if (id == R.id.nav_star) {
-            Toast.makeText(MainActivity.this, "상품평을 선택하셨습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserActivity.this, "상품평을 선택하셨습니다.", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_check) {
-            Toast.makeText(MainActivity.this, "조회를 선택하셨습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserActivity.this, "조회를 선택하셨습니다.", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_setting) {
-            Toast.makeText(MainActivity.this, "설정을 선택하셨습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserActivity.this, "설정을 선택하셨습니다.", Toast.LENGTH_SHORT).show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

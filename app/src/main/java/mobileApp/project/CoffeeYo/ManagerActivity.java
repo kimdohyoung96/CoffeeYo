@@ -1,28 +1,28 @@
 package mobileApp.project.CoffeeYo;
 
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
+        import android.net.Uri;
+        import android.os.Bundle;
+        import android.support.annotation.NonNull;
+        import android.support.annotation.Nullable;
+        import android.support.design.widget.FloatingActionButton;
+        import android.support.design.widget.NavigationView;
+        import android.support.design.widget.Snackbar;
+        import android.support.v4.app.Fragment;
+        import android.support.v4.app.FragmentTransaction;
+        import android.support.v4.view.GravityCompat;
+        import android.support.v4.widget.DrawerLayout;
+        import android.support.v7.app.ActionBarDrawerToggle;
+        import android.support.v7.app.AppCompatActivity;
+        import android.support.v7.widget.Toolbar;
+        import android.view.Menu;
+        import android.view.MenuItem;
+        import android.view.View;
+        import android.widget.Toast;
 
 public class ManagerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ReserveFragment.OnFragmentInteractionListener{
-    private Fragment fragment;
+    private Fragment ReserveFregment;
     DrawerLayout drawer;
 
     @Override
@@ -30,16 +30,17 @@ public class ManagerActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manager);
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar1);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Manager Mode");
         Intent intent = getIntent();
-        fragment = new ReserveFragment();
+        ReserveFregment = new ReserveFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.content_main1, fragment);
+        transaction.add(R.id.content_main, ReserveFregment);
         transaction.addToBackStack(null);
         transaction.commit();
 
-        FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fab1);
+        FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,11 +105,14 @@ public class ManagerActivity extends AppCompatActivity
 
         if(id == R.id.nav_register){
             Toast.makeText(ManagerActivity.this, "카페 등록/변경", Toast.LENGTH_SHORT).show();;
+
             //transaction.replace(R.id.content_main1, fragment);
             //transaction.commit();
         }
         else if(id == R.id.nav_reserved){
-            Toast.makeText(ManagerActivity.this, "내역", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ManagerActivity.this, "주문 내역", Toast.LENGTH_SHORT).show();
+            transaction.replace(R.id.content_main, ReserveFregment);
+            transaction.commit();
         }
         else if(id == R.id.nav_congestion){
             Toast.makeText(ManagerActivity.this, "혼잡도 설정", Toast.LENGTH_SHORT).show();
