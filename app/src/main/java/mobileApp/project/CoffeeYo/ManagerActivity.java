@@ -23,8 +23,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ManagerActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ReserveFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener, OrderFragment.OnFragmentInteractionListener, CongestionFragment.OnFragmentInteractionListener{
-    private Fragment reserveFragment;
+        implements NavigationView.OnNavigationItemSelectedListener, ReserveMFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener, OrderFragment.OnFragmentInteractionListener, CongestionFragment.OnFragmentInteractionListener{
+    private Fragment reserveMFragment;
     private Fragment registerFragment;
     private Fragment orderFragment;
     private Fragment congestionFragment;
@@ -39,12 +39,12 @@ public class ManagerActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Manager Mode");
         Intent intent = getIntent();
-        reserveFragment = new ReserveFragment();
+        reserveMFragment = new ReserveMFragment();
         registerFragment = new RegisterFragment();
         orderFragment = new OrderFragment();
         congestionFragment = new CongestionFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.content_main, reserveFragment);
+        transaction.replace(R.id.content_main, reserveMFragment);
         transaction.addToBackStack(null);
         transaction.commit();
 

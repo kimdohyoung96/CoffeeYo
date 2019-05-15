@@ -10,7 +10,7 @@
         <item
             android:id="@+id/nav_reserved"
             android:icon="@drawable/ic_coffee"
-            android:title="주문 내역" />
+            android:title="완료 주문 내역" />
         <item
             android:id="@+id/nav_congestion"
             android:icon="@drawable/ic_reserve"
