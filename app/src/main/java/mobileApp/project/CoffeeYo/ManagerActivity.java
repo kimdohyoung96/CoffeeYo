@@ -1,7 +1,8 @@
 package mobileApp.project.CoffeeYo;
 
 import android.content.Intent;
-        import android.net.Uri;
+import android.graphics.Color;
+import android.net.Uri;
         import android.os.Bundle;
         import android.support.annotation.NonNull;
         import android.support.annotation.Nullable;
@@ -18,7 +19,8 @@ import android.content.Intent;
         import android.view.Menu;
         import android.view.MenuItem;
         import android.view.View;
-        import android.widget.Toast;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class ManagerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ReserveFragment.OnFragmentInteractionListener{
@@ -40,12 +42,25 @@ public class ManagerActivity extends AppCompatActivity
         transaction.addToBackStack(null);
         transaction.commit();
 
-        FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                final Snackbar snackbar = Snackbar.make(view, "커피요를 쉽게 이용하는 방법\n1.커피요머니를 충전한다.\n2.이름 혹은 지도로 카페를 검색한다\n-지도검색시 화면을 옮기고 현재 보이는 화면에서 카페를 찾고 싶다면 왼쪽 상단에 커피 아이콘을 클릭한다.\n3.카페 혼잡도 여부와 커피 매진여부를 확인 후 커피를 주문한다.\n4.커피를 즐긴다.", Snackbar.LENGTH_INDEFINITE);
+                View snackbarView = snackbar.getView();
+                TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+                textView.setMaxLines(10);  // show multiple line
+                snackbar.setActionTextColor(Color.RED)
+                        .setAction("확인", new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(ManagerActivity.this, "Let's Get Some Coffee", Toast.LENGTH_SHORT);
+                                snackbar.dismiss();
+                            }
+                        }).show();
+
             }
         });
 
@@ -85,18 +100,15 @@ public class ManagerActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_right_menu) {
-            if (drawer.isDrawerOpen(GravityCompat.END)) {
-                drawer.closeDrawer(GravityCompat.END);
-            } else {
-                drawer.openDrawer(GravityCompat.END);
-            }
-            return true;
+        switch (item.getItemId()) {
+            case R.id.logout:
+                finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(null);
         }
-
-        return super.onOptionsItemSelected(item);
     }
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
