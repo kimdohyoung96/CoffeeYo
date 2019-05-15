@@ -8,12 +8,77 @@
     tools:context="CongestionFragment">
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/congestion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Congestion"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="60dp"
+        android:text="혼잡도 설정"
+        android:textSize="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="120dp"
+        app:layout_constraintTop_toBottomOf="@+id/congestion"
+        app:layout_constraintStart_toStartOf="@+id/congestion"
+        app:layout_constraintEnd_toEndOf="@+id/congestion">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/checkBox_quiet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="한산"
+                android:layout_marginRight="10dp"/>
+
+            <CheckBox
+                android:id="@+id/checkBox_common"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="보통"
+                android:layout_marginLeft="10dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <CheckBox
+                android:id="@+id/checkBox_busy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="혼잡"
+                android:layout_marginRight="10dp"/>
+
+            <CheckBox
+                android:id="@+id/checkBox_full"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="만석"
+                android:layout_marginLeft="10dp"/>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="혼잡도 설정"
+            android:layout_marginTop="30dp"/>
+
+    </LinearLayout>
+
+
+
 </android.support.constraint.ConstraintLayout>
