@@ -42,7 +42,7 @@ public class UserActivity extends AppCompatActivity
         NameSearch = new NameSearch();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content_main, reserveFragment);
-        //transaction.add(R.id.content_main, NameSearch);
+        transaction.add(R.id.content_main, NameSearch);
         transaction.addToBackStack(null);
         transaction.commit();
 
