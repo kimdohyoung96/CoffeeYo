@@ -135,7 +135,9 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
                     {android.Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
 
         }
-
+        if ( Build.VERSION.SDK_INT < 23 ||
+                ContextCompat.checkSelfPermission( getApplicationContext(),
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED){
             google.setMyLocationEnabled(true);
             //현재위치 표현 옵션
             google.setIndoorEnabled(true);
@@ -203,7 +205,7 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
                 }
             });
 
-        }
+        }}
 
 
     public void showPlaceInformation(LatLng location) {
