@@ -21,8 +21,11 @@ import android.content.Intent;
         import android.widget.Toast;
 
 public class ManagerActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ReserveFragment.OnFragmentInteractionListener{
-    private Fragment ReserveFregment;
+        implements NavigationView.OnNavigationItemSelectedListener, ReserveFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener, OrderFragment.OnFragmentInteractionListener, CongestionFragment.OnFragmentInteractionListener{
+    private Fragment reserveFragment;
+    private Fragment registerFragment;
+    private Fragment orderFragment;
+    private Fragment congestionFragment;
     DrawerLayout drawer;
 
     @Override
@@ -34,9 +37,12 @@ public class ManagerActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Manager Mode");
         Intent intent = getIntent();
-        ReserveFregment = new ReserveFragment();
+        reserveFragment = new ReserveFragment();
+        registerFragment = new RegisterFragment();
+        orderFragment = new OrderFragment();
+        congestionFragment = new CongestionFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.content_main, ReserveFregment);
+        transaction.add(R.id.content_main, reserveFragment);
         transaction.addToBackStack(null);
         transaction.commit();
 
@@ -105,17 +111,18 @@ public class ManagerActivity extends AppCompatActivity
 
         if(id == R.id.nav_register){
             Toast.makeText(ManagerActivity.this, "카페 등록/변경", Toast.LENGTH_SHORT).show();;
-
-            //transaction.replace(R.id.content_main1, fragment);
-            //transaction.commit();
+            transaction.replace(R.id.content_main, registerFragment);
+            transaction.commit();
         }
         else if(id == R.id.nav_reserved){
             Toast.makeText(ManagerActivity.this, "주문 내역", Toast.LENGTH_SHORT).show();
-            transaction.replace(R.id.content_main, ReserveFregment);
+            transaction.replace(R.id.content_main, orderFragment);
             transaction.commit();
         }
         else if(id == R.id.nav_congestion){
             Toast.makeText(ManagerActivity.this, "혼잡도 설정", Toast.LENGTH_SHORT).show();
+            transaction.replace(R.id.content_main, congestionFragment);
+            transaction.commit();
         }
 
         DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer_layout1);
