@@ -23,8 +23,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class UserActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ReserveFragment.OnFragmentInteractionListener, NameSearch.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ReserveFragment.OnFragmentInteractionListener, OrderFragment.OnFragmentInteractionListener, NameSearch.OnFragmentInteractionListener {
     private Fragment reserveFragment;
+    private Fragment OrderFragment;
     private Fragment NameSearch;
 
     DrawerLayout drawer;
@@ -40,9 +41,9 @@ public class UserActivity extends AppCompatActivity
         Intent intent = getIntent();
         reserveFragment = new ReserveFragment();
         NameSearch = new NameSearch();
+        OrderFragment = new OrderFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.content_main, reserveFragment);
-        transaction.add(R.id.content_main, NameSearch);
+        transaction.add(R.id.content_main, reserveFragment);
         transaction.addToBackStack(null);
         transaction.commit();
 
@@ -146,7 +147,7 @@ public class UserActivity extends AppCompatActivity
             transaction.commit();
         } else if (id == R.id.nav_menu) {
             Toast.makeText(UserActivity.this, "주문 내역를 선택하셨습니다.", Toast.LENGTH_SHORT).show();
-            transaction.replace(R.id.content_main, reserveFragment);
+            transaction.replace(R.id.content_main, OrderFragment);
             transaction.commit();
         } else if (id == R.id.nav_searchmap) {
             Toast.makeText(UserActivity.this, "지도검색을 선택하셨습니다.", Toast.LENGTH_SHORT).show();

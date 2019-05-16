@@ -48,6 +48,7 @@ public class ManagerActivity extends AppCompatActivity
         transaction.addToBackStack(null);
         transaction.commit();
 
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
 
@@ -77,6 +78,8 @@ public class ManagerActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view1);
         navigationView.setNavigationItemSelectedListener(this);
+
+
     }
 
     @Override
