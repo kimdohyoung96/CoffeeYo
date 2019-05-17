@@ -22,7 +22,7 @@ public class Login extends AppCompatActivity {
         r_btn1 = (RadioButton) findViewById(R.id.r_btn1);
         r_btn2 = (RadioButton) findViewById(R.id.r_btn2);
 
-        radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+        radioGroup = (RadioGroup) findViewById(R.id.radioGp);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override
