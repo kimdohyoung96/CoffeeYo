@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="mobileApp.project.CoffeeYo.Login">
+    tools:context="mobileApp.project.Coffeeyo.Login">
 
 
     <RadioGroup
-        android:id="@+id/radioGp"
+        android:id="@+id/radioGroup"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="59dp"
@@ -48,6 +48,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGp" />
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
+
+    출처: https://bitsoul.tistory.com/45 [Happy Programmer~]
 
 </android.support.constraint.ConstraintLayout>
