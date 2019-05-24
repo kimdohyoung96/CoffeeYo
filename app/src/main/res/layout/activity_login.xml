@@ -4,18 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="mobileApp.project.Coffeeyo.Login">
+    tools:context="mobileApp.project.CoffeeYo.Login">
 
-
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="173dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="200dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/radioGroup"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/icon" />
     <RadioGroup
         android:id="@+id/radioGroup"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="59dp"
+        android:layout_marginStart="95dp"
         android:layout_marginTop="397dp"
-        android:layout_marginEnd="59dp"
+        android:layout_marginEnd="95dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
+        app:layout_constraintBottom_toTopOf="@+id/sign_in_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -23,34 +34,47 @@
         <RadioButton
             android:id="@+id/r_btn1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginBottom="55dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="User" />
+            android:text="User"
+            android:visibility="visible" />
 
         <RadioButton
             android:id="@+id/r_btn2"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
+            android:layout_height="match_parent"
+
             android:layout_weight="1"
             android:text="Manager" />
     </RadioGroup>
 
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="182dp"
-        android:layout_height="63dp"
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="169dp"
-        android:text="Login"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
-
-    출처: https://bitsoul.tistory.com/45 [Happy Programmer~]
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="235dp"
+        android:layout_height="81dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Coffee-Yo"
+        android:textColor="@color/colorAccent"
+        android:textColorHighlight="@color/colorPrimaryDark"
+        android:textSize="50dp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toTopOf="@+id/imageView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
 </android.support.constraint.ConstraintLayout>

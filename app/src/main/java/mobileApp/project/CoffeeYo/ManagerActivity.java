@@ -22,6 +22,8 @@ import android.net.Uri;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class ManagerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ReserveMFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener, OrderFragment.OnFragmentInteractionListener, CongestionFragment.OnFragmentInteractionListener{
     private Fragment reserveMFragment;
@@ -111,6 +113,7 @@ public class ManagerActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         switch (item.getItemId()) {
             case R.id.logout:
+                FirebaseAuth.getInstance().signOut();
                 finish();
                 return true;
 

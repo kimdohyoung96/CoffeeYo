@@ -22,6 +22,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class UserActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ReserveFragment.OnFragmentInteractionListener, OrderFragment.OnFragmentInteractionListener, NameSearch.OnFragmentInteractionListener {
     private Fragment reserveFragment;
@@ -57,7 +59,7 @@ public class UserActivity extends AppCompatActivity
             public void onClick(View view) {
                 final Snackbar snackbar = Snackbar.make(view, "커피요를 쉽게 이용하는 방법\n1.커피요머니를 충전한다.\n2.이름 혹은 지도로 카페를 검색한다\n-지도검색시 화면을 옮기고 현재 보이는 화면에서 카페를 찾고 싶다면 왼쪽 상단에 커피 아이콘을 클릭한다.\n3.카페 혼잡도 여부와 커피 매진여부를 확인 후 커피를 주문한다.\n4.커피를 즐긴다.", Snackbar.LENGTH_INDEFINITE);
                 View snackbarView = snackbar.getView();
-                TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+                TextView textView = (TextView) snackbarView.findViewById(R.id.snackbar_text);
                 textView.setMaxLines(10);  // show multiple line
                 snackbar.setActionTextColor(Color.RED)
                         .setAction("확인", new View.OnClickListener()
@@ -114,6 +116,7 @@ public class UserActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         switch (item.getItemId()) {
             case R.id.logout :
+                FirebaseAuth.getInstance().signOut();
                 finish();
                 return true ;
 
@@ -154,7 +157,8 @@ public class UserActivity extends AppCompatActivity
             Intent intent = new Intent(UserActivity.this, map_Search.class);
             startActivity(intent);
         } else if (id == R.id.nav_star) {
-            Toast.makeText(UserActivity.this, "상품평을 선택하셨습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserActivity.this, "충전을 선택하셨습니다.", Toast.LENGTH_SHORT).show();
+
         } else if (id == R.id.nav_check) {
             Toast.makeText(UserActivity.this, "조회를 선택하셨습니다.", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_setting) {

@@ -218,7 +218,7 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
             }
             new NRPlaces.Builder()
                     .listener(this)
-                    .key("AIzaSyB3xYdMVp3_kLmqKhb6yCljg3I_uqg77kA")
+                    .key("AIzaSyBDLQiG_YkuMT7ySUSG0MjQBG8tLdd3WT4")
                     .latlng(latitude, longitude)
                     .radius(1000)
                     .type(PlaceType.CAFE)
