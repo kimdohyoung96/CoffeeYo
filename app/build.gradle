@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     defaultConfig {
+
         applicationId "mobileApp.project.CoffeeYo"
         minSdkVersion 15
         targetSdkVersion 26

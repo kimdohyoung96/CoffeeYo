@@ -23,11 +23,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ManagerActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ReserveFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener, OrderFragment.OnFragmentInteractionListener, CongestionFragment.OnFragmentInteractionListener{
-    private Fragment reserveFragment;
+        implements NavigationView.OnNavigationItemSelectedListener, ReserveMFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener, OrderFragment.OnFragmentInteractionListener, CongestionFragment.OnFragmentInteractionListener, MenuFragment.OnFragmentInteractionListener {
+    private Fragment reserveMFragment;
     private Fragment registerFragment;
     private Fragment orderFragment;
     private Fragment congestionFragment;
+    private Fragment menuFragment;
     DrawerLayout drawer;
 
     @Override
@@ -39,14 +40,16 @@ public class ManagerActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Manager Mode");
         Intent intent = getIntent();
-        reserveFragment = new ReserveFragment();
+        reserveMFragment = new ReserveMFragment();
         registerFragment = new RegisterFragment();
         orderFragment = new OrderFragment();
         congestionFragment = new CongestionFragment();
+        menuFragment = new MenuFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.content_main, reserveFragment);
+        transaction.replace(R.id.content_main, reserveMFragment);
         transaction.addToBackStack(null);
         transaction.commit();
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -77,6 +80,8 @@ public class ManagerActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view1);
         navigationView.setNavigationItemSelectedListener(this);
+
+
     }
 
     @Override
@@ -134,6 +139,11 @@ public class ManagerActivity extends AppCompatActivity
         else if(id == R.id.nav_congestion){
             Toast.makeText(ManagerActivity.this, "혼잡도 설정", Toast.LENGTH_SHORT).show();
             transaction.replace(R.id.content_main, congestionFragment);
+            transaction.commit();
+        }
+        else if(id == R.id.nav_menu){
+            Toast.makeText(ManagerActivity.this, "메뉴 추가/삭제", Toast.LENGTH_SHORT).show();
+            transaction.replace(R.id.content_main, menuFragment);
             transaction.commit();
         }
 

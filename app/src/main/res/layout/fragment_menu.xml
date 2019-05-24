@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".RegisterFragment">
+    tools:context=".MenuFragment">
 
 
     <TextView
@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
         android:layout_marginBottom="8dp"
-        android:text="카페 등록/변경"
+        android:text="메뉴 추가/삭제"
         android:textSize="30dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,7 +23,7 @@
 
     <LinearLayout
         android:id="@+id/linearLayout2"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="60dp"
@@ -32,49 +32,43 @@
         app:layout_constraintEnd_toEndOf="@+id/register">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:text="이름"
+                android:text="메뉴"
                 android:textAlignment="center"/>
 
             <EditText
                 android:id="@+id/name"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:hint="카페명을 입력하시오."/>
+                android:hint="메뉴를 입력하시오."/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/addB"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:text="주소"
-                android:textAlignment="center"/>
+                android:text="메뉴 추가"/>
 
-            <EditText
-                android:id="@+id/address"
-                android:layout_width="250dp"
+
+            <Button
+                android:id="@+id/deleteB"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:hint="카페 주소를 입력하시오."/>
+                android:text="메뉴 삭제"/>
 
         </LinearLayout>
-
-
-        <Button
-            android:id="@+id/registerB"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="카페 등록/변경"/>
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
