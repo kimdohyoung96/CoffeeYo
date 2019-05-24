@@ -25,11 +25,12 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class ManagerActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ReserveMFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener, OrderFragment.OnFragmentInteractionListener, CongestionFragment.OnFragmentInteractionListener{
+        implements NavigationView.OnNavigationItemSelectedListener, ReserveMFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener, OrderFragment.OnFragmentInteractionListener, CongestionFragment.OnFragmentInteractionListener, MenuFragment.OnFragmentInteractionListener {
     private Fragment reserveMFragment;
     private Fragment registerFragment;
     private Fragment orderFragment;
     private Fragment congestionFragment;
+    private Fragment menuFragment;
     DrawerLayout drawer;
 
     @Override
@@ -45,6 +46,7 @@ public class ManagerActivity extends AppCompatActivity
         registerFragment = new RegisterFragment();
         orderFragment = new OrderFragment();
         congestionFragment = new CongestionFragment();
+        menuFragment = new MenuFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content_main, reserveMFragment);
         transaction.addToBackStack(null);
@@ -140,6 +142,11 @@ public class ManagerActivity extends AppCompatActivity
         else if(id == R.id.nav_congestion){
             Toast.makeText(ManagerActivity.this, "혼잡도 설정", Toast.LENGTH_SHORT).show();
             transaction.replace(R.id.content_main, congestionFragment);
+            transaction.commit();
+        }
+        else if(id == R.id.nav_menu){
+            Toast.makeText(ManagerActivity.this, "메뉴 추가/삭제", Toast.LENGTH_SHORT).show();
+            transaction.replace(R.id.content_main, menuFragment);
             transaction.commit();
         }
 
