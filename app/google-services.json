@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "119238636021",
+    "firebase_url": "https://coffeeyo-2019.firebaseio.com",
+    "project_id": "coffeeyo-2019",
+    "storage_bucket": "coffeeyo-2019.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:119238636021:android:00ecaeab6ba4da76",
+        "android_client_info": {
+          "package_name": "mobileApp.project.CoffeeYo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "119238636021-2becopbcn973o143bc7gsqn6s8b7kh4r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "mobileApp.project.CoffeeYo",
+            "certificate_hash": "6cdbd1b0f4fb0568d98707e4b2232ea988d77485"
+          }
+        },
+        {
+          "client_id": "119238636021-hgu55l6pfslu96ke4l1kqe1ggu00ip72.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "mobileApp.project.CoffeeYo",
+            "certificate_hash": "e3ce633abd47c6b650a200d3c4a238b6d27e5c28"
+          }
+        },
+        {
+          "client_id": "119238636021-qgbqndbrua5uirbumtvrpeh219d31gee.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0TPWcx-vM5-IIQvuhL7eGwckatq4Vucc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "119238636021-qgbqndbrua5uirbumtvrpeh219d31gee.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

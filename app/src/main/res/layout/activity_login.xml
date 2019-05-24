@@ -6,37 +6,45 @@
     android:layout_height="match_parent"
     tools:context="mobileApp.project.CoffeeYo.Login">
 
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="53dp"
+        android:layout_marginLeft="53dp"
+        android:layout_marginTop="397dp"
+        android:layout_marginEnd="53dp"
+        android:layout_marginRight="53dp"
+        android:layout_marginBottom="104dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/sign_in_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <CheckBox
-        android:id="@+id/checkBox_u"
+        <RadioButton
+            android:id="@+id/r_btn1"
+            android:layout_width="142dp"
+            android:layout_height="69dp"
+            android:text="User"
+            android:visibility="visible" />
+
+        <RadioButton
+            android:id="@+id/r_btn2"
+            android:layout_width="147dp"
+            android:layout_height="74dp"
+            android:text="Manager" />
+    </RadioGroup>
+
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginBottom="55dp"
-        android:text="User"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
-        app:layout_constraintStart_toEndOf="@+id/checkBox_m" />
-
-    <CheckBox
-        android:id="@+id/checkBox_m"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="Manager"
-        app:layout_constraintBaseline_toBaselineOf="@+id/checkBox_u"
-        app:layout_constraintStart_toStartOf="@+id/button2" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="194dp"
-        android:layout_height="56dp"
-        android:layout_marginBottom="169dp"
-        android:text="Login"
+        android:layout_marginBottom="99dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-
-    출처: https://bitsoul.tistory.com/45 [Happy Programmer~]
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
 </android.support.constraint.ConstraintLayout>
