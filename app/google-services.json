@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "786464855890-p9f0qrpmpab6153293aa634pva56em6n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "mobileApp.project.CoffeeYo",
+            "certificate_hash": "d03b58b75a79407c98ff321e25e6b20a8ba34442"
+          }
+        },
+        {
           "client_id": "786464855890-va51nac10adfn28ijb7oeput38s55nt5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
