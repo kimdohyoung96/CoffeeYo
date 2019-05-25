@@ -16,22 +16,35 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ManagerActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ReserveMFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener, OrderFragment.OnFragmentInteractionListener, CongestionFragment.OnFragmentInteractionListener, MenuFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ReserveMFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener, OrderFragment.OnFragmentInteractionListener, CongestionFragment.OnFragmentInteractionListener {
     private Fragment reserveMFragment;
     private Fragment registerFragment;
     private Fragment orderFragment;
     private Fragment congestionFragment;
-    private Fragment menuFragment;
     DrawerLayout drawer;
+
+    public DatabaseReference mPostReference_cafeInfo;
+    ArrayList<CafeItem> cafeInfo;
+    CafeAdapter arrayAdapter_cafeInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +59,14 @@ public class ManagerActivity extends AppCompatActivity
         registerFragment = new RegisterFragment();
         orderFragment = new OrderFragment();
         congestionFragment = new CongestionFragment();
-        menuFragment = new MenuFragment();
+        cafeInfo = new ArrayList<CafeItem>();
+
+        mPostReference_cafeInfo = FirebaseDatabase.getInstance().getReference();
+
+        //arrayAdapter_cafeInfo = new CafeAdapter(this, cafeInfo);
+        //listView.setAdapter(arrayAdapter_cafeInfo);
+        getFirebaseDatabaseCafeInfo();
+
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content_main, reserveMFragment);
         transaction.addToBackStack(null);
@@ -82,9 +102,34 @@ public class ManagerActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view1);
         navigationView.setNavigationItemSelectedListener(this);
-
-
     }
+
+    public void getFirebaseDatabaseCafeInfo(){
+        final ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.d("onDataChange", "Data is updated");
+
+                cafeInfo.clear();
+                for(DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    String key = postSnapshot.getKey();
+                    CafeInfo get = postSnapshot.getValue(CafeInfo.class);
+
+                    CafeItem item = new CafeItem(get.cafe_id, get.cafe_name, get.cafe_longitude, get.cafe_latitude, get.menu_cnt, get.menu1, get.menu2, get.menu3);
+                    cafeInfo.add(item);
+                }
+                //arrayAdapter_cafeInfo.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        mPostReference_cafeInfo.child("cafe_list").addValueEventListener(postListener);
+    }
+
+
 
     @Override
     public void onBackPressed() {
@@ -115,7 +160,6 @@ public class ManagerActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         switch (item.getItemId()) {
             case R.id.logout:
-                FirebaseAuth.getInstance().signOut();
                 finish();
                 return true;
 
@@ -142,11 +186,6 @@ public class ManagerActivity extends AppCompatActivity
         else if(id == R.id.nav_congestion){
             Toast.makeText(ManagerActivity.this, "혼잡도 설정", Toast.LENGTH_SHORT).show();
             transaction.replace(R.id.content_main, congestionFragment);
-            transaction.commit();
-        }
-        else if(id == R.id.nav_menu){
-            Toast.makeText(ManagerActivity.this, "메뉴 추가/삭제", Toast.LENGTH_SHORT).show();
-            transaction.replace(R.id.content_main, menuFragment);
             transaction.commit();
         }
 

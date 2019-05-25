@@ -16,21 +16,31 @@
         <activity android:name=".Login"></activity>
         <activity android:name=".map_Search"/>
         <activity android:name=".LaunchApp">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".UserActivity" >
         <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.LAUNCHER" />
+            <data android:host="test1" android:scheme="practice" />
         </intent-filter>
-    </activity>
+        </activity>
+        <activity android:name=".ManagerActivity" />
+        <activity android:name=".NiceMainActivity" android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:host="test1" android:scheme="practice" />
+            </intent-filter>
+        </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBRH1pFRG06wrIHnGTr73XqigzlSv5SLCM" />
-
-        <activity android:name=".UserActivity" />
-
-        <activity android:name=".ManagerActivity" />
     </application>
 
 </manifest>

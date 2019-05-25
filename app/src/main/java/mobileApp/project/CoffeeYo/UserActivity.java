@@ -158,7 +158,8 @@ public class UserActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_star) {
             Toast.makeText(UserActivity.this, "충전을 선택하셨습니다.", Toast.LENGTH_SHORT).show();
-
+            Intent intent = new Intent(UserActivity.this, NiceMainActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_check) {
             Toast.makeText(UserActivity.this, "조회를 선택하셨습니다.", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_setting) {

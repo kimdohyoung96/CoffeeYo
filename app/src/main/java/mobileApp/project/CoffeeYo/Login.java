@@ -26,6 +26,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Login extends AppCompatActivity {
@@ -36,11 +43,14 @@ public class Login extends AppCompatActivity {
     int RC_SIGN_IN = 0;
     private FirebaseAuth mAuth;
     int check2 = -1;
-
+    private DatabaseReference mPostReference;
+    String email="",name="",uid="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        mPostReference = FirebaseDatabase.getInstance().getReference();
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -97,13 +107,7 @@ public class Login extends AppCompatActivity {
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                if(check2 == 1){
-                    startActivity(new Intent(Login.this, ManagerActivity.class));
-                    firebaseAuthWithGoogle(account);
-                }else if(check2 == 2){
-                    startActivity(new Intent(Login.this, UserActivity.class));
-                    firebaseAuthWithGoogle(account);
-                }
+                firebaseAuthWithGoogle(account);
 
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
@@ -124,6 +128,39 @@ public class Login extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            if (user != null) {
+                                // Name, email address, and profile photo Url
+
+                                name = user.getDisplayName();
+                                email = user.getEmail();
+
+                                // The user's ID, unique to the Firebase project. Do NOT use this value to
+                                // authenticate with your backend server, if you have one. Use
+                                // FirebaseUser.getIdToken() instead.
+                                uid = user.getUid();
+                                FirebasePost post = new FirebasePost(email, name, uid);
+                                if (check2 == 1) {
+                                    //push
+                                    Map<String, Object> childUpdates = new HashMap<>();
+                                    Map<String, Object> postValues = null;
+
+                                    postValues = post.toMap();
+                                    childUpdates.put("/user_list/" + uid, postValues); //여기서 추가 - 이름을 뭘로할지 /memo_list/title 의 이름으로 만들어짐.
+                                    mPostReference.updateChildren(childUpdates);
+                                    startActivity(new Intent(Login.this, ManagerActivity.class));
+
+                                } else if (check2 == 2) {
+                                    //push
+                                    Map<String, Object> childUpdates = new HashMap<>();
+                                    Map<String, Object> postValues = null;
+                                    FirebasePost post1 = new FirebasePost(email, name, uid);
+                                    postValues = post1.toMap();
+                                    childUpdates.put("/user_list/" + uid, postValues); //여기서 추가 - 이름을 뭘로할지 /memo_list/title 의 이름으로 만들어짐.
+                                    mPostReference.updateChildren(childUpdates);
+                                    startActivity(new Intent(Login.this, UserActivity.class));
+
+                                }
+                            }
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -132,6 +169,7 @@ public class Login extends AppCompatActivity {
                     }
                 });
     }
+
 
 
 }
