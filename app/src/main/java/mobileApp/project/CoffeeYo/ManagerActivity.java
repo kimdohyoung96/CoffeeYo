@@ -24,6 +24,17 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -45,7 +56,9 @@ public class ManagerActivity extends AppCompatActivity
     public DatabaseReference mPostReference_cafeInfo;
     ArrayList<CafeItem> cafeInfo;
     CafeAdapter arrayAdapter_cafeInfo;
-
+    FirebaseAuth fb = FirebaseAuth.getInstance();
+    GoogleSignInClient mGoogleSignInClient;
+    GoogleApiClient mgoogleApiClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,6 +173,8 @@ public class ManagerActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         switch (item.getItemId()) {
             case R.id.logout:
+                signOut();
+
                 finish();
                 return true;
 
@@ -174,7 +189,7 @@ public class ManagerActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if(id == R.id.nav_register){
-            Toast.makeText(ManagerActivity.this, "카페 등록/변경", Toast.LENGTH_SHORT).show();;
+            Toast.makeText(ManagerActivity.this, "카페 등록/변경", Toast.LENGTH_SHORT).show();
             transaction.replace(R.id.content_main, registerFragment);
             transaction.commit();
         }
@@ -199,5 +214,50 @@ public class ManagerActivity extends AppCompatActivity
     public void onFragmentInteraction(Uri uri) {
 
     }
+    public void signOut() {
 
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        mgoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+                    }
+                })
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
+        mgoogleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+
+            @Override
+            public void onConnected(@Nullable Bundle bundle) {
+
+                fb.signOut();
+                if (mgoogleApiClient.isConnected()) {
+
+                    Auth.GoogleSignInApi.signOut(mgoogleApiClient).setResultCallback(new ResultCallback<Status>() {
+
+                        @Override
+                        public void onResult(@NonNull Status status) {
+
+
+
+                            finish();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onConnectionSuspended(int i) {
+
+
+                finish();
+            }
+        });
+    }
 }

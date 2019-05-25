@@ -22,6 +22,13 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class UserActivity extends AppCompatActivity
@@ -31,7 +38,9 @@ public class UserActivity extends AppCompatActivity
     private Fragment NameSearch;
 
     DrawerLayout drawer;
-
+    FirebaseAuth fb = FirebaseAuth.getInstance();
+    GoogleSignInClient mGoogleSignInClient;
+    GoogleApiClient mgoogleApiClient;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -116,7 +125,8 @@ public class UserActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         switch (item.getItemId()) {
             case R.id.logout :
-                FirebaseAuth.getInstance().signOut();
+                signOut();
+
                 finish();
                 return true ;
 
@@ -173,5 +183,51 @@ public class UserActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+    public void signOut() {
+
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        mgoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+                    }
+                })
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
+        mgoogleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+
+            @Override
+            public void onConnected(@Nullable Bundle bundle) {
+
+                fb.signOut();
+                if (mgoogleApiClient.isConnected()) {
+
+                    Auth.GoogleSignInApi.signOut(mgoogleApiClient).setResultCallback(new ResultCallback<Status>() {
+
+                        @Override
+                        public void onResult(@NonNull Status status) {
+
+
+
+                            finish();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onConnectionSuspended(int i) {
+
+
+                finish();
+            }
+        });
     }
 }
