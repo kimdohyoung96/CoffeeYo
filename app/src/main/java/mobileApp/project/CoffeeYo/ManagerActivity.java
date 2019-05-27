@@ -76,8 +76,8 @@ public class ManagerActivity extends AppCompatActivity
 
         mPostReference_cafeInfo = FirebaseDatabase.getInstance().getReference();
 
-        //arrayAdapter_cafeInfo = new CafeAdapter(this, cafeInfo);
-        //listView.setAdapter(arrayAdapter_cafeInfo);
+        arrayAdapter_cafeInfo = new CafeAdapter(this, cafeInfo);
+        myCafeInfo.setAdapter(arrayAdapter_cafeInfo);
         getFirebaseDatabaseCafeInfo();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -128,7 +128,7 @@ public class ManagerActivity extends AppCompatActivity
                     String key = postSnapshot.getKey();
                     CafeInfo get = postSnapshot.getValue(CafeInfo.class);
 
-                    CafeItem item = new CafeItem(get.cafe_id, get.cafe_name, get.cafe_longitude, get.cafe_latitude, get.menu_cnt, get.menu1, get.menu2, get.menu3);
+                    CafeItem item = new CafeItem(get.manager_id, get.cafe_name, get.cafe_longitude, get.cafe_latitude, get.menu1, get.menu2, get.menu3, get.menu4, get.menu5);
                     cafeInfo.add(item);
                 }
                 //arrayAdapter_cafeInfo.notifyDataSetChanged();
