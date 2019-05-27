@@ -1,17 +1,17 @@
 package mobileApp.project.CoffeeYo;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
@@ -70,12 +70,12 @@ public class Login extends AppCompatActivity {
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                if (r_btn2.isChecked() == true) {
-                    check2 = 1;
-                    signIn();
-                } else if (r_btn1.isChecked() == true) {
-                    check2 = 2;
-                        signIn();
+                        if (r_btn2.isChecked() == true) {
+                            check2 = 1;
+                            signIn();
+                        } else if (r_btn1.isChecked() == true) {
+                            check2 = 2;
+                            signIn();
                         }
                     }
                 });
@@ -135,12 +135,12 @@ public class Login extends AppCompatActivity {
                                 // authenticate with your backend server, if you have one. Use
                                 // FirebaseUser.getIdToken() instead.
                                 uid = user.getUid();
-                                FirebasePost post = new FirebasePost(email, name, uid);
+
                                 if (check2 == 1) {
                                     //push
                                     Map<String, Object> childUpdates = new HashMap<>();
                                     Map<String, Object> postValues = null;
-
+                                    FirebasePost post = new FirebasePost(email, name, uid,"0","0");
                                     postValues = post.toMap();
                                     childUpdates.put("/user_list/" + uid, postValues); //여기서 추가 - 이름을 뭘로할지 /memo_list/title 의 이름으로 만들어짐.
                                     mPostReference.updateChildren(childUpdates);
@@ -150,9 +150,10 @@ public class Login extends AppCompatActivity {
                                     //push
                                     Map<String, Object> childUpdates = new HashMap<>();
                                     Map<String, Object> postValues = null;
-                                    FirebasePost post1 = new FirebasePost(email, name, uid);
+                                    FirebasePost post1 = new FirebasePost(email, name, uid,"0","0");
                                     postValues = post1.toMap();
                                     childUpdates.put("/user_list/" + uid, postValues); //여기서 추가 - 이름을 뭘로할지 /memo_list/title 의 이름으로 만들어짐.
+
                                     mPostReference.updateChildren(childUpdates);
                                     startActivity(new Intent(Login.this, UserActivity.class));
 

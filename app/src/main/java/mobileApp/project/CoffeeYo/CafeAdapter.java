@@ -12,8 +12,8 @@ public class CafeAdapter extends BaseAdapter {
     LayoutInflater inflater;
     private ArrayList<CafeItem> items;
 
-    public CafeAdapter(Context context, ArrayList<CafeItem> cafeInfo){
-        this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public CafeAdapter(ReserveMFragment context, ArrayList<CafeItem> cafeInfo){
+
         this.items = cafeInfo;
     }
 

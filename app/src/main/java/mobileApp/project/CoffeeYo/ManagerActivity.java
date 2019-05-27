@@ -54,8 +54,6 @@ public class ManagerActivity extends AppCompatActivity
     DrawerLayout drawer;
 
     public DatabaseReference mPostReference_cafeInfo;
-    ArrayList<CafeItem> cafeInfo;
-    CafeAdapter arrayAdapter_cafeInfo;
     FirebaseAuth fb = FirebaseAuth.getInstance();
     GoogleSignInClient mGoogleSignInClient;
     GoogleApiClient mgoogleApiClient;
@@ -72,13 +70,9 @@ public class ManagerActivity extends AppCompatActivity
         registerFragment = new RegisterFragment();
         orderFragment = new OrderFragment();
         congestionFragment = new CongestionFragment();
-        cafeInfo = new ArrayList<CafeItem>();
+
 
         mPostReference_cafeInfo = FirebaseDatabase.getInstance().getReference();
-
-        arrayAdapter_cafeInfo = new CafeAdapter(this, cafeInfo);
-        myCafeInfo.setAdapter(arrayAdapter_cafeInfo);
-        getFirebaseDatabaseCafeInfo();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content_main, reserveMFragment);
@@ -115,31 +109,6 @@ public class ManagerActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view1);
         navigationView.setNavigationItemSelectedListener(this);
-    }
-
-    public void getFirebaseDatabaseCafeInfo(){
-        final ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d("onDataChange", "Data is updated");
-
-                cafeInfo.clear();
-                for(DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    String key = postSnapshot.getKey();
-                    CafeInfo get = postSnapshot.getValue(CafeInfo.class);
-
-                    CafeItem item = new CafeItem(get.manager_id, get.cafe_name, get.cafe_longitude, get.cafe_latitude, get.menu1, get.menu2, get.menu3, get.menu4, get.menu5);
-                    cafeInfo.add(item);
-                }
-                //arrayAdapter_cafeInfo.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        };
-        mPostReference_cafeInfo.child("cafe_list").addValueEventListener(postListener);
     }
 
 

@@ -22,12 +22,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UserActivity" >
-        <intent-filter>
-            <data android:host="test1" android:scheme="practice" />
-        </intent-filter>
+        <activity android:name=".UserActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <data android:host="test1" android:scheme="practice" />
+            </intent-filter>
         </activity>
-        <activity android:name=".ManagerActivity" />
+        <activity android:name=".ManagerActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".NiceMainActivity" android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

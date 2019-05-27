@@ -76,8 +76,9 @@ public class ReserveMFragment extends Fragment {
 
         cafeInfo = new ArrayList<CafeItem>();
 
-        arrayAdapter_cafeInfo = new CafeAdapter(this, cafeInfo);
-        myCafeInfo.setAdapter(arrayAdapter_cafeInfo);
+        arrayAdapter_cafeInfo = new CafeAdapter(this
+                , cafeInfo);
+ //       myCafeInfo.setAdapter(arrayAdapter_cafeInfo);
         getFirebaseDatabaseCafeInfo();
 
         return inflater.inflate(R.layout.fragment_reserve_m, container, false);
