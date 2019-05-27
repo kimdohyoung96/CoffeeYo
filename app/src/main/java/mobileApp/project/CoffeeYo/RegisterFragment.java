@@ -42,6 +42,11 @@ public class RegisterFragment extends Fragment {
     String longitudeS;
     String latitudeS;
     String menuS;
+    String menu1;
+    String menu2;
+    String menu3;
+    String menu4;
+    String menu5;
 
     public RegisterFragment() {
         // Required empty public constructor
@@ -91,7 +96,7 @@ public class RegisterFragment extends Fragment {
         nameE = (EditText) view.findViewById(R.id.name);
         longitudeE = (EditText) view.findViewById(R.id.longitude);
         latitudeE = (EditText) view.findViewById(R.id.latitude);
-        EditText menuE = (EditText) view.findViewById(R.id.menu);
+        final EditText menuE = (EditText) view.findViewById(R.id.menu);
 
         registerB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,7 +106,13 @@ public class RegisterFragment extends Fragment {
                 nameS = nameE.getText().toString();
                 longitudeS = longitudeE.getText().toString();
                 latitudeS = latitudeE.getText().toString();
-                if ((nameS.length() * longitudeS.length() * latitudeS.length()) == 0) {
+                menu1 = "Unknown";
+                menu2 = "Unknown";
+                menu3 = "Unknown";
+                menu4 = "Unknown";
+                menu5 = "Unknown";
+
+                if ((cafeIDS.length() * nameS.length() * longitudeS.length() * latitudeS.length()) == 0) {
                     Toast.makeText(contextRegister, "Data is missing", Toast.LENGTH_SHORT).show();
                 } else {
                     cafeID = Integer.parseInt(cafeIDS);
@@ -135,7 +146,7 @@ public class RegisterFragment extends Fragment {
             CafeInfo post = new CafeInfo();
             postValues = post.toMap();
         }
-        childUpdates.put("/cafe_list/" + cafeIDS, postValues);
+        childUpdates.put("/cafe_list/" + cafeIDS + "/cafe_info/", postValues);  //user_id로 cafe_id 찾는거로 고치기 + query join
         ((ManagerActivity)getActivity()).mPostReference_cafeInfo.updateChildren(childUpdates);
         clearET();
     }
