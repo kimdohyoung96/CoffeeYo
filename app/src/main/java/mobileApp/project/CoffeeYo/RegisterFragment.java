@@ -1,12 +1,21 @@
 package mobileApp.project.CoffeeYo;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -19,6 +28,25 @@ public class RegisterFragment extends Fragment {
     private String mParam2;
 
     private RegisterFragment.OnFragmentInteractionListener mListener;
+
+    Button registerB;
+    Button addMenuB;
+    Button deleteMenuB;
+    EditText IDE;
+    EditText nameE;
+    EditText longitudeE;
+    EditText latitudeE;
+    int cafeID;
+    String cafeIDS;
+    String nameS;
+    String longitudeS;
+    String latitudeS;
+    String menuS;
+    String menu1;
+    String menu2;
+    String menu3;
+    String menu4;
+    String menu5;
 
     public RegisterFragment() {
         // Required empty public constructor
@@ -45,18 +73,97 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
+    @SuppressLint("WrongViewCast")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_register, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_register, container, false);
+        final Context contextRegister = container.getContext();
+
+        registerB = (Button) view.findViewById(R.id.register);
+        addMenuB = (Button) view.findViewById(R.id.add_menu);
+        deleteMenuB = (Button) view.findViewById(R.id.delete_menu);
+        IDE = (EditText) view.findViewById(R.id.id);
+        nameE = (EditText) view.findViewById(R.id.name);
+        longitudeE = (EditText) view.findViewById(R.id.longitude);
+        latitudeE = (EditText) view.findViewById(R.id.latitude);
+        final EditText menuE = (EditText) view.findViewById(R.id.menu);
+
+        registerB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(contextRegister, "카페 등록/변경", Toast.LENGTH_LONG).show();
+                cafeIDS = IDE.getText().toString();
+                nameS = nameE.getText().toString();
+                longitudeS = longitudeE.getText().toString();
+                latitudeS = latitudeE.getText().toString();
+                menu1 = "Unknown";
+                menu2 = "Unknown";
+                menu3 = "Unknown";
+                menu4 = "Unknown";
+                menu5 = "Unknown";
+
+                if ((cafeIDS.length() * nameS.length() * longitudeS.length() * latitudeS.length()) == 0) {
+                    Toast.makeText(contextRegister, "Data is missing", Toast.LENGTH_SHORT).show();
+                } else {
+                    cafeID = Integer.parseInt(cafeIDS);
+                    postFirebaseDatabaseCafeInfo(true);
+                }
+            }
+        });
+
+        addMenuB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(contextRegister, "메뉴 추가", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        deleteMenuB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(contextRegister, "메뉴 삭제", Toast.LENGTH_LONG).show();
+            }
+        });
+
+
+        return view;
     }
+
+    private void postFirebaseDatabaseCafeInfo(boolean add) {
+        Map<String, Object> childUpdates = new HashMap<>();
+        Map<String, Object> postValues = null;
+        if(add){
+            CafeInfo post = new CafeInfo();
+            postValues = post.toMap();
+        }
+        childUpdates.put("/cafe_list/" + cafeIDS + "/cafe_info/", postValues);  //user_id로 cafe_id 찾는거로 고치기 + query join
+        ((ManagerActivity)getActivity()).mPostReference_cafeInfo.updateChildren(childUpdates);
+        clearET();
+    }
+
+    private void clearET() {
+        IDE.setText("");
+        nameE.setText("");
+        longitudeE.setText("");
+        latitudeE.setText("");
+
+        cafeID = 0;
+        cafeIDS = "";
+        nameS = "";
+        longitudeS = "";
+        latitudeS = "";
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
