@@ -41,6 +41,8 @@ import com.google.firebase.database.ValueEventListener;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ReserveFragment.OnFragmentInteractionListener, OrderFragment.OnFragmentInteractionListener, NameSearch.OnFragmentInteractionListener {
@@ -55,14 +57,14 @@ public class UserActivity extends AppCompatActivity
     private FirebaseAuth mAuth;
     String suc = "sss";
     private DatabaseReference mPostReference;
-    String mymoney ="";
-    String myemail ="";
+    String mymoney;
+    String myemail;
     ArrayList<String[]> list = new ArrayList<>();
     TextView emailtext;
     TextView moneytext;
-    String myuid = "";
-    String myname ="";
-    String mycafe_id = "";
+    String myuid;
+    String myname;
+    String mycafe_id;
     int cnt = 0;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,7 +92,7 @@ public class UserActivity extends AppCompatActivity
         OrderFragment = new OrderFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.content_main, reserveFragment);
-        transaction.addToBackStack(null);
+        //transaction.addToBackStack(null);
         transaction.commit();
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
@@ -215,7 +217,9 @@ public class UserActivity extends AppCompatActivity
         } else if (id == R.id.nav_star) {
             Toast.makeText(UserActivity.this, "충전을 선택하셨습니다.", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(UserActivity.this, NiceMainActivity.class);
-            intent.putExtra("uid",myuid).putExtra("name",myname).putExtra("email",myemail).putExtra("money",mymoney).putExtra("cafe_id",mycafe_id).putExtra("flag",(int)0);
+            mymoney = Integer.toString(Integer.parseInt(mymoney.replaceAll("\"","")) + 10000);
+            postFirebaseDatabase(true);
+            //intent.putExtra("uid",myuid).putExtra("name",myname).putExtra("email",myemail).putExtra("money",mymoney).putExtra("cafe_id",mycafe_id).putExtra("flag",(int)0);
             startActivity(intent);
         } else if (id == R.id.nav_check) {
             Toast.makeText(UserActivity.this, "조회를 선택하셨습니다.", Toast.LENGTH_SHORT).show();
@@ -289,12 +293,24 @@ public class UserActivity extends AppCompatActivity
                     NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
                     navigationView.setNavigationItemSelectedListener(UserActivity.this);
                     View nav_header_view = navigationView.getHeaderView(0);
-                    if(myuid.equals(list.get(cnt)[2])) {
-                        moneytext = (TextView) nav_header_view.findViewById(R.id.mymoney);
-                        moneytext.setText("Money : " + mymoney + " Won");
+                    try {
+                        for (int j = 0; j < list.size(); j++) {
+                            if (myuid.equals(list.get(j)[2])) {
+                                mymoney = list.get(j)[3];
+                                moneytext = (TextView) nav_header_view.findViewById(R.id.mymoney);
+                                moneytext.setText("Money : " + mymoney + " Won");
+                            }
+                        }
+                    }catch(NullPointerException e){
+
                     }
+                    /*if(myuid.equals(list.get(cnt)[2])) {
+                        moneytext = (TextView) nav_header_view.findViewById(R.id.mymoney);
+                        mymoney = list.get(cnt)[3];
+                        moneytext.setText("Money : " + mymoney + " Won");
+                    }*/
                 }
-                cnt++;
+               //cnt++;
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -302,5 +318,15 @@ public class UserActivity extends AppCompatActivity
         };
         mPostReference.child("user_list/").addValueEventListener(postListener); //id_list 의 서브트리부터 밑으로만 접근하겟다.
     }
+    public void postFirebaseDatabase(boolean add){ //firebase database로 데이터를 보내는 함수.
+        Map<String, Object> childUpdates = new HashMap<>();
+        Map<String, Object> postValues = null;
 
+        FirebasePost post1 = new FirebasePost(myemail, myname, myuid, mymoney, mycafe_id);
+        postValues = post1.toMap();
+        childUpdates.put("/user_list/" + myuid, postValues); //여기서 추가 - 이름을 뭘로할지 /memo_list/title 의 이름으로 만들어짐.
+
+        mPostReference.updateChildren(childUpdates);
+
+    }
 }

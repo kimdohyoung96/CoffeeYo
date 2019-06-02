@@ -13,6 +13,8 @@ import android.webkit.CookieManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,35 +36,35 @@ public class NiceMainActivity extends AppCompatActivity {
     private NiceWebViewClient niceClient;
     private final String APP_SCHEME = "practice://";
     int suc = 0;
+    String uid = "";
     String myuid = "";
     String myname ="";
     String mycafe_id = "";
     String mymoney ="";
     String myemail ="";
-    int flag = 0;
-
+    int flag = 1;
+    private FirebaseAuth mAuth;
+    ArrayList<String[]> list = new ArrayList<>();
     private DatabaseReference mPostReference;
     @SuppressLint("NewApi") @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.payment);
         mPostReference = FirebaseDatabase.getInstance().getReference();
-/*
-        Intent intent = getIntent();
-        myemail = intent.getStringExtra("email");
-        mymoney = intent.getStringExtra("money");
-        myuid = intent.getStringExtra("uid");
-        myname = intent.getStringExtra("name");
-        mycafe_id = intent.getStringExtra("cafe_id");
-        */
 
+        getFirebaseDatabase();
+        mAuth = FirebaseAuth.getInstance();
         Intent intent = getIntent();
-
-        myemail = intent.getStringExtra("email");
-        mymoney = intent.getStringExtra("money");
-        myuid = intent.getStringExtra("uid");
-        myname = intent.getStringExtra("name");
-        mycafe_id = intent.getStringExtra("cafe_id");
+        Uri intentData = intent.getData();
+        for (int j = 0; j < list.size(); j++) {
+            if (myuid.equals(list.get(j)[2])) {
+                myemail = list.get(j)[0];
+                myname = list.get(j)[1];
+                myuid = list.get(j)[2];
+                mymoney = list.get(j)[3];
+                mycafe_id = list.get(j)[4];
+            }
+        }
         flag = intent.getIntExtra("flag",0);
         Intent intent1 = new Intent(NiceMainActivity.this, UserActivity.class);
         mainWebView = (WebView) findViewById(R.id.mainWebView);
@@ -77,26 +79,24 @@ public class NiceMainActivity extends AppCompatActivity {
             cookieManager.setAcceptCookie(true);
             cookieManager.setAcceptThirdPartyCookies(mainWebView, true);
         }
-
-        Uri intentData = intent.getData();
-
-        if ( flag != 1 ) {
-            flag = 1;
+        //mymoney = Integer.toString(Integer.parseInt(mymoney.replaceAll("\"","")) + 10000);
+        //postFirebaseDatabase(true);
+        if ( intentData == null ) {
             mainWebView.loadUrl("https://paymentprac.firebaseapp.com/");
 
-        } //else {
-          //  Log.d(TAG, intentData.toString());
+        } else {
+            Log.d(TAG, intentData.toString());
             //isp 인증 후 복귀했을 때 결제 후속조치
-          //  String url = intentData.toString();
-           // if ( url.startsWith(APP_SCHEME) ) {
-              //  String redirectURL = url.substring(APP_SCHEME.length()+3); //"://"가 추가로 더 전달됨
-                //mainWebView.loadUrl(redirectURL);
-
-                mymoney = Integer.toString(Integer.parseInt(mymoney.replaceAll("\"","")) + 10000);
-                postFirebaseDatabase(true);
+           String url = intentData.toString();
+            if ( url.startsWith(APP_SCHEME) ) {
+                String redirectURL = url.substring(APP_SCHEME.length()+3); //"://"가 추가로 더 전달됨
+                mainWebView.loadUrl(redirectURL);
                 startActivity(intent1);
-           // }
-       // }
+            }
+            intent.putExtra("uid",myuid).putExtra("name",myname).putExtra("email",myemail).putExtra("money",mymoney).putExtra("cafe_id",mycafe_id);
+            startActivity(intent1);
+        }
+            getFirebaseDatabase();
     }
 
     @Override
@@ -122,6 +122,7 @@ public class NiceMainActivity extends AppCompatActivity {
             Log.e(TAG, "인증모듈 초기화 오류");
         }
     }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -131,45 +132,29 @@ public class NiceMainActivity extends AppCompatActivity {
             mainWebView.loadUrl(redirectURL);
         }
     }
-    /*
-    public void getFirebaseDatabase() {
+    public void getFirebaseDatabase(){
         final ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) { //만약에 데이터가 추가되거나 삭제되거나 바뀌면 실행됨.
                 Log.d("onDataChange", "Data is Updated");
+                list.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) { //노드 다시 읽어서 추가
                     String key = postSnapshot.getKey();
                     FirebasePost get = postSnapshot.getValue(FirebasePost.class);
-                    String[] info = {get.title, get.owner, get.context};
-                    MemoItem result = new MemoItem(info[0],info[1],info[2]);
-                    memos.add(result);
-                    //String restoult = info[0] + " : " + info[1] + "(" + info[2] + ")";
-                    //data.add(result);
+                    list.add(new String[]{get.email, get.name, get.uid, get.money, get.cafe_id});
+
                     Log.d("getFirebaseDatabase", "key: " + key);
-                    Log.d("getFirebaseDatabase", "info: " + info[0] + info[1] + info[2] );
+                    Log.d("getFirebaseDatabase", "info: " + list.get(0)[2] + list.get(0)[3]);
+
                 }
-                memoAdapter = new MemoAdapter(MainActivity.this, memos);
-                listView.setAdapter(memoAdapter);
-                //memoAdapter.clear();
-                //memoAdapter.addAll(data);
-                memoAdapter.notifyDataSetChanged();
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         };
-        mPostReference.child("memo_list").addValueEventListener(postListener); //id_list 의 서브트리부터 밑으로만 접근하겟다.
+        mPostReference.child("user_list").addValueEventListener(postListener); //id_list 의 서브트리부터 밑으로만 접근하겟다.
     }
-*/
-    public void postFirebaseDatabase(boolean add){ //firebase database로 데이터를 보내는 함수.
-        Map<String, Object> childUpdates = new HashMap<>();
-        Map<String, Object> postValues = null;
-        FirebasePost post1 = new FirebasePost(myemail, myname, myuid, mymoney, mycafe_id);
-        postValues = post1.toMap();
-        childUpdates.put("/user_list/" + myuid, postValues); //여기서 추가 - 이름을 뭘로할지 /memo_list/title 의 이름으로 만들어짐.
 
-        mPostReference.updateChildren(childUpdates);
-
-    }
 
 }

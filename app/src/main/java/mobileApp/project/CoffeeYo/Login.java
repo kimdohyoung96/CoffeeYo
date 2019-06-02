@@ -209,13 +209,10 @@ public class Login extends AppCompatActivity {
                     FirebasePost get = postSnapshot.getValue(FirebasePost.class);
                     list.add(new String[]{get.email, get.name, get.uid, get.money, get.cafe_id});
 
-                    //FirebasePost get = postSnapshot.getValue(FirebasePost.class);
-                    //String[] info = {get.email, get.name, get.uid, get.money, get.cafe_id};
-                    //String restoult = info[0] + " : " + info[1] + "(" + info[2] + ")";
-                    //data.add(result);
+
                     Log.d("getFirebaseDatabase", "key: " + key);
                     Log.d("getFirebaseDatabase", "info: " + list.get(0)[2] + list.get(0)[3]);
-                   // Log.d("getFirebaseDatabase", "info: " + info[0] + info[1] + info[2] );
+
                 }
 
             }
