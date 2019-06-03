@@ -31,7 +31,7 @@
             android:gravity="center" />
 
         <ListView
-            android:id="@+id/listView"
+            android:id="@+id/orderlist"
             android:layout_width="match_parent"
             android:layout_height="650dp" />
 
