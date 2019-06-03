@@ -53,10 +53,15 @@ public class ManagerActivity extends AppCompatActivity
     private Fragment congestionFragment;
     DrawerLayout drawer;
 
-    public DatabaseReference mPostReference_cafeInfo;
+    public DatabaseReference mPostReference;
     FirebaseAuth fb = FirebaseAuth.getInstance();
     GoogleSignInClient mGoogleSignInClient;
     GoogleApiClient mgoogleApiClient;
+    String uid;
+    long newCafeID = 1;
+    long currentCafeID;
+    int flag;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,14 +70,44 @@ public class ManagerActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Manager Mode");
-        Intent intent = getIntent();
+
         reserveMFragment = new ReserveMFragment();
         registerFragment = new RegisterFragment();
         orderFragment = new OrderFragment();
         congestionFragment = new CongestionFragment();
 
+        Intent intent = getIntent();
+        uid = intent.getStringExtra("uid");
 
-        mPostReference_cafeInfo = FirebaseDatabase.getInstance().getReference();
+        mPostReference = FirebaseDatabase.getInstance().getReference();
+
+        flag = 0;
+        // check if user already has cafe
+        mPostReference.child("user_list").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child(uid).exists()){
+                    FirebasePost get = dataSnapshot.child(uid).getValue(FirebasePost.class);
+                    String info = get.cafe_id;
+                    if(!(info.equals("0"))){
+                        currentCafeID = Long.parseLong(info);
+                        flag = 1;
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {            }
+        });
+
+        // count number of existing cafe
+        mPostReference.child("cafe_list").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                newCafeID = dataSnapshot.getChildrenCount();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {            }
+        });
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content_main, reserveMFragment);
@@ -111,6 +146,18 @@ public class ManagerActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    public long getNewCafeID(){
+        return newCafeID;
+    }
+    public String getUid(){
+        return uid;
+    }
+    public int getFlag(){
+        return flag;
+    }
+    public long getCurrentCafeID(){
+        return currentCafeID;
+    }
 
 
     @Override

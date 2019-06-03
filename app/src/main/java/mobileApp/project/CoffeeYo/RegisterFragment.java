@@ -2,8 +2,10 @@ package mobileApp.project.CoffeeYo;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -13,6 +15,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,21 +40,19 @@ public class RegisterFragment extends Fragment {
     Button registerB;
     Button addMenuB;
     Button deleteMenuB;
-    EditText IDE;
     EditText nameE;
     EditText longitudeE;
     EditText latitudeE;
-    int cafeID;
-    String cafeIDS;
+    EditText menuE;
+    String  cafeid;
     String nameS;
     String longitudeS;
     String latitudeS;
     String menuS;
-    String menu1;
-    String menu2;
-    String menu3;
-    String menu4;
-    String menu5;
+    String uid;
+    long cafeID;
+    int flag;
+    int menuCnt = 0;
 
     public RegisterFragment() {
         // Required empty public constructor
@@ -89,33 +95,35 @@ public class RegisterFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_register, container, false);
         final Context contextRegister = container.getContext();
 
-        registerB = (Button) view.findViewById(R.id.register);
+        flag = ((ManagerActivity)getActivity()).getFlag();
+        if(flag == 0) cafeID = ((ManagerActivity)getActivity()).getNewCafeID();
+        else cafeID = ((ManagerActivity)getActivity()).getCurrentCafeID();
+        uid = ((ManagerActivity)getActivity()).getUid();
+
+        registerB = (Button) view.findViewById(R.id.registerB);
         addMenuB = (Button) view.findViewById(R.id.add_menu);
         deleteMenuB = (Button) view.findViewById(R.id.delete_menu);
-        IDE = (EditText) view.findViewById(R.id.id);
         nameE = (EditText) view.findViewById(R.id.name);
         longitudeE = (EditText) view.findViewById(R.id.longitude);
         latitudeE = (EditText) view.findViewById(R.id.latitude);
-        final EditText menuE = (EditText) view.findViewById(R.id.menu);
+        menuE = (EditText) view.findViewById(R.id.menu);
 
         registerB.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Toast.makeText(contextRegister, "카페 등록/변경", Toast.LENGTH_LONG).show();
-                cafeIDS = IDE.getText().toString();
+            public void onClick(View v) {
+                Toast.makeText(contextRegister, "카페 등록/변경 완료", Toast.LENGTH_LONG).show();
                 nameS = nameE.getText().toString();
                 longitudeS = longitudeE.getText().toString();
                 latitudeS = latitudeE.getText().toString();
-                menu1 = "Unknown";
-                menu2 = "Unknown";
-                menu3 = "Unknown";
-                menu4 = "Unknown";
-                menu5 = "Unknown";
 
-                if ((cafeIDS.length() * nameS.length() * longitudeS.length() * latitudeS.length()) == 0) {
+                if ((nameS.length() * longitudeS.length() * latitudeS.length()) == 0) {
                     Toast.makeText(contextRegister, "Data is missing", Toast.LENGTH_SHORT).show();
                 } else {
-                    cafeID = Integer.parseInt(cafeIDS);
+                    // set cafe_id
+                    cafeid = Long.toString(cafeID);
+                    Map<String, Object> taskMap = new HashMap<String, Object>();
+                    taskMap.put("user_list/"+uid+"/cafe_id", cafeid);
+                    ((ManagerActivity)getActivity()).mPostReference.updateChildren(taskMap);
                     postFirebaseDatabaseCafeInfo(true);
                 }
             }
@@ -124,41 +132,73 @@ public class RegisterFragment extends Fragment {
         addMenuB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(contextRegister, "메뉴 추가", Toast.LENGTH_LONG).show();
+                Toast.makeText(contextRegister, "메뉴 추가 완료", Toast.LENGTH_LONG).show();
+
+                menuS = menuE.getText().toString();
+                if(menuS.length() == 0){
+                    Toast.makeText(contextRegister, "Data is missing", Toast.LENGTH_SHORT).show();
+                } else {
+                    menuCnt++;
+                    Map<String, Object> taskMap = new HashMap<String, Object>();
+                    taskMap.put("cafe_list/cafe"+cafeid+"/cafe_info/menu_cnt", Integer.toString(menuCnt));
+                    ((ManagerActivity)getActivity()).mPostReference.updateChildren(taskMap);
+                    postFirebaseDatabaseCafeMenu(true);
+                }
             }
         });
 
         deleteMenuB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(contextRegister, "메뉴 삭제", Toast.LENGTH_LONG).show();
+                Toast.makeText(contextRegister, "메뉴 삭제 완료", Toast.LENGTH_LONG).show();
+
+                menuS = menuE.getText().toString();
+                if(menuS.length() == 0){
+                    Toast.makeText(contextRegister, "Data is missing", Toast.LENGTH_SHORT).show();
+                } else {
+                    postFirebaseDatabaseCafeInfo(false);
+                    menuCnt--;
+                    Map<String, Object> taskMap = new HashMap<String, Object>();
+                    taskMap.put("cafe_list/cafe"+cafeid+"/cafe_info/menu_cnt", Integer.toString(menuCnt));
+                    ((ManagerActivity)getActivity()).mPostReference.updateChildren(taskMap);
+                }
             }
         });
 
-
         return view;
+    }
+
+    private void postFirebaseDatabaseCafeMenu(boolean add){
+        if(add == true) {
+            ((ManagerActivity) getActivity()).mPostReference.child("/cafe_list/cafe" + cafeid + "/cafe_info/menu/menu" + Integer.toString(menuCnt)).setValue(menuS);
+        } else {
+            ((ManagerActivity) getActivity()).mPostReference.child("/cafe_list/cafe" + cafeid + "/cafe_info/menu/menu" + Integer.toString(menuCnt)).setValue(null);
+        }
+        clearET2();
     }
 
     private void postFirebaseDatabaseCafeInfo(boolean add) {
         Map<String, Object> childUpdates = new HashMap<>();
         Map<String, Object> postValues = null;
         if(add){
-            CafeInfo post = new CafeInfo();
+            CafeInfo post = new CafeInfo(nameS, longitudeS, latitudeS, Integer.toString(menuCnt));
             postValues = post.toMap();
         }
-        childUpdates.put("/cafe_list/" + cafeIDS + "/cafe_info/", postValues);  //user_id로 cafe_id 찾는거로 고치기 + query join
-        ((ManagerActivity)getActivity()).mPostReference_cafeInfo.updateChildren(childUpdates);
+        childUpdates.put("/cafe_list/cafe" + cafeid + "/cafe_info/", postValues);
+        ((ManagerActivity)getActivity()).mPostReference.updateChildren(childUpdates);
         clearET();
     }
 
+    private void clearET2(){
+        menuE.setText("");
+        menuS = "";
+    }
+
     private void clearET() {
-        IDE.setText("");
         nameE.setText("");
         longitudeE.setText("");
         latitudeE.setText("");
 
-        cafeID = 0;
-        cafeIDS = "";
         nameS = "";
         longitudeS = "";
         latitudeS = "";
