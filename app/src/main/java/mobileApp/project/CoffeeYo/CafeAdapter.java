@@ -13,7 +13,7 @@ public class CafeAdapter extends BaseAdapter {
     private ArrayList<CafeItem> items;
 
     public CafeAdapter(ReserveMFragment context, ArrayList<CafeItem> cafeInfo){
-
+        //this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.items = cafeInfo;
     }
 

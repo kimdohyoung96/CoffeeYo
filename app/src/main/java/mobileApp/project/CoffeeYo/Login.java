@@ -48,6 +48,7 @@ public class Login extends AppCompatActivity {
     String money = "0";
     String cafe_id = "0";
     int flag = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,10 +143,10 @@ public class Login extends AppCompatActivity {
                                             money = list.get(j)[3];
                                             cafe_id = list.get(j)[4];
                                             flag = 1;
-                                          //  Map<String, Object> childUpdates = new HashMap<>();
-                                           // Map<String, Object> postValues = null;
-                                           // FirebasePost post = new FirebasePost(list.get(j).email, list.get(j).name, list.get(j).uid,list.get(j).money,list.get(j).cafe_id);
-                                           // postValues = post.toMap();
+                                            //  Map<String, Object> childUpdates = new HashMap<>();
+                                            // Map<String, Object> postValues = null;
+                                            // FirebasePost post = new FirebasePost(list.get(j).email, list.get(j).name, list.get(j).uid,list.get(j).money,list.get(j).cafe_id);
+                                            // postValues = post.toMap();
                                             //childUpdates.put("/user_list/" + uid, postValues); //여기서 추가 - 이름을 뭘로할지 /memo_list/title 의 이름으로 만들어짐.
                                             //mPostReference.updateChildren(childUpdates);
                                             startActivity(new Intent(Login.this, ManagerActivity.class).putExtra("email",email).putExtra("money",money).putExtra("uid",uid).putExtra("cafe_id",cafe_id).putExtra("name",name));
@@ -168,12 +169,12 @@ public class Login extends AppCompatActivity {
                                             money = list.get(j)[3];
                                             cafe_id = list.get(j)[4];
                                             flag = 1;
-                                          //  Map<String, Object> childUpdates = new HashMap<>();
-                                           // Map<String, Object> postValues = null;
+                                            //  Map<String, Object> childUpdates = new HashMap<>();
+                                            // Map<String, Object> postValues = null;
                                             //FirebasePost post = new FirebasePost(list.get(j).email, list.get(j).name, list.get(j).uid,list.get(j).money,list.get(j).cafe_id);
-                                           //postValues = post.toMap();
-                                           // childUpdates.put("/user_list/" + uid, postValues); //여기서 추가 - 이름을 뭘로할지 /memo_list/title 의 이름으로 만들어짐.
-                                           // mPostReference.updateChildren(childUpdates);
+                                            //postValues = post.toMap();
+                                            // childUpdates.put("/user_list/" + uid, postValues); //여기서 추가 - 이름을 뭘로할지 /memo_list/title 의 이름으로 만들어짐.
+                                            // mPostReference.updateChildren(childUpdates);
                                             startActivity(new Intent(Login.this, UserActivity.class).putExtra("email",email).putExtra("money",money).putExtra("uid",uid).putExtra("cafe_id",cafe_id).putExtra("name",name));
                                         }
                                     }
@@ -198,7 +199,7 @@ public class Login extends AppCompatActivity {
                 });
     }
 
- public void getFirebaseDatabase() {
+    public void getFirebaseDatabase() {
         final ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) { //만약에 데이터가 추가되거나 삭제되거나 바뀌면 실행됨.

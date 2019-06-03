@@ -9,11 +9,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -30,9 +34,10 @@ public class ReserveMFragment extends Fragment {
 
     private ReserveMFragment.OnFragmentInteractionListener mListener;
 
-    public ListView myCafeInfo;
-    public ArrayList<CafeItem> cafeInfo;
-    private CafeAdapter arrayAdapter_cafeInfo;
+    TextView myCafeInfo;
+    String cafeid;
+    int flag;
+    long cafeID;
 
     public ReserveMFragment() {
         // Required empty public constructor
@@ -69,42 +74,44 @@ public class ReserveMFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_register, container, false);
+        View view = inflater.inflate(R.layout.fragment_reserve_m, container, false);
         final Context contextRegister = container.getContext();
 
-        myCafeInfo = (ListView) view.findViewById(R.id.myCafe);
+        myCafeInfo = (TextView)view.findViewById(R.id.myCafe);
 
-        cafeInfo = new ArrayList<CafeItem>();
+        flag = ((ManagerActivity)getActivity()).getFlag();
+        if(flag == 0){
+            cafeID = ((ManagerActivity)getActivity()).getNewCafeID();
+            myCafeInfo.setText("Not registered yet.");
+        }
+        else{
+            cafeID = ((ManagerActivity)getActivity()).getCurrentCafeID();
+            cafeid = Long.toString(cafeID);
+            //cafeid = "1";
+            getFirebaseDatabaseCafeInfo();
+        }
 
-        arrayAdapter_cafeInfo = new CafeAdapter(this
-                , cafeInfo);
- //       myCafeInfo.setAdapter(arrayAdapter_cafeInfo);
-        getFirebaseDatabaseCafeInfo();
-
-        return inflater.inflate(R.layout.fragment_reserve_m, container, false);
+        return view;
     }
 
     public void getFirebaseDatabaseCafeInfo(){
         final ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d("onDataChange", "Data is updated");
+                if(dataSnapshot.child("cafe"+cafeid).exists()){
+                    myCafeInfo.setText("");
+                    CafeInfo get = dataSnapshot.child("/cafe"+cafeid+"/cafe_info").getValue(CafeInfo.class);
+                    String[] info = {get.cafe_name, get.cafe_longitude, get.cafe_latitude, get.menu_cnt};
+                    String result = "cafe ID: " + cafeid + "\nname: " + info[0] + "\nlocation: (" + info[1] + ", " + info[2] + ")\nnumber of menu: " + info[3];
 
-                cafeInfo.clear();
-                for(DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    String key = postSnapshot.getKey();
-                    CafeInfo get = postSnapshot.getValue(CafeInfo.class);
-
-                    CafeItem item = new CafeItem(get.manager_id, get.cafe_name, get.cafe_longitude, get.cafe_latitude, get.menu1, get.menu2, get.menu3, get.menu4, get.menu5);
-                    cafeInfo.add(item);
+                    myCafeInfo.setText(result);
+                    Log.d("getCafeInfo", "cafeid: " + cafeid);
                 }
-                arrayAdapter_cafeInfo.notifyDataSetChanged();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {         }
         };
-        ((ManagerActivity)getActivity()).mPostReference_cafeInfo.child("cafe_list").addValueEventListener(postListener); //user_id로 고쳐야해 + query join
+        ((ManagerActivity)getActivity()).mPostReference.child("cafe_list").addValueEventListener(postListener);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
