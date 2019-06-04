@@ -42,10 +42,12 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class UserActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ReserveFragment.OnFragmentInteractionListener, OrderFragment.OnFragmentInteractionListener, NameSearch.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ReserveFragment.OnFragmentInteractionListener,
+        OrderFragment.OnFragmentInteractionListener, NameSearch.OnFragmentInteractionListener, User_Order.OnFragmentInteractionListener {
     private Fragment OrderFragment;
     private Fragment NameSearch;
     private Fragment ReserveFragment;
+    private Fragment User_Order;
 
     private DatabaseReference mPostReference;
 
@@ -82,6 +84,7 @@ public class UserActivity extends AppCompatActivity
         NameSearch = new NameSearch();
         OrderFragment = new OrderFragment();
         ReserveFragment = new ReserveFragment();
+        User_Order = new User_Order();
         Bundle bundle = new Bundle(1); // 파라미터는 전달할 데이터 개수
         bundle.putString("uid", uid);
         ReserveFragment.setArguments(bundle);

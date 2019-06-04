@@ -27,6 +27,7 @@ public class ReserveFragment extends Fragment {
     private ReserveFragment.OnFragmentInteractionListener mListener;
     private DatabaseReference mPostReference;
 
+
     String uid;
     ListView listView;
     ArrayList<String> data;

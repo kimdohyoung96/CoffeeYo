@@ -2,14 +2,18 @@ package mobileApp.project.CoffeeYo;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,7 +37,7 @@ import java.util.Map;
 
 public class NameSearch extends Fragment {
 
-
+    String cafe_name = "";
     private NameSearch.OnFragmentInteractionListener mListener;
     private DatabaseReference mPostReference;
 
@@ -50,6 +54,7 @@ public class NameSearch extends Fragment {
     public NameSearch() {
         // Required empty public constructor
     }
+
 
 
     @Override
@@ -70,6 +75,7 @@ public class NameSearch extends Fragment {
         list = new ArrayList<String>();
 
         mPostReference = FirebaseDatabase.getInstance().getReference();
+
 
         arrayAdapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1);
         listView.setAdapter(arrayAdapter);
@@ -93,6 +99,24 @@ public class NameSearch extends Fragment {
                 search(text);
             }
         });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Fragment User_Order = new User_Order();
+                cafe_name = data.get(position);
+                Bundle bundle = new Bundle(1); // 파라미터는 전달할 데이터 개수
+                bundle.putString("cafe_name", cafe_name);
+                User_Order.setArguments(bundle);
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.content_main, User_Order);
+
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+
+
+            }
+        });
 
 
         // Inflate the layout for this fragment
@@ -109,7 +133,7 @@ public class NameSearch extends Fragment {
             arrayAdapter.clear();
             arrayAdapter.addAll(list);
             arrayAdapter.notifyDataSetChanged();
-        }
+            }
 
         else {
 
