@@ -168,11 +168,11 @@ public class NameSearch extends Fragment {
                     String value = (String) postSnapshot.getValue();
 
                     Cafenamedatabase get = dataSnapshot.child(id_key).child("cafe_info").getValue(Cafenamedatabase.class);
-                    String[] info = {get.cafe_id, get.cafe_name};
-                    String result = info[1];
+                    String[] info = {get.cafe_name};
+                    String result = info[0];
                     data.add(result);
                     Log.d("getFirebaseDatabase", "key: " + id_key);
-                    Log.d("getFirebaseDatabase", "info: " + info[0] + info[1]);
+                    Log.d("getFirebaseDatabase", "info: " + info[0]);
 
                 }
 ;
