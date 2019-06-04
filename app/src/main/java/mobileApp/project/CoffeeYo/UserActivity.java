@@ -176,7 +176,7 @@ public class UserActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.menu_right_side, menu);
         return true;
     }
-
+///
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
