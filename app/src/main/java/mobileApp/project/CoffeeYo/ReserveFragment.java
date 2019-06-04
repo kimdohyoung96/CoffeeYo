@@ -76,7 +76,7 @@ public class ReserveFragment extends Fragment {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     String key = postSnapshot.getKey();
                     Orderfirebase get = postSnapshot.getValue(Orderfirebase.class);
-                    String[] info = {get.cafe_id, get.cafe_name, get.order, get.state};
+                    String[] info = {get.cafe_name, get.order, get.state};
                     String result = info[1] + "[" + info[2] + ", " + info[3] + "]";
                     data.add(result);
                     Log.d("getFirebaseDatabase", "key: " + key);

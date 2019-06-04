@@ -7,16 +7,16 @@ public class FirebasePost {
     public String name;
     public String uid;
     public String money;
-    public String cafe_id;
+    public String cafe_name;
     public FirebasePost(){
         // Default constructor required for calls to DataSnapshot.getValue(FirebasePost.class)
     }
-    public FirebasePost(String email, String name, String uid, String money, String cafe_id) {
+    public FirebasePost(String email, String name, String uid, String money, String cafe_name) {
         this.email = email;
         this.name = name;
         this.uid = uid;
         this.money = money;
-        this.cafe_id = cafe_id;
+        this.cafe_name = cafe_name;
     }
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
@@ -24,7 +24,7 @@ public class FirebasePost {
         result.put("name", name);
         result.put("uid", uid);
         result.put("money", money);
-        result.put("cafe_id", cafe_id);
+        result.put("cafe_name", cafe_name);
         return result;
     }
 }

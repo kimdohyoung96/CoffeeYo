@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,10 +35,14 @@ public class ReserveMFragment extends Fragment {
 
     private ReserveMFragment.OnFragmentInteractionListener mListener;
 
+    ListView currentOrderInfo;
     TextView myCafeInfo;
-    String cafeid;
+    TextView myCafeCongestion;
+    TextView myCafeMenu;
+    String cafename;
     int flag;
-    long cafeID;
+    ArrayList<String> currentOrderList;
+    ArrayAdapter<String> arrayAdapter;
 
     public ReserveMFragment() {
         // Required empty public constructor
@@ -78,40 +83,110 @@ public class ReserveMFragment extends Fragment {
         final Context contextRegister = container.getContext();
 
         myCafeInfo = (TextView)view.findViewById(R.id.myCafe);
+        myCafeCongestion = (TextView)view.findViewById(R.id.myCafeCongestion);
+        myCafeMenu = (TextView)view.findViewById(R.id.myCafeMenu);
+        currentOrderInfo = (ListView)view.findViewById(R.id.listView);
+        currentOrderList = new ArrayList<String>();
+        arrayAdapter = new ArrayAdapter<String>(contextRegister, android.R.layout.simple_list_item_1);
+        currentOrderInfo.setAdapter(arrayAdapter);
 
         flag = ((ManagerActivity)getActivity()).getFlag();
         if(flag == 0){
-            cafeID = ((ManagerActivity)getActivity()).getNewCafeID();
             myCafeInfo.setText("Not registered yet.");
+            Toast.makeText(contextRegister, "Cafe is not registered yet.", Toast.LENGTH_SHORT).show();
         }
         else{
-            cafeID = ((ManagerActivity)getActivity()).getCurrentCafeID();
-            cafeid = Long.toString(cafeID);
-            //cafeid = "1";
+            cafename = ((ManagerActivity)getActivity()).getCurrentCafeName();
             getFirebaseDatabaseCafeInfo();
+            getFirebaseDatabaseCafeMenu();
+            getFirebaseDatabaseCurrentOrderInfo();
+            getFirebaseDatabaseCongestion();
         }
 
         return view;
+    }
+
+    public void getFirebaseDatabaseCongestion(){
+        final ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child(cafename).exists()){
+                    myCafeCongestion.setText("");
+                    CafeCongestion get = dataSnapshot.child(cafename).getValue(CafeCongestion.class);
+                    String info = get.congestion;
+                    String result = "Current congestion: " + info;
+                    myCafeCongestion.setText(result);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {            }
+        };
+        ((ManagerActivity)getActivity()).mPostReference.child("cafe_list").addValueEventListener(postListener);
     }
 
     public void getFirebaseDatabaseCafeInfo(){
         final ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child("cafe"+cafeid).exists()){
+                if(dataSnapshot.child(cafename).exists()){
                     myCafeInfo.setText("");
-                    CafeInfo get = dataSnapshot.child("/cafe"+cafeid+"/cafe_info").getValue(CafeInfo.class);
-                    String[] info = {get.cafe_name, get.cafe_longitude, get.cafe_latitude, get.menu_cnt};
-                    String result = "cafe ID: " + cafeid + "\nname: " + info[0] + "\nlocation: (" + info[1] + ", " + info[2] + ")\nnumber of menu: " + info[3];
-
+                    CafeInfo get = dataSnapshot.child("/"+cafename+"/cafe_info").getValue(CafeInfo.class);
+                    String[] info = {get.cafe_name, get.cafe_longitude, get.cafe_latitude};
+                    String result = "Cafe name: " + info[0] + "\nlocation: (" + info[1] + ", " + info[2] + ")";
                     myCafeInfo.setText(result);
-                    Log.d("getCafeInfo", "cafeid: " + cafeid);
+                    Log.d("getCafeInfo", "cafeid: " + cafename);
                 }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {         }
         };
         ((ManagerActivity)getActivity()).mPostReference.child("cafe_list").addValueEventListener(postListener);
+    }
+
+    public void getFirebaseDatabaseCafeMenu(){
+        final ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child(cafename).exists()){
+                    myCafeMenu.setText("");
+                    String result = "";
+                    for(DataSnapshot snapshot : dataSnapshot.child(cafename+"/menu/").getChildren()){
+                        String key = snapshot.getKey();
+                        result = result + "\n" + key;
+                    }
+                    myCafeMenu.setText(result);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {            }
+        };
+        ((ManagerActivity)getActivity()).mPostReference.child("cafe_list").addValueEventListener(postListener);
+    }
+
+    public void getFirebaseDatabaseCurrentOrderInfo(){
+        final ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                currentOrderList.clear();
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    String key = snapshot.getKey();
+                    for(DataSnapshot snapshot1 : snapshot.child("order").getChildren()){
+                        Orderfirebase get = snapshot1.getValue(Orderfirebase.class);
+                        String[] order = {get.cafe_name, get.order, get.state};
+                        if(order[0].equals(cafename) && order[2].equals("current")){
+                            String result = "client: " + key + "\norder: " + order[1];
+                            currentOrderList.add(result);
+                        }
+                    }
+                    arrayAdapter.clear();
+                    arrayAdapter.addAll(currentOrderList);
+                    arrayAdapter.notifyDataSetChanged();
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {            }
+        };
+        ((ManagerActivity)getActivity()).mPostReference.child("user_list").addValueEventListener(postListener);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
