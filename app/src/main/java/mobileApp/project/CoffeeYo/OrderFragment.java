@@ -98,12 +98,13 @@ public class OrderFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 oldOrderList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    String key = snapshot.getKey();
+                    String client = snapshot.getKey();
                     for (DataSnapshot snapshot1 : snapshot.child("order").getChildren()){
+                        String orderNum = snapshot1.getKey();
                         Orderfirebase get = snapshot1.getValue(Orderfirebase.class);
                         String[] order = {get.cafe_name, get.order, get.state};
                         if(order[0].equals(cafename) && order[2].equals("old")){
-                            String result = "client: " + key + "\norder: " + order[1];
+                            String result = "client: " + client + "\nOrder number: " + orderNum + "\norder: " + order[1];
                             oldOrderList.add(result);
                         }
                     }

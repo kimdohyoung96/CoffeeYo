@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -43,6 +44,8 @@ public class ReserveMFragment extends Fragment {
     int flag;
     ArrayList<String> currentOrderList;
     ArrayAdapter<String> arrayAdapter;
+    String clientS;
+    String orderNumS;
 
     public ReserveMFragment() {
         // Required empty public constructor
@@ -103,7 +106,43 @@ public class ReserveMFragment extends Fragment {
             getFirebaseDatabaseCongestion();
         }
 
+        currentOrderInfo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                String item = (String) adapterView.getItemAtPosition(position);
+                int num = item.indexOf("Client: ");
+                clientS = item.substring(num+8, (item.substring(num).indexOf("\n")+num));
+                num = item.indexOf("Order number: ");
+                orderNumS = item.substring(num+14, (item.substring(num).indexOf("\n")+num));
+
+                Log.d("currentOrderInfo", "client:"+clientS);
+                Log.d("currentOrderInfo", "orderNum:"+orderNumS);
+
+                changeFirebaseDatabaseOrder();
+                Toast.makeText(contextRegister,"주문을 완료했습니다.",Toast.LENGTH_SHORT).show();
+            }
+        });
+
         return view;
+    }
+
+    public void changeFirebaseDatabaseOrder(){
+        final ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child(clientS).exists()){
+                    for(DataSnapshot snapshot : dataSnapshot.child(clientS+"/order").getChildren()){
+                        String orderNum = snapshot.getKey();
+                        if(orderNum.equals(orderNumS)){
+                            ((ManagerActivity)getActivity()).mPostReference.child("user_list/"+clientS+"/order/"+orderNumS+"/state").setValue("old");
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {            }
+        };
+        ((ManagerActivity)getActivity()).mPostReference.child("user_list").addValueEventListener(postListener);
     }
 
     public void getFirebaseDatabaseCongestion(){
@@ -169,12 +208,13 @@ public class ReserveMFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 currentOrderList.clear();
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    String key = snapshot.getKey();
+                    String client = snapshot.getKey();
                     for(DataSnapshot snapshot1 : snapshot.child("order").getChildren()){
+                        String orderNum = snapshot1.getKey();
                         Orderfirebase get = snapshot1.getValue(Orderfirebase.class);
                         String[] order = {get.cafe_name, get.order, get.state};
                         if(order[0].equals(cafename) && order[2].equals("current")){
-                            String result = "client: " + key + "\norder: " + order[1];
+                            String result = "Client: " + client + "\nOrder number: " + orderNum + "\nOrder: " + order[1];
                             currentOrderList.add(result);
                         }
                     }
