@@ -96,22 +96,22 @@ public class User_Order extends Fragment {
     //잠깐만 이거 불러오는 거랑 넣는 게 달라
     //불러오는 건 cafe 메뉴 정보인데 넣는 건 주문 내역이야
     public void getFirebaseDatabase() {
+
         final ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.d("onDataChange", "Data is Updated");
                 data.clear();
 
+                for(DataSnapshot postListener: dataSnapshot.child(cafe_name).child("menu").getChildren()) {
+
+                    String key = postListener.getKey();
+                    data.add(key);
+                }
 
 
-                UserMenudata get = dataSnapshot.child(cafe_name).child("menu").getValue(UserMenudata.class);
-
-                String[] info = {get.menu1, get.menu2};
-                data.add(info[0]);
-                data.add(info[1]);
 
 
-                Log.d("getFirebaseDatabase", "info: " + info[0] + info[1]);
 
                 arrayAdapter.clear();
                 arrayAdapter.addAll(data);
