@@ -5,6 +5,8 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -27,6 +29,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -121,10 +124,10 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
     @Override
     public void onMapReady(final GoogleMap map) {
         google = map;
-        LatLng SEOUL = new LatLng(37.56, 126.97);
+        final LatLng SEOUL = new LatLng(37.56, 126.97);
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(SEOUL);
-        map.addMarker(markerOptions);
+        //map.addMarker(markerOptions);
         map.moveCamera(CameraUpdateFactory.newLatLng(SEOUL));
         map.animateCamera(CameraUpdateFactory.zoomTo(16));
         if ( Build.VERSION.SDK_INT >= 23 &&
@@ -178,6 +181,19 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
                         // 해당 좌표로 화면 줌
                         google.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 15));
                         showPlaceInformation(point);
+                        MarkerOptions markerOptions3 = new MarkerOptions();
+                        markerOptions3.position(SEOUL);
+                        markerOptions3.title("서울");
+                        markerOptions3.snippet("한국의 수도");
+
+
+                        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.mappin);
+                        Bitmap b=bitmapdraw.getBitmap();
+                        Bitmap smallMarker = Bitmap.createScaledBitmap(b, 200, 200, false);
+                        markerOptions3.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+
+
+                        map.addMarker(markerOptions3);
                     } else {
                         Toast.makeText(map_Search.this, "검색할 키워드를 입력하세요", Toast.LENGTH_SHORT).show();
                     }
