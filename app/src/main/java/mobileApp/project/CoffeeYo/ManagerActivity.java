@@ -46,17 +46,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ManagerActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ReserveMFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener, OrderFragment.OnFragmentInteractionListener, CongestionFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ReserveMFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener, OrderFragment.OnFragmentInteractionListener, CongestionFragment.OnFragmentInteractionListener, LoadingMFragment.OnFragmentInteractionListener, CafeMenuFragment.OnFragmentInteractionListener {
     private Fragment reserveMFragment;
     private Fragment registerFragment;
     private Fragment orderFragment;
     private Fragment congestionFragment;
+    private Fragment cafemenuFragment;
+    private Fragment loadingMFragment;
     DrawerLayout drawer;
 
-    public DatabaseReference mPostReference_cafeInfo;
+    public DatabaseReference mPostReference;
     FirebaseAuth fb = FirebaseAuth.getInstance();
     GoogleSignInClient mGoogleSignInClient;
     GoogleApiClient mgoogleApiClient;
+    String uid;
+    String currentCafeName;
+    int flag;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,20 +71,46 @@ public class ManagerActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Manager Mode");
-        Intent intent = getIntent();
+
         reserveMFragment = new ReserveMFragment();
         registerFragment = new RegisterFragment();
         orderFragment = new OrderFragment();
         congestionFragment = new CongestionFragment();
+        cafemenuFragment = new CafeMenuFragment();
+        loadingMFragment = new LoadingMFragment();
 
+        Intent intent = getIntent();
+        uid = intent.getStringExtra("uid");
 
-        mPostReference_cafeInfo = FirebaseDatabase.getInstance().getReference();
+        mPostReference = FirebaseDatabase.getInstance().getReference();
 
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.content_main, reserveMFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        flag = 0;
+        // check if user already has cafe
+        mPostReference.child("user_list").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child(uid).exists()){
+                    FirebasePost get = dataSnapshot.child(uid).getValue(FirebasePost.class);
+                    String info = get.cafe_name;
+                    if(!(info.equals("0"))){
+                        currentCafeName = info;
+                        flag = 1;
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {            }
+        });
 
+        // count number of existing cafe
+        /*mPostReference.child("cafe_list").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                newCafeID = dataSnapshot.getChildrenCount();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {            }
+        });*/
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -109,8 +141,29 @@ public class ManagerActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view1);
         navigationView.setNavigationItemSelectedListener(this);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.content_main, loadingMFragment);
+        //transaction.addToBackStack(null);
+        transaction.commit();
     }
 
+    public void transactionFromLoadingToReserveM(){
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.content_main, reserveMFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    public String getUid(){
+        return uid;
+    }
+    public int getFlag(){
+        return flag;
+    }
+    public String getCurrentCafeName(){
+        return currentCafeName;
+    }
 
 
     @Override
@@ -162,13 +215,15 @@ public class ManagerActivity extends AppCompatActivity
             transaction.replace(R.id.content_main, registerFragment);
             transaction.commit();
         }
+        else if(id == R.id.nav_cafemenu){
+            transaction.replace(R.id.content_main, cafemenuFragment);
+            transaction.commit();
+        }
         else if(id == R.id.nav_reserved){
-            Toast.makeText(ManagerActivity.this, "주문 내역", Toast.LENGTH_SHORT).show();
             transaction.replace(R.id.content_main, orderFragment);
             transaction.commit();
         }
         else if(id == R.id.nav_congestion){
-            Toast.makeText(ManagerActivity.this, "혼잡도 설정", Toast.LENGTH_SHORT).show();
             transaction.replace(R.id.content_main, congestionFragment);
             transaction.commit();
         }

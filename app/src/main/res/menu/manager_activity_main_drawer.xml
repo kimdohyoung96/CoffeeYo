@@ -8,6 +8,9 @@
             android:icon="@drawable/ic_map"
             android:title="카페 등록/변경" />
         <item
+            android:id="@+id/nav_cafemenu"
+            android:title="카페 메뉴 추가/삭제"/>
+        <item
             android:id="@+id/nav_reserved"
             android:icon="@drawable/ic_coffee"
             android:title="완료 주문 내역" />

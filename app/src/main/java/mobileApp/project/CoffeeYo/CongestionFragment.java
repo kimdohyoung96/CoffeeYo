@@ -7,6 +7,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
 public class CongestionFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -17,6 +22,15 @@ public class CongestionFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    RadioGroup group;
+    RadioButton quietB;
+    RadioButton commonB;
+    RadioButton busyB;
+    RadioButton fullB;
+    Button button;
+    String cafename;
+    int flag;
 
     private CongestionFragment.OnFragmentInteractionListener mListener;
 
@@ -54,8 +68,47 @@ public class CongestionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_congestion, container, false);
+        View view = inflater.inflate(R.layout.fragment_congestion, container, false);
+        final Context contextRegister = container.getContext();
+
+        flag = ((ManagerActivity)getActivity()).getFlag();
+
+        quietB = (RadioButton)view.findViewById(R.id.radio1);
+        commonB = (RadioButton)view.findViewById(R.id.radio2);
+        busyB = (RadioButton)view.findViewById(R.id.radio3);
+        fullB = (RadioButton)view.findViewById(R.id.radio4);
+        group = (RadioGroup)view.findViewById(R.id.radioGroup);
+        button = (Button)view.findViewById(R.id.button);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(flag == 0){
+                    Toast.makeText(contextRegister, "Cafe is not registered yet", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    cafename = ((ManagerActivity)getActivity()).getCurrentCafeName();
+                    postFirebaseDatabaseCafeCongestion(true);
+                    Toast.makeText(contextRegister, "혼잡도 설정 완료", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        return view;
+    }
+
+    private void postFirebaseDatabaseCafeCongestion(boolean add){
+        if(add){
+            if (quietB.isChecked()){
+                ((ManagerActivity)getActivity()).mPostReference.child("/cafe_list/"+cafename+"/congestion").setValue("한산");
+            } else if (commonB.isChecked()) {
+                ((ManagerActivity)getActivity()).mPostReference.child("/cafe_list/"+cafename+"/congestion").setValue("보통");
+            } else if (busyB.isChecked()) {
+                ((ManagerActivity)getActivity()).mPostReference.child("/cafe_list/"+cafename+"/congestion").setValue("혼잡");
+            } else if (fullB.isChecked()) {
+                ((ManagerActivity)getActivity()).mPostReference.child("/cafe_list/"+cafename+"/congestion").setValue("만석");
+            }
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
