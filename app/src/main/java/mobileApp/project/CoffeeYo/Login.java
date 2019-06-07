@@ -175,7 +175,7 @@ public class Login extends AppCompatActivity {
                                             //postValues = post.toMap();
                                             // childUpdates.put("/user_list/" + uid, postValues); //여기서 추가 - 이름을 뭘로할지 /memo_list/title 의 이름으로 만들어짐.
                                             // mPostReference.updateChildren(childUpdates);
-                                            startActivity(new Intent(Login.this, UserActivity.class).putExtra("email",email).putExtra("money",money).putExtra("uid",uid).putExtra("cafe_name",cafe_name).putExtra("name",name));
+                                            startActivity(new Intent(Login.this, UserActivity.class).putExtra("email",email).putExtra("money",money).putExtra("uid",uid).putExtra("cafe_name",cafe_name).putExtra("name",name).putExtra("class","Login"));
                                         }
                                     }
                                     if(flag ==0) {
@@ -186,7 +186,7 @@ public class Login extends AppCompatActivity {
                                         childUpdates.put("/user_list/" + uid, postValues); //여기서 추가 - 이름을 뭘로할지 /memo_list/title 의 이름으로 만들어짐.
 
                                         mPostReference.updateChildren(childUpdates);
-                                        startActivity(new Intent(Login.this, UserActivity.class).putExtra("email",email).putExtra("money",money).putExtra("uid",uid).putExtra("cafe_name",cafe_name).putExtra("name",name));
+                                        startActivity(new Intent(Login.this, UserActivity.class).putExtra("email",email).putExtra("money",money).putExtra("uid",uid).putExtra("cafe_name",cafe_name).putExtra("name",name).putExtra("class","Login"));
                                     }
                                 }
                             }

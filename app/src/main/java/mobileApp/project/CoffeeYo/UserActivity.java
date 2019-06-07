@@ -1,5 +1,6 @@
 package mobileApp.project.CoffeeYo;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -62,7 +63,7 @@ public class UserActivity extends AppCompatActivity
     long newCafeID = 1;
     long currentCafeID;
     int flag;
-
+    String cafename= "";
     DrawerLayout drawer;
     FirebaseAuth fb = FirebaseAuth.getInstance();
     GoogleSignInClient mGoogleSignInClient;
@@ -76,13 +77,10 @@ public class UserActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("User Mode");
         Intent intent = getIntent();
-
-
-
-
+        String classname = intent.getStringExtra("class");
         data = new ArrayList<String>();
         listView = (ListView)findViewById(R.id.orderlist);
-        uid = intent.getStringExtra("uid");
+        //uid = intent.getStringExtra("uid");
 
         NameSearch = new NameSearch();
         User_Finished_Order = new User_Finished_Order();
@@ -92,21 +90,30 @@ public class UserActivity extends AppCompatActivity
         ReserveFragment = new ReserveFragment();
         User_Order = new User_Order();
         Bundle bundle = new Bundle(1); // 파라미터는 전달할 데이터 개수
-        bundle.putString("uid", uid);
-        ReserveFragment.setArguments(bundle);
+
 
 
         mPostReference = FirebaseDatabase.getInstance().getReference();
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.content_main, ReserveFragment);
-
-        transaction.addToBackStack(null);
-        transaction.commit();
-
-
-
-
+        if(classname.equals("map")){
+            cafename = intent.getStringExtra("cafe_name");
+            uid = intent.getStringExtra("uid");
+            Fragment User_Order = new User_Order();
+            Bundle bundle2 = new Bundle(1); // 파라미터는 전달할 데이터 개수
+            bundle2.putString("cafe_name", cafename);
+            User_Order.setArguments(bundle2);
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.content_main, User_Order);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }else{
+            uid = intent.getStringExtra("uid");
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.content_main, ReserveFragment);
+            bundle.putString("uid", uid);
+            ReserveFragment.setArguments(bundle);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
 
         map_Search a = new map_Search();
 
@@ -233,7 +240,7 @@ public class UserActivity extends AppCompatActivity
             transaction.commit();
         } else if (id == R.id.nav_searchmap) {
             Toast.makeText(UserActivity.this, "지도검색을 선택하셨습니다.", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(UserActivity.this, map_Search.class);
+            Intent intent = new Intent(UserActivity.this, map_Search.class).putExtra("uid",uid);
             startActivity(intent);
         } else if (id == R.id.nav_star) {
             Toast.makeText(UserActivity.this, "충전을 선택하셨습니다.", Toast.LENGTH_SHORT).show();
