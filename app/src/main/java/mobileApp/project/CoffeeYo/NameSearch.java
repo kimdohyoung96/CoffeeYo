@@ -126,10 +126,11 @@ public class NameSearch extends Fragment {
 
     public void search(String charText) {
 
-        list.clear();
+
 
         if (charText.length() == 0) {
-            System.arraycopy(data, 0, list, 0, data.size());
+            list.clear();
+            list.addAll(data);
             arrayAdapter.clear();
             arrayAdapter.addAll(list);
             arrayAdapter.notifyDataSetChanged();
