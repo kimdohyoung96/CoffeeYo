@@ -40,13 +40,15 @@
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:text="이름"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                />
 
             <EditText
                 android:id="@+id/name"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:hint="카페명을 입력하시오."/>
+                android:hint="카페명을 입력하시오."
+                android:singleLine = "true"/>
 
         </LinearLayout>
 
@@ -59,13 +61,15 @@
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:text="경도"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                />
 
             <EditText
                 android:id="@+id/longitude"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:hint="카페 경도를 입력하시오."/>
+                android:hint="카페 경도를 입력하시오."
+                android:singleLine = "true"/>
 
         </LinearLayout>
 
@@ -85,7 +89,8 @@
                 android:id="@+id/latitude"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:hint="카페 위도를 입력하시오."/>
+                android:hint="카페 위도를 입력하시오."
+                android:singleLine = "true"/>
 
         </LinearLayout>
 

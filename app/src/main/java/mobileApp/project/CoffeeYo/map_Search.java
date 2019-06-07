@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -14,6 +15,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -30,12 +32,19 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -54,7 +63,7 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
     private GoogleMap google = null;
     LatLng now = null;
     List<Marker> prevMarkers;
-
+    private DatabaseReference mPostReference;
     private ImageButton button;
     private Button curbutton;
     private EditText edittext;
@@ -64,8 +73,9 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
     double curlatitude;
     double curlongitude;
     LatLng currentPosition = new LatLng(37.56, 126.97);
-
-
+    String cafename;
+    ArrayList<String[]> list = new ArrayList<>();
+    HashMap<String, String> infowindow = new HashMap<String, String>();
     @Override
     public void onLocationChanged(Location location) {
     }
@@ -91,11 +101,12 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_search);
+        getFirebaseDatabase();
         edittext = (EditText)findViewById(R.id.editPlace);
         button = (ImageButton) findViewById(R.id.button);
         curbutton = (Button)findViewById(R.id.curbutton);
         prevMarkers = new ArrayList<>(); //마커 목록들
-
+        mPostReference = FirebaseDatabase.getInstance().getReference();
         Intent intent = getIntent();
         FragmentManager fragmentManager = getFragmentManager();
         MapFragment mapFragment = (MapFragment) fragmentManager
@@ -124,6 +135,7 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
     @Override
     public void onMapReady(final GoogleMap map) {
         google = map;
+
         final LatLng SEOUL = new LatLng(37.56, 126.97);
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(SEOUL);
@@ -176,24 +188,59 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
                         mOptions2.title("search result");
                         mOptions2.snippet(str);
                         mOptions2.position(point);
+                        CircleOptions circle1KM = new CircleOptions() //원점
+                                .center(point)
+                                .radius(1000)      //반지름 단위 : m
+                                .strokeWidth(1)  //선너비 0f : 선없음
+                                .fillColor(Color.BLUE)
+                                .visible(true);
+                        google.addCircle(circle1KM);
                         // 마커 추가
                         google.addMarker(mOptions2);
                         // 해당 좌표로 화면 줌
                         google.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 15));
+                        Log.d("here circle", "location : "+ point.latitude + " , " + point.longitude);
+
                         showPlaceInformation(point);
+                        Location loc = new Location("target");
+                        loc.setLongitude(log);
+                        loc.setLatitude(lat);
+                        int len = list.size();
+                        MarkerOptions Marker[] = new MarkerOptions[len];
+
+                        int i =0;
+                        for(String item[] : list){
+                            Location loc1 = new Location(item[0]);
+                            loc1.setLongitude(Double.parseDouble(item[1]));
+                            loc1.setLatitude(Double.parseDouble(item[2]));
+
+                            double distance = loc1.distanceTo(loc);
+                            if(distance < 1000){
+                                LatLng ln = new LatLng(loc1.getLatitude(), loc1.getLongitude());
+                                Marker[i].position(ln);
+                                Marker[i].title(item[0]);
+                                BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.mappin);
+                                Bitmap b=bitmapdraw.getBitmap();
+                                Bitmap smallMarker = Bitmap.createScaledBitmap(b, 200, 200, false);
+                                Marker[i].icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+                                //infowindow.put(Marker[i].getTitle(),"cafe_id 넣어야함. 나중에 접근할때 infolistener에서 if()");
+                                //infowindow.containsKey("markertitle ") 있는지 if 문으로 확인하고
+                                //있으면 cafeid_fragment 로 이동.
+                                //없으면 toast message 보내면될듯
+                            }
+                            i++;
+                        }
                         MarkerOptions markerOptions3 = new MarkerOptions();
                         markerOptions3.position(SEOUL);
                         markerOptions3.title("서울");
                         markerOptions3.snippet("한국의 수도");
-
-
                         BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.mappin);
                         Bitmap b=bitmapdraw.getBitmap();
                         Bitmap smallMarker = Bitmap.createScaledBitmap(b, 200, 200, false);
                         markerOptions3.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
 
 
-                        map.addMarker(markerOptions3);
+                        google.addMarker(markerOptions3);
                     } else {
                         Toast.makeText(map_Search.this, "검색할 키워드를 입력하세요", Toast.LENGTH_SHORT).show();
                     }
@@ -206,6 +253,12 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
                     curlatitude = google.getCameraPosition().target.latitude;
                     curlongitude = google.getCameraPosition().target.longitude;
                     currentPosition = new LatLng(curlatitude, curlongitude);
+                    CircleOptions circle1KM = new CircleOptions().center(currentPosition) //원점
+                            .radius(1000)      //반지름 단위 : m
+                            .strokeWidth(0f)  //선너비 0f : 선없음
+                            .fillColor(Color.parseColor("#880000ff"));
+                    google.addCircle(circle1KM);
+
                     showPlaceInformation(currentPosition);
                 }
             });
@@ -339,5 +392,21 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
         @Override
         public void onProviderDisabled(String provider) {}
     };
+    public void getFirebaseDatabase(){
+        final ValueEventListener postListener = new ValueEventListener() {
 
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                list.clear();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    CafeInfo get = dataSnapshot.child("/"+cafename+"/cafe_info").getValue(CafeInfo.class);
+                    list.add(new String[]{get.cafe_name, get.cafe_longitude, get.cafe_latitude});
+
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        };
+        mPostReference.child("cafe_list").addValueEventListener(postListener);
+    }
 }

@@ -39,6 +39,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class UserActivity extends AppCompatActivity
@@ -48,9 +50,10 @@ public class UserActivity extends AppCompatActivity
     private Fragment NameSearch;
     private Fragment ReserveFragment;
     private Fragment User_Order;
-
+    ArrayList<String[]> list = new ArrayList<>();
     private DatabaseReference mPostReference;
-
+    String mymoney = "";
+    String myemail = "";
     ListView listView;
     ArrayList<String> data;
     ArrayAdapter<String> arrayAdapter;
@@ -138,6 +141,7 @@ public class UserActivity extends AppCompatActivity
         //NavigationView navigationViewRight = (NavigationView) findViewById(R.id.nav_view_right);
         // navigationViewRight.setNavigationItemSelectedListener(this);
         navigationView.setNavigationItemSelectedListener(this);
+        getFirebaseDatabase();
     }
 
 
@@ -291,5 +295,42 @@ public class UserActivity extends AppCompatActivity
                 finish();
             }
         });
+    }
+    public void getFirebaseDatabase() {
+        final ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) { //만약에 데이터가 추가되거나 삭제되거나 바뀌면 실행됨.
+                Log.d("onDataChange", "Data is Updated");
+                list.clear();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) { //노드 다시 읽어서 추가
+                    String key = postSnapshot.getKey();
+                    FirebasePost get = postSnapshot.getValue(FirebasePost.class);
+                    list.add(new String[]{get.email, get.name, get.uid, get.money, get.cafe_name});
+
+
+                    Log.d("getFirebaseDatabase", "key: " + key);
+                    Log.d("getFirebaseDatabase", "info: " + list.get(0)[2] + list.get(0)[3]);
+
+                }
+                for(int j = 0 ; j < list.size(); j++) {
+                    if (uid.equals(list.get(j)[2])) {
+                        myemail = list.get(j)[0];
+                        mymoney = list.get(j)[3];
+                        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                        View headerView = navigationView.getHeaderView(0);
+                        TextView useremail = (TextView) headerView.findViewById(R.id.myemail);
+                        TextView usermoney = (TextView) headerView.findViewById(R.id.mymoney);
+                        useremail.setText(" Email : " + myemail);
+                        useremail.setSelected(true);
+                        usermoney.setText(" Money : " + mymoney + " Won");
+                        usermoney.setSelected(true);
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        };
+        mPostReference.child("user_list").addValueEventListener(postListener); //id_list 의 서브트리부터 밑으로만 접근하겟다.
     }
 }

@@ -92,9 +92,11 @@ public class ManagerActivity extends AppCompatActivity
                 if(dataSnapshot.child(uid).exists()){
                     FirebasePost get = dataSnapshot.child(uid).getValue(FirebasePost.class);
                     String info = get.cafe_name;
-                    if(!(info.equals("0"))){
-                        currentCafeName = info;
-                        flag = 1;
+                    if(info != null) {
+                        if (!(info.equals("0"))) {
+                            currentCafeName = info;
+                            flag = 1;
+                        }
                     }
                 }
             }

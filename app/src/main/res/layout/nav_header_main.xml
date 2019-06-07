@@ -55,7 +55,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="137dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingTop="15dp">
@@ -69,12 +69,20 @@
         <TextView
             android:id="@+id/myemail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:singleLine="true" />
 
         <TextView
             android:id="@+id/mymoney"
-            android:layout_width="match_parent"
+            android:layout_width="139dp"
             android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:singleLine="true"
             android:text="Money : " />
     </LinearLayout>
 
