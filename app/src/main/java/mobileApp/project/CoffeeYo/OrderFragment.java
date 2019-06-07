@@ -3,10 +3,21 @@ package mobileApp.project.CoffeeYo;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class OrderFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -17,6 +28,12 @@ public class OrderFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    ListView oldOrderInfo;
+    ArrayList<String> oldOrderList;
+    ArrayAdapter<String> arrayAdapter;
+    int flag;
+    String cafename;
 
     private OrderFragment.OnFragmentInteractionListener mListener;
 
@@ -54,8 +71,52 @@ public class OrderFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_order, container, false);
+        View view = inflater.inflate(R.layout.fragment_order, container, false);
+        final Context contextRegister = container.getContext();
+
+        oldOrderInfo = (ListView)view.findViewById(R.id.listview);
+        oldOrderList = new ArrayList<String>();
+        arrayAdapter = new ArrayAdapter<String>(contextRegister, android.R.layout.simple_list_item_1);
+        oldOrderInfo.setAdapter(arrayAdapter);
+
+        flag = ((ManagerActivity)getActivity()).getFlag();
+        if(flag == 0){
+            Toast.makeText(contextRegister, "Cafe is not registered yet.", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(contextRegister, "finished orders", Toast.LENGTH_SHORT).show();
+            cafename = ((ManagerActivity)getActivity()).getCurrentCafeName();
+            getFirebaseDatabaseOldOrderInfo();
+        }
+
+        return view;
+    }
+
+    public void getFirebaseDatabaseOldOrderInfo(){
+        final ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                oldOrderList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    String client = snapshot.getKey();
+                    for (DataSnapshot snapshot1 : snapshot.child("order").getChildren()){
+                        String orderNum = snapshot1.getKey();
+                        Orderfirebase get = snapshot1.getValue(Orderfirebase.class);
+                        String[] order = {get.cafe_name, get.order, get.state};
+                        if(order[0].equals(cafename) && order[2].equals("old")){
+                            String result = "client: " + client + "\nOrder number: " + orderNum + "\norder: " + order[1];
+                            oldOrderList.add(result);
+                        }
+                    }
+                    arrayAdapter.clear();
+                    arrayAdapter.addAll(oldOrderList);
+                    arrayAdapter.notifyDataSetChanged();
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {            }
+        };
+        ((ManagerActivity)getActivity()).mPostReference.child("user_list").addValueEventListener(postListener);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

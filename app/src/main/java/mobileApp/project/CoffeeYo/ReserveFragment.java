@@ -75,6 +75,7 @@ public class ReserveFragment extends Fragment {
                     String key = postSnapshot.getKey();
                     Orderfirebase get = postSnapshot.getValue(Orderfirebase.class);
                     String[] info = {get.cafe_name, get.order, get.state};
+
                     state = "current";
                     if (state.equals(info[2])) {
                         String result = info[0] + ": " + info[1];
@@ -82,6 +83,7 @@ public class ReserveFragment extends Fragment {
                         Log.d("getFirebaseDatabase", "key: " + key);
                         Log.d("getFirebaseDatabase", "info: " + info[0] + info[1] + info[2]);
                     }
+
 
                 }
                 arrayAdapter.clear();

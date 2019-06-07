@@ -46,11 +46,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ManagerActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ReserveMFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener, OrderFragment.OnFragmentInteractionListener, CongestionFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ReserveMFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener, OrderFragment.OnFragmentInteractionListener, CongestionFragment.OnFragmentInteractionListener, LoadingMFragment.OnFragmentInteractionListener, CafeMenuFragment.OnFragmentInteractionListener {
     private Fragment reserveMFragment;
     private Fragment registerFragment;
     private Fragment orderFragment;
     private Fragment congestionFragment;
+    private Fragment cafemenuFragment;
+    private Fragment loadingMFragment;
     DrawerLayout drawer;
 
     public DatabaseReference mPostReference;
@@ -58,8 +60,7 @@ public class ManagerActivity extends AppCompatActivity
     GoogleSignInClient mGoogleSignInClient;
     GoogleApiClient mgoogleApiClient;
     String uid;
-    long newCafeID = 1;
-    long currentCafeID;
+    String currentCafeName;
     int flag;
 
     @Override
@@ -75,6 +76,8 @@ public class ManagerActivity extends AppCompatActivity
         registerFragment = new RegisterFragment();
         orderFragment = new OrderFragment();
         congestionFragment = new CongestionFragment();
+        cafemenuFragment = new CafeMenuFragment();
+        loadingMFragment = new LoadingMFragment();
 
         Intent intent = getIntent();
         uid = intent.getStringExtra("uid");
@@ -88,9 +91,9 @@ public class ManagerActivity extends AppCompatActivity
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.child(uid).exists()){
                     FirebasePost get = dataSnapshot.child(uid).getValue(FirebasePost.class);
-                    String info = get.cafe_id;
+                    String info = get.cafe_name;
                     if(!(info.equals("0"))){
-                        currentCafeID = Long.parseLong(info);
+                        currentCafeName = info;
                         flag = 1;
                     }
                 }
@@ -100,20 +103,14 @@ public class ManagerActivity extends AppCompatActivity
         });
 
         // count number of existing cafe
-        mPostReference.child("cafe_list").addListenerForSingleValueEvent(new ValueEventListener() {
+        /*mPostReference.child("cafe_list").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 newCafeID = dataSnapshot.getChildrenCount();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {            }
-        });
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.content_main, reserveMFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-
+        });*/
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -144,19 +141,28 @@ public class ManagerActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view1);
         navigationView.setNavigationItemSelectedListener(this);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.content_main, loadingMFragment);
+        //transaction.addToBackStack(null);
+        transaction.commit();
     }
 
-    public long getNewCafeID(){
-        return newCafeID;
+    public void transactionFromLoadingToReserveM(){
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.content_main, reserveMFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
+
     public String getUid(){
         return uid;
     }
     public int getFlag(){
         return flag;
     }
-    public long getCurrentCafeID(){
-        return currentCafeID;
+    public String getCurrentCafeName(){
+        return currentCafeName;
     }
 
 
@@ -209,13 +215,15 @@ public class ManagerActivity extends AppCompatActivity
             transaction.replace(R.id.content_main, registerFragment);
             transaction.commit();
         }
+        else if(id == R.id.nav_cafemenu){
+            transaction.replace(R.id.content_main, cafemenuFragment);
+            transaction.commit();
+        }
         else if(id == R.id.nav_reserved){
-            Toast.makeText(ManagerActivity.this, "주문 내역", Toast.LENGTH_SHORT).show();
             transaction.replace(R.id.content_main, orderFragment);
             transaction.commit();
         }
         else if(id == R.id.nav_congestion){
-            Toast.makeText(ManagerActivity.this, "혼잡도 설정", Toast.LENGTH_SHORT).show();
             transaction.replace(R.id.content_main, congestionFragment);
             transaction.commit();
         }
