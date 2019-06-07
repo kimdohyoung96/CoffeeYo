@@ -10,9 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,9 +20,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class ReserveFragment extends Fragment {
 
-    private ReserveFragment.OnFragmentInteractionListener mListener;
+
+public class User_Finished_Order extends Fragment {
+
+
+    private OnFragmentInteractionListener mListener;
     private DatabaseReference mPostReference;
 
 
@@ -33,7 +34,7 @@ public class ReserveFragment extends Fragment {
     ArrayList<String> data;
     ArrayAdapter<String> arrayAdapter;
 
-    public ReserveFragment() {
+    public User_Finished_Order() {
         // Required empty public constructor
     }
 
@@ -45,11 +46,12 @@ public class ReserveFragment extends Fragment {
 
     }
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_reserve, container, false);
+        View view = inflater.inflate(R.layout.fragment_user__finished__order, container, false);
         final Context contextRegister = container.getContext();
         uid = getArguments().getString("uid");
 
@@ -75,15 +77,13 @@ public class ReserveFragment extends Fragment {
                     String key = postSnapshot.getKey();
                     Orderfirebase get = postSnapshot.getValue(Orderfirebase.class);
                     String[] info = {get.cafe_name, get.order, get.state};
-
-                    state = "current";
+                    state = "old";
                     if (state.equals(info[2])) {
                         String result = info[0] + ": " + info[1];
                         data.add(result);
                         Log.d("getFirebaseDatabase", "key: " + key);
                         Log.d("getFirebaseDatabase", "info: " + info[0] + info[1] + info[2]);
                     }
-
 
                 }
                 arrayAdapter.clear();
@@ -99,6 +99,7 @@ public class ReserveFragment extends Fragment {
         mPostReference.child("user_list").child(uid).child("order").addValueEventListener(postListener);
     }
 
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -109,8 +110,8 @@ public class ReserveFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof ReserveFragment.OnFragmentInteractionListener) {
-            mListener = (ReserveFragment.OnFragmentInteractionListener) context;
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -122,6 +123,7 @@ public class ReserveFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name

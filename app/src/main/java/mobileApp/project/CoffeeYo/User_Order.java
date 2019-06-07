@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +33,7 @@ public class User_Order extends Fragment {
     private DatabaseReference mPostReference;
     private FirebaseAuth mAuth;
 
-    String cafe_name, uid, order, state = "";
+    String cafe_name, order = "";
 
     private ListView mListView;
     private ArrayList<String> data;
@@ -54,16 +56,15 @@ public class User_Order extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user__order, container, false);
 
-        mAuth= FirebaseAuth.getInstance();
 
         cafe_name = getArguments().getString("cafe_name");
         data = new ArrayList<String>();
-        uid = mAuth.getCurrentUser().getUid();
         mListView = view.findViewById(R.id.cafemenulist);
-        mPostReference = FirebaseDatabase.getInstance().getReference();
+
 
         arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1);
         mListView.setAdapter(arrayAdapter);
+        mPostReference = FirebaseDatabase.getInstance().getReference();
 
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -71,20 +72,26 @@ public class User_Order extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 
-                Map<String, Object> childUpdates = new HashMap<>();
-                Map<String, Object> postValues = null;
-
-                state = "current";
                 order = data.get(position);
-                Userorderdata post = new Userorderdata(cafe_name, order, state);
-                postValues = post.toMap();
-                String order_id = mPostReference.push().getKey();
 
 
-                childUpdates.put("/user_list/" + uid + "/order/"+order_id, postValues);
-                mPostReference.updateChildren(childUpdates);
-                state = "";
+
+                Fragment OrderCheckFragment = new OrderCheckFragment();
+                Bundle bundle = new Bundle(); // 파라미터는 전달할 데이터 개수
+                bundle.putString("cafe_name", cafe_name);
+                bundle.putString("order", order);
+                OrderCheckFragment.setArguments(bundle);
+
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.content_main, OrderCheckFragment);
+
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+
+
                 order = "";
+                cafe_name = "";
 
             }
         });
@@ -108,9 +115,6 @@ public class User_Order extends Fragment {
                     String key = postListener.getKey();
                     data.add(key);
                 }
-
-
-
 
 
                 arrayAdapter.clear();

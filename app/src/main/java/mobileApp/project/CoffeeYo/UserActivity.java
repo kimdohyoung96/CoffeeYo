@@ -45,8 +45,8 @@ import java.util.ArrayList;
 
 public class UserActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ReserveFragment.OnFragmentInteractionListener,
-        OrderFragment.OnFragmentInteractionListener, NameSearch.OnFragmentInteractionListener, User_Order.OnFragmentInteractionListener {
-    private Fragment OrderFragment;
+        User_Finished_Order.OnFragmentInteractionListener, NameSearch.OnFragmentInteractionListener, User_Order.OnFragmentInteractionListener {
+    private Fragment User_Finished_Order;
     private Fragment NameSearch;
     private Fragment ReserveFragment;
     private Fragment User_Order;
@@ -85,7 +85,10 @@ public class UserActivity extends AppCompatActivity
         uid = intent.getStringExtra("uid");
 
         NameSearch = new NameSearch();
-        OrderFragment = new OrderFragment();
+        User_Finished_Order = new User_Finished_Order();
+        Bundle bundle1 = new Bundle(1); // 파라미터는 전달할 데이터 개수
+        bundle1.putString("uid", uid);
+        User_Finished_Order.setArguments(bundle1);
         ReserveFragment = new ReserveFragment();
         User_Order = new User_Order();
         Bundle bundle = new Bundle(1); // 파라미터는 전달할 데이터 개수
@@ -226,7 +229,7 @@ public class UserActivity extends AppCompatActivity
             transaction.commit();
         } else if (id == R.id.nav_menu) {
             Toast.makeText(UserActivity.this, "주문 내역를 선택하셨습니다.", Toast.LENGTH_SHORT).show();
-            transaction.replace(R.id.content_main, OrderFragment);
+            transaction.replace(R.id.content_main, User_Finished_Order);
             transaction.commit();
         } else if (id == R.id.nav_searchmap) {
             Toast.makeText(UserActivity.this, "지도검색을 선택하셨습니다.", Toast.LENGTH_SHORT).show();
