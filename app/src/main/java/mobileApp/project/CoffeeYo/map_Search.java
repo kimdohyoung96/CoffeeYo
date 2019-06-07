@@ -195,6 +195,7 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
                                 mOptions2.title("search result");
                                 mOptions2.snippet(str);
                                 mOptions2.position(point);
+                                google.clear();
                                 CircleOptions circle1KM = new CircleOptions() //원점
                                         .center(point)
                                         .radius(1000)      //반지름 단위 : m
@@ -208,7 +209,7 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
                                 google.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 15));
                                 Log.d("here circle", "location : "+ point.latitude + " , " + point.longitude);
 
-                                showPlaceInformation(point);
+                                //showPlaceInformation(point);
                                 Location loc = new Location("target");
                                 loc.setLongitude(log);
                                 loc.setLatitude(lat);
@@ -260,18 +261,19 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            google.clear();
+                            //google.clear();
                             curlatitude = google.getCameraPosition().target.latitude;
                             curlongitude = google.getCameraPosition().target.longitude;
                             currentPosition = new LatLng(curlatitude, curlongitude);
-                            CircleOptions circle1KM = new CircleOptions().center(currentPosition) //원점
-                                    .radius(1000)      //반지름 단위 : m
-                                    .strokeWidth(0f)  //선너비 0f : 선없음
-                                    .fillColor(Color.parseColor("#880000ff"));
-                            google.addCircle(circle1KM);
-                            Location loc = new Location("target");
-                            loc.setLongitude(curlongitude);
-                            loc.setLatitude(curlatitude);
+                            //CircleOptions circle1KM = new CircleOptions().center(currentPosition) //원점
+                            //        .radius(1000)      //반지름 단위 : m
+                            //        .strokeWidth(0f)  //선너비 0f : 선없음
+                            //        .fillColor(Color.parseColor("#880000ff"));
+                            //google.addCircle(circle1KM);
+                            //Location loc = new Location("target");
+                            //loc.setLongitude(curlongitude);
+                            //loc.setLatitude(curlatitude);
+                            /*
                             int len = list.size();
                             MarkerOptions marker[] = new MarkerOptions[len];
 
@@ -302,7 +304,7 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
                                     //없으면 toast message 보내면될듯
                                 }
                                 i++;
-                            }
+                            }*/
                             showPlaceInformation(currentPosition);
                         }
                     });
@@ -329,7 +331,8 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
 
 
     public void showPlaceInformation(LatLng location) {
-        google.clear();
+        //google.clear();
+
         latitude = location.latitude;
         longitude = location.longitude;
         if (latitude != 0 && longitude != 0) {
