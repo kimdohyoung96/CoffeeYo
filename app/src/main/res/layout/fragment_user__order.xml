@@ -1,17 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".User_Order">
 
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".User_Order">
+
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+
+        <TextView
+            android:id="@+id/text1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="31dp"
+            android:gravity="center"
+            android:text="카페 주문"
+            android:textSize="25dp"
+            app:layout_constraintBottom_toTopOf="@+id/textView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ListView
             android:id="@+id/cafemenulist"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_width="wrap_content"
+            android:layout_height="203dp"
+            android:layout_marginBottom="14dp"
+            android:listSelector="@drawable/textview_deco"
+            android:textSize="15dp"
+            app:layout_constraintBottom_toTopOf="@+id/textViewcon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-    </android.support.constraint.ConstraintLayout>
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="254dp"
+            android:layout_height="79dp"
+            android:layout_marginStart="13dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewcon">
+
+            <RadioButton
+                android:id="@+id/r_btn1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="For-here" />
+
+            <RadioButton
+                android:id="@+id/r_btn2"
+                android:layout_width="match_parent"
+                android:layout_height="84dp"
+                android:layout_weight="1"
+                android:singleLine="true"
+                android:text="Take-out" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/Yesbutton"
+            android:layout_width="193dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="81dp"
+            android:text="주문"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+            app:layout_constraintVertical_bias="0.546" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="390dp"
+            android:layout_height="35dp"
+            android:layout_marginBottom="13dp"
+            android:text="카페 메뉴"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/cafemenulist"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text1" />
+
+        <TextView
+            android:id="@+id/textViewcon"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="7dp"
+            android:text="TextView"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/radioGroup"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cafemenulist" />
+
+
+
+</android.support.constraint.ConstraintLayout>
+    </ScrollView>
 </FrameLayout>

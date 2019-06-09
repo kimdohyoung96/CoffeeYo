@@ -14,8 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
+import com.google.android.gms.common.SignInButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,10 +38,14 @@ public class User_Order extends Fragment {
     private DatabaseReference mPostReference;
     private FirebaseAuth mAuth;
 
-    String cafe_name, order = "";
+    String cafe_name, order, take = "";
 
     private ListView mListView;
     private ArrayList<String> data;
+    private TextView TextCongestion;
+    private RadioButton r_btn1, r_btn2;
+    private RadioGroup radioGroup;
+    private Button YesButton;
 
     private ArrayAdapter<String> arrayAdapter;
 
@@ -60,26 +69,53 @@ public class User_Order extends Fragment {
         cafe_name = getArguments().getString("cafe_name");
         data = new ArrayList<String>();
         mListView = view.findViewById(R.id.cafemenulist);
-
+        TextCongestion = (TextView)view.findViewById(R.id.textViewcon);
 
         arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1);
         mListView.setAdapter(arrayAdapter);
         mPostReference = FirebaseDatabase.getInstance().getReference();
+
+        radioGroup = (RadioGroup)view.findViewById(R.id.radioGroup);
+        r_btn1 = (RadioButton)view.findViewById(R.id.r_btn1);
+        r_btn2 = (RadioButton)view.findViewById(R.id.r_btn2);
+
+        YesButton = (Button) view.findViewById(R.id.Yesbutton);
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                        if (r_btn2.isChecked() == true) {
+                            take = "Take-out";
+                        } else if (r_btn1.isChecked() == true) {
+                            take = "For-here";
+
+                        }
+                    }
+                });
 
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-
                 order = data.get(position);
 
 
+            }
+        });
+
+
+        YesButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
                 Fragment OrderCheckFragment = new OrderCheckFragment();
                 Bundle bundle = new Bundle(); // 파라미터는 전달할 데이터 개수
                 bundle.putString("cafe_name", cafe_name);
                 bundle.putString("order", order);
+                bundle.putString("take", take);
                 OrderCheckFragment.setArguments(bundle);
 
                 FragmentManager fragmentManager = getFragmentManager();
@@ -92,6 +128,7 @@ public class User_Order extends Fragment {
 
                 order = "";
                 cafe_name = "";
+                take = "";
 
             }
         });
@@ -115,6 +152,10 @@ public class User_Order extends Fragment {
                     String key = postListener.getKey();
                     data.add(key);
                 }
+
+
+                String congestion = dataSnapshot.child(cafe_name).child("congestion").getValue().toString();
+                TextCongestion.setText("카페 밀도: "+congestion);
 
 
                 arrayAdapter.clear();
