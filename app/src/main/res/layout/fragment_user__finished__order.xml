@@ -6,35 +6,31 @@
     android:layout_height="match_parent"
     tools:context=".User_Finished_Order">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/reserved"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="주문 예약 내역"
+            android:layout_width="380dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="7dp"
+            android:gravity="center"
+            android:text="완료된 주문 내역"
             android:textSize="30dp"
-            android:gravity="center" />
+            app:layout_constraintBottom_toTopOf="@+id/orderlist"
+            app:layout_constraintEnd_toEndOf="@+id/orderlist"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ListView
             android:id="@+id/orderlist"
             android:layout_width="match_parent"
-            android:layout_height="650dp" />
+            android:layout_height="400dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/reserved" />
 
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
 </ScrollView>

@@ -12,52 +12,85 @@
 
         <TextView
             android:id="@+id/textView5"
-            android:layout_width="286dp"
-            android:layout_height="55dp"
-            android:layout_marginStart="33dp"
-            android:layout_marginTop="98dp"
-            android:layout_marginEnd="33dp"
-            android:layout_marginBottom="94dp"
-            android:text="확인 버튼을 눌러 주문을 완료해주세요."
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="29dp"
+            android:layout_marginTop="111dp"
+            android:layout_marginEnd="29dp"
+            android:layout_marginBottom="104dp"
             android:gravity="center_horizontal"
-            app:layout_constraintBottom_toTopOf="@+id/textView7"
+            android:padding="9dp"
+            android:text="확인 버튼을 눌러 주문을 완료해주세요."
+            android:textSize="15dp"
+            app:layout_constraintBottom_toTopOf="@+id/textView6"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
+
         <TextView
             android:id="@+id/textView6"
-            android:layout_width="214dp"
-            android:layout_height="50dp"
-            android:layout_marginBottom="84dp"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="13dp"
             android:text="TextView"
-            app:layout_constraintBottom_toTopOf="@+id/button2"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/textView7"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView7" />
+            app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
         <TextView
             android:id="@+id/textView7"
-            android:layout_width="214dp"
-            android:layout_height="50dp"
-            android:layout_marginBottom="7dp"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
             android:text="TextView"
-            app:layout_constraintBottom_toTopOf="@+id/textView6"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/textView8"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.502"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView5" />
+            app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="102dp"
+            android:text="TextView"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/button2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
         <Button
             android:id="@+id/button2"
             android:layout_width="240dp"
-            android:layout_height="52dp"
-            android:layout_marginTop="84dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="120dp"
             android:text="확인"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+        <TextView
+            android:id="@+id/box"
+            android:layout_width="280dp"
+            android:layout_height="196dp"
+            android:layout_marginStart="56dp"
+            android:layout_marginTop="67dp"
+            android:layout_marginEnd="56dp"
+            android:layout_marginBottom="80dp"
+            android:background="@drawable/textview_deco"
+            android:text=" "
+            app:layout_constraintBottom_toTopOf="@+id/button2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView6" />
+            app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
 
     </android.support.constraint.ConstraintLayout>

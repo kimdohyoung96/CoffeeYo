@@ -28,10 +28,11 @@ public class OrderCheckFragment extends Fragment {
 
     private DatabaseReference mPostReference;
     private FirebaseAuth mAuth;
-    String cafe_name, uid, order, state = "";
-    Button OkButton;
-    TextView TextCafe;
-    TextView TextOrder;
+    private String cafe_name, uid, order, state, take = "";
+    private Button OkButton;
+    private TextView TextCafe;
+    private TextView TextOrder;
+    private TextView TextTake;
 
     private ArrayList<String> data;
 
@@ -56,6 +57,7 @@ public class OrderCheckFragment extends Fragment {
         // Inflate the layout for this fragment
         cafe_name = getArguments().getString("cafe_name");
         order = getArguments().getString("order");
+        take = getArguments().getString("take");
 
         mAuth= FirebaseAuth.getInstance();
         data = new ArrayList<String>();
@@ -64,8 +66,10 @@ public class OrderCheckFragment extends Fragment {
 
         TextCafe = (TextView)view.findViewById(R.id.textView6);
         TextOrder = (TextView)view.findViewById(R.id.textView7);
+        TextTake = (TextView)view.findViewById(R.id.textView8);
         TextCafe.setText("카페: "+cafe_name);
         TextOrder.setText("메뉴: "+order);
+        TextTake.setText(take);
 
         OkButton = (Button) view.findViewById(R.id.button2);
 
