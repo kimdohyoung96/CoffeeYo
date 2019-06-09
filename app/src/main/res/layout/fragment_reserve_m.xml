@@ -36,9 +36,9 @@
                 android:gravity="center" />
 
             <ListView
-                android:id="@+id/reserved"
+                android:id="@+id/listView"
                 android:layout_width="match_parent"
-                android:layout_height="300dp" />
+                android:layout_height="330dp" />
 
         </LinearLayout>
 
@@ -47,7 +47,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="30dp">
 
         <LinearLayout
             android:id="@+id/linearLayout2"
@@ -76,7 +76,17 @@
             <TextView
                 android:id="@+id/myCafe"
                 android:layout_width="match_parent"
-                android:layout_height="300dp" />
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/myCafeCongestion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/myCafeMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 

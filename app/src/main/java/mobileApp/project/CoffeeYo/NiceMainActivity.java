@@ -39,7 +39,7 @@ public class NiceMainActivity extends AppCompatActivity {
     String uid = "";
     String myuid = "";
     String myname ="";
-    String mycafe_id = "";
+    String mycafe_name = "";
     String mymoney ="";
     String myemail ="";
     int flag = 1;
@@ -62,7 +62,7 @@ public class NiceMainActivity extends AppCompatActivity {
                 myname = list.get(j)[1];
                 myuid = list.get(j)[2];
                 mymoney = list.get(j)[3];
-                mycafe_id = list.get(j)[4];
+                mycafe_name = list.get(j)[4];
             }
         }
         flag = intent.getIntExtra("flag",0);
@@ -93,7 +93,7 @@ public class NiceMainActivity extends AppCompatActivity {
                 mainWebView.loadUrl(redirectURL);
                 startActivity(intent1);
             }
-            intent.putExtra("uid",myuid).putExtra("name",myname).putExtra("email",myemail).putExtra("money",mymoney).putExtra("cafe_id",mycafe_id);
+            intent.putExtra("uid",myuid).putExtra("name",myname).putExtra("email",myemail).putExtra("money",mymoney).putExtra("cafe_name",mycafe_name);
             startActivity(intent1);
         }
             getFirebaseDatabase();
@@ -141,7 +141,7 @@ public class NiceMainActivity extends AppCompatActivity {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) { //노드 다시 읽어서 추가
                     String key = postSnapshot.getKey();
                     FirebasePost get = postSnapshot.getValue(FirebasePost.class);
-                    list.add(new String[]{get.email, get.name, get.uid, get.money, get.cafe_id});
+                    list.add(new String[]{get.email, get.name, get.uid, get.money, get.cafe_name});
 
                     Log.d("getFirebaseDatabase", "key: " + key);
                     Log.d("getFirebaseDatabase", "info: " + list.get(0)[2] + list.get(0)[3]);

@@ -3,7 +3,6 @@ package mobileApp.project.CoffeeYo;
 import java.util.HashMap;
 import java.util.Map;
 public class Orderfirebase {
-
     public String cafe_name;
     public String order;
     public String state;
@@ -13,7 +12,6 @@ public class Orderfirebase {
     }
 
     public Orderfirebase(String cafe_name, String order, String state) {
-
 
         this.cafe_name = cafe_name;
         this.order = order;

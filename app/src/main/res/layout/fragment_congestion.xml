@@ -27,52 +27,43 @@
         app:layout_constraintStart_toStartOf="@+id/congestion"
         app:layout_constraintEnd_toEndOf="@+id/congestion">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <CheckBox
-                android:id="@+id/checkBox_quiet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <RadioButton
+                android:id="@+id/radio1"
                 android:text="한산"
-                android:layout_marginRight="10dp"/>
-
-            <CheckBox
-                android:id="@+id/checkBox_common"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:checked="true"/>
+
+            <RadioButton
+                android:id="@+id/radio2"
                 android:text="보통"
-                android:layout_marginLeft="10dp"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp">
-
-            <CheckBox
-                android:id="@+id/checkBox_busy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <RadioButton
+                android:id="@+id/radio3"
                 android:text="혼잡"
-                android:layout_marginRight="10dp"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-            <CheckBox
-                android:id="@+id/checkBox_full"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <RadioButton
+                android:id="@+id/radio4"
                 android:text="만석"
-                android:layout_marginLeft="10dp"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-        </LinearLayout>
+        </RadioGroup>
+
 
         <Button
-            android:id="@+id/button3"
-            android:layout_width="match_parent"
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="혼잡도 설정"
             android:layout_marginTop="30dp"/>
