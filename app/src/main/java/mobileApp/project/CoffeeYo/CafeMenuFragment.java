@@ -72,6 +72,9 @@ public class CafeMenuFragment extends Fragment {
         final Context contextRegister = container.getContext();
 
         flag = ((ManagerActivity)getActivity()).getFlag();
+        if(flag == 0){
+            Toast.makeText(contextRegister, "Cafe is not registered yet.", Toast.LENGTH_SHORT).show();
+        }
 
         addMenuB = (Button) view.findViewById(R.id.add_menu);
         deleteMenuB = (Button) view.findViewById(R.id.delete_menu);

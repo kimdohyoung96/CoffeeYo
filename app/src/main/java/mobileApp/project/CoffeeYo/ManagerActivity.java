@@ -85,24 +85,7 @@ public class ManagerActivity extends AppCompatActivity
         mPostReference = FirebaseDatabase.getInstance().getReference();
 
         flag = 0;
-        // check if user already has cafe
-        mPostReference.child("user_list").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child(uid).exists()){
-                    FirebasePost get = dataSnapshot.child(uid).getValue(FirebasePost.class);
-                    String info = get.cafe_name;
-                    if(info != null) {
-                        if (!(info.equals("0"))) {
-                            currentCafeName = info;
-                            flag = 1;
-                        }
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {            }
-        });
+        getFirebaseDatabaseCheckMyCafe();
 
         // count number of existing cafe
         /*mPostReference.child("cafe_list").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -148,6 +131,27 @@ public class ManagerActivity extends AppCompatActivity
         transaction.replace(R.id.content_main, loadingMFragment);
         //transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    public void getFirebaseDatabaseCheckMyCafe(){
+        final ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child(uid).exists()){
+                    FirebasePost get = dataSnapshot.child(uid).getValue(FirebasePost.class);
+                    String info = get.cafe_name;
+                    if(info != null) {
+                        if (!(info.equals("0"))) {
+                            currentCafeName = info;
+                            flag = 1;
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {            }
+        };
+        mPostReference.child("user_list").addValueEventListener(postListener);
     }
 
     public void transactionFromLoadingToReserveM(){

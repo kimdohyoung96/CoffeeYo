@@ -72,6 +72,9 @@ public class CongestionFragment extends Fragment {
         final Context contextRegister = container.getContext();
 
         flag = ((ManagerActivity)getActivity()).getFlag();
+        if(flag == 0){
+            Toast.makeText(contextRegister, "Cafe is not registered yet", Toast.LENGTH_SHORT).show();
+        }
 
         quietB = (RadioButton)view.findViewById(R.id.radio1);
         commonB = (RadioButton)view.findViewById(R.id.radio2);

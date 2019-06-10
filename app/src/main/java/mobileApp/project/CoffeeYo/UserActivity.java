@@ -69,6 +69,9 @@ public class UserActivity extends AppCompatActivity
     GoogleSignInClient mGoogleSignInClient;
     GoogleApiClient mgoogleApiClient;
 
+    String client;
+    String orderid;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -153,9 +156,6 @@ public class UserActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         getFirebaseDatabase();
     }
-
-
-
 
     public long getNewCafeID(){
         return newCafeID;
