@@ -118,6 +118,8 @@ public class UserActivity extends AppCompatActivity
             transaction.commit();
         }
 
+        createNotification();
+
         map_Search a = new map_Search();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -155,6 +157,12 @@ public class UserActivity extends AppCompatActivity
         // navigationViewRight.setNavigationItemSelectedListener(this);
         navigationView.setNavigationItemSelectedListener(this);
         getFirebaseDatabase();
+    }
+
+    public void createNotification() {
+        Intent intentNotif = new Intent(this, MyService.class);
+        intentNotif.putExtra("uid", uid);
+        startService(intentNotif);
     }
 
     public long getNewCafeID(){

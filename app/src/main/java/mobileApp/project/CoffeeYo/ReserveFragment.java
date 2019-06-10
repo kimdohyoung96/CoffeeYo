@@ -80,21 +80,14 @@ public class ReserveFragment extends Fragment {
                     if (state.equals(info[2])) {
                         String result = info[0] + ": " + info[1];
                         data.add(result);
-                        Log.d("getFirebaseDatabase", "key: " + key);
-                        Log.d("getFirebaseDatabase", "info: " + info[0] + info[1] + info[2]);
                     }
-
-
                 }
                 arrayAdapter.clear();
                 arrayAdapter.addAll(data);
                 arrayAdapter.notifyDataSetChanged();
             }
-
-
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) {            }
         };
         mPostReference.child("user_list").child(uid).child("order").addValueEventListener(postListener);
     }

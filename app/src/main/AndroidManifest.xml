@@ -12,6 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+        <service
+            android:name=".MyService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <activity android:name=".Login" />
         <activity android:name=".map_Search" />
         <activity android:name=".LaunchApp">
@@ -23,7 +28,7 @@
         </activity>
         <activity
             android:name=".UserActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ManagerActivity"
             android:screenOrientation="portrait" />
@@ -45,7 +50,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBRH1pFRG06wrIHnGTr73XqigzlSv5SLCM" />
-
     </application>
 
 </manifest>

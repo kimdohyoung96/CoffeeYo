@@ -1,8 +1,17 @@
 package mobileApp.project.CoffeeYo;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,6 +20,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -87,6 +97,8 @@ public class ManagerActivity extends AppCompatActivity
         flag = 0;
         getFirebaseDatabaseCheckMyCafe();
 
+        createNotification();
+
         // count number of existing cafe
         /*mPostReference.child("cafe_list").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -131,6 +143,12 @@ public class ManagerActivity extends AppCompatActivity
         transaction.replace(R.id.content_main, loadingMFragment);
         //transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    public void createNotification() {
+        Intent intentNotif = new Intent(this, MyService.class);
+        intentNotif.putExtra("uid", uid);
+        startService(intentNotif);
     }
 
     public void getFirebaseDatabaseCheckMyCafe(){

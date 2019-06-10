@@ -1,6 +1,7 @@
 package mobileApp.project.CoffeeYo;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -46,6 +47,8 @@ public class ReserveMFragment extends Fragment {
     ArrayAdapter<String> arrayAdapter;
     String clientS;
     String orderNumS;
+    Context contextRegister;
+    String uid;
 
     public ReserveMFragment() {
         // Required empty public constructor
@@ -83,7 +86,7 @@ public class ReserveMFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_reserve_m, container, false);
-        final Context contextRegister = container.getContext();
+        contextRegister = container.getContext();
 
         myCafeInfo = (TextView)view.findViewById(R.id.myCafe);
         myCafeCongestion = (TextView)view.findViewById(R.id.myCafeCongestion);
@@ -94,6 +97,7 @@ public class ReserveMFragment extends Fragment {
         currentOrderInfo.setAdapter(arrayAdapter);
 
         flag = ((ManagerActivity)getActivity()).getFlag();
+        uid = ((ManagerActivity)getActivity()).getUid();
         if(flag == 0){
             myCafeInfo.setText("Not registered yet.");
             Toast.makeText(contextRegister, "Cafe is not registered yet.", Toast.LENGTH_SHORT).show();
