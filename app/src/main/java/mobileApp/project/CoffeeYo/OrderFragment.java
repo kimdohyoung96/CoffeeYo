@@ -104,7 +104,7 @@ public class OrderFragment extends Fragment {
                         Orderfirebase get = snapshot1.getValue(Orderfirebase.class);
                         String[] order = {get.cafe_name, get.order, get.state};
                         if(order[0].equals(cafename) && order[2].equals("old")){
-                            String result = "client: " + client + "\nOrder number: " + orderNum + "\norder: " + order[1];
+                            String result = "Client: " + client + "\nOrder number: " + orderNum + "\nOrder: " + order[1];
                             oldOrderList.add(result);
                         }
                     }

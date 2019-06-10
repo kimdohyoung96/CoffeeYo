@@ -212,9 +212,9 @@ public class ReserveMFragment extends Fragment {
                     for(DataSnapshot snapshot1 : snapshot.child("order").getChildren()){
                         String orderNum = snapshot1.getKey();
                         Orderfirebase get = snapshot1.getValue(Orderfirebase.class);
-                        String[] order = {get.cafe_name, get.order, get.state};
+                        String[] order = {get.cafe_name, get.order, get.state, get.take};
                         if(order[0].equals(cafename) && order[2].equals("current")){
-                            String result = "Client: " + client + "\nOrder number: " + orderNum + "\nOrder: " + order[1];
+                            String result = "Client: " + client + "\nOrder number: " + orderNum + "\nOrder: " + order[1] + "\nTake: " + order[3];
                             currentOrderList.add(result);
                         }
                     }
