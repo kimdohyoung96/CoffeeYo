@@ -83,7 +83,7 @@ public class OrderCheckFragment extends Fragment {
                 Map<String, Object> postValues = null;
 
                 state = "current";
-                Userorderdata post = new Userorderdata(cafe_name, order, state);
+                Userorderdata post = new Userorderdata(cafe_name, order, state, take);
                 postValues = post.toMap();
                 String order_id = mPostReference.push().getKey();
 
@@ -93,7 +93,7 @@ public class OrderCheckFragment extends Fragment {
 
                 state = "";
                 order = "";
-
+                take = "";
                 Fragment ReserveFragment = new ReserveFragment();
 
                 FragmentManager fragmentManager = getFragmentManager();
