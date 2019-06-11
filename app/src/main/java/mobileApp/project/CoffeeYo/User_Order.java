@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,14 +42,14 @@ public class User_Order extends Fragment {
 
     String cafe_name, order, take = "";
 
-    private ListView mListView;
-    private ArrayList<String> data;
+    private ArrayList<menuitem> menu_list;
+    private RecyclerView recyclerView;
+    private MenuAdapter adapter;
     private TextView TextCongestion;
     private RadioButton r_btn1, r_btn2;
     private RadioGroup radioGroup;
     private Button YesButton;
 
-    private ArrayAdapter<String> arrayAdapter;
 
     public User_Order() {
         // Required empty public constructor
@@ -67,12 +69,23 @@ public class User_Order extends Fragment {
 
 
         cafe_name = getArguments().getString("cafe_name");
-        data = new ArrayList<String>();
-        mListView = view.findViewById(R.id.cafemenulist);
+        menu_list = new ArrayList<menuitem>();
+        recyclerView = view.findViewById(R.id.cafemenulist);
+        adapter = new MenuAdapter();
+
         TextCongestion = (TextView)view.findViewById(R.id.textViewcon);
 
-        arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1);
-        mListView.setAdapter(arrayAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
+
+        adapter.setItemClick(new MenuAdapter.ItemClick() {
+            @Override
+            public void onClick(View view, int position) {
+
+                //클릭시 실행될 함수 작성
+            }
+        });
+
         mPostReference = FirebaseDatabase.getInstance().getReference();
 
         radioGroup = (RadioGroup)view.findViewById(R.id.radioGroup);
@@ -96,15 +109,6 @@ public class User_Order extends Fragment {
                 });
 
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                order = data.get(position);
-
-
-            }
-        });
 
 
         YesButton.setOnClickListener(new View.OnClickListener() {
@@ -145,23 +149,26 @@ public class User_Order extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.d("onDataChange", "Data is Updated");
-                data.clear();
+                menu_list.clear();
 
-                for(DataSnapshot postListener: dataSnapshot.child(cafe_name).child("menu").getChildren()) {
+                for(DataSnapshot postListener: dataSnapshot.child("menu").getChildren()) {
 
                     String key = postListener.getKey();
-                    data.add(key);
+                    CafeMenudatabase get = postListener.getValue(CafeMenudatabase.class);
+                    menu_list.add(new menuitem(get.menu_name, get.price));
+
+                    Log.d("getFirebaseDatabase", "key: " + key);
+                    Log.d("getFirebaseDatabase", "info: " + get.menu_name + get.price);
                 }
 
 
-                String congestion = dataSnapshot.child(cafe_name).child("congestion").getValue().toString();
+
+                String congestion = dataSnapshot.child("congestion").getValue().toString();
                 TextCongestion.setText("카페 밀도: "+congestion);
 
 
-                arrayAdapter.clear();
-                arrayAdapter.addAll(data);
-                arrayAdapter.notifyDataSetChanged();
-
+                adapter.setItems(menu_list);
+                adapter.notifyDataSetChanged();
 
             }
 
@@ -169,7 +176,7 @@ public class User_Order extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         };
-        mPostReference.child("cafe_list").addValueEventListener(postListener);
+        mPostReference.child("cafe_list").child(cafe_name).addValueEventListener(postListener);
     }
 
 
