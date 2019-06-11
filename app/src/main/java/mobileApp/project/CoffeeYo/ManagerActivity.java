@@ -114,7 +114,7 @@ public class ManagerActivity extends AppCompatActivity
 
             @Override
             public void onClick(View view) {
-                final Snackbar snackbar = Snackbar.make(view, "커피요를 쉽게 이용하는 방법\n1.커피요머니를 충전한다.\n2.이름 혹은 지도로 카페를 검색한다\n-지도검색시 화면을 옮기고 현재 보이는 화면에서 카페를 찾고 싶다면 왼쪽 상단에 커피 아이콘을 클릭한다.\n3.카페 혼잡도 여부와 커피 매진여부를 확인 후 커피를 주문한다.\n4.커피를 즐긴다.", Snackbar.LENGTH_INDEFINITE);
+                final Snackbar snackbar = Snackbar.make(view, "커피요를 쉽게 이용하는 방법\n1.내 카페를 등록한다.\n2.내 카페의 메뉴를 추가한다.\n3.내 카페의 혼잡도를 설정한다.\n4.주문 예약 내역의 주문 리스트를 클릭해 주문을 완료한다.\n5.완료 주문 내역 탭에서 지금까지 완료된 주문을 확인한다.", Snackbar.LENGTH_INDEFINITE);
                 View snackbarView = snackbar.getView();
                 TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
                 textView.setMaxLines(10);  // show multiple line
