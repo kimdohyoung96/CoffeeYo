@@ -48,7 +48,8 @@ public class MenuAdapter extends RecyclerView.Adapter <MenuAdapter.ViewHolder> {
 
         menuitem item = items.get(position);
 
-        viewHolder.menuName.setText(item.getMenu()+"  ["+item.getPrice()+"원]");
+        viewHolder.menuName.setText(item.getMenu());
+        viewHolder.price.setText("["+item.getPrice()+"원]");
 
         final int[] i = {0};
         final TextView count = viewHolder.count;
@@ -94,6 +95,7 @@ public class MenuAdapter extends RecyclerView.Adapter <MenuAdapter.ViewHolder> {
         ImageButton subButton;
         TextView menuName;
         TextView count;
+        TextView price;
         final View mView;
 
         ViewHolder(View itemView) {
@@ -103,6 +105,7 @@ public class MenuAdapter extends RecyclerView.Adapter <MenuAdapter.ViewHolder> {
             subButton = itemView.findViewById(R.id.imagesub);
             count = itemView.findViewById(R.id.count);
             menuName = itemView.findViewById(R.id.menutext);
+            price = itemView.findViewById(R.id.price);
             mView = itemView;
         }
     }
