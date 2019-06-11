@@ -128,7 +128,7 @@ public class User_Order extends Fragment {
 
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
-
+//
 
                 order = "";
                 cafe_name = "";
