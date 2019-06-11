@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -32,6 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -39,9 +41,8 @@ public class User_Order extends Fragment {
     private OnFragmentInteractionListener mListener;
     private DatabaseReference mPostReference;
     private FirebaseAuth mAuth;
-
-    String cafe_name, order, take = "";
-
+    final int[] i = {0};
+    private String cafe_name, take, menu, count, price = "";
     private ArrayList<menuitem> menu_list;
     private RecyclerView recyclerView;
     private MenuAdapter adapter;
@@ -114,25 +115,36 @@ public class User_Order extends Fragment {
         YesButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Fragment OrderCheckFragment = new OrderCheckFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("cafe_name", cafe_name);
+                        String[] order = new String[10];
+                        int Num = 0;
+                        for (int j=0; j < i[0]; j++) {
+                            menu = ((TextView) recyclerView.findViewHolderForAdapterPosition(j).itemView.findViewById(R.id.menutext)).getText().toString();
+                            count = ((TextView) recyclerView.findViewHolderForAdapterPosition(j).itemView.findViewById(R.id.count)).getText().toString();
+                            price = ((TextView) recyclerView.findViewHolderForAdapterPosition(j).itemView.findViewById(R.id.price)).getText().toString();
+                            if (Integer.parseInt(count) >= 1) {
+                                order[Num]= menu+": "+count+"개";
+                                Num++;
+                                }
+                            }
 
-                Fragment OrderCheckFragment = new OrderCheckFragment();
-                Bundle bundle = new Bundle(); // 파라미터는 전달할 데이터 개수
-                bundle.putString("cafe_name", cafe_name);
-                bundle.putString("order", order);
-                bundle.putString("take", take);
-                OrderCheckFragment.setArguments(bundle);
+                        bundle.putStringArray("order", order);
+                        bundle.putString("Num", String.valueOf(Num));
+                        bundle.putString("take", take);
+                        OrderCheckFragment.setArguments(bundle);
 
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.content_main, OrderCheckFragment);
+                        FragmentManager fragmentManager = getFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.content_main, OrderCheckFragment);
 
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
 
 
-                order = "";
-                cafe_name = "";
-                take = "";
+                        cafe_name = "";
+                        take = "";
 
             }
         });
@@ -156,7 +168,7 @@ public class User_Order extends Fragment {
                     String key = postListener.getKey();
                     CafeMenudatabase get = postListener.getValue(CafeMenudatabase.class);
                     menu_list.add(new menuitem(get.menu_name, get.price));
-
+                    i[0]++;
                     Log.d("getFirebaseDatabase", "key: " + key);
                     Log.d("getFirebaseDatabase", "info: " + get.menu_name + get.price);
                 }

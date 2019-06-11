@@ -9,7 +9,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,11 +30,11 @@ public class OrderCheckFragment extends Fragment {
 
     private DatabaseReference mPostReference;
     private FirebaseAuth mAuth;
-    private String cafe_name, uid, order, state, take = "";
+    private String cafe_name, uid, Num, state, take = "";
     private Button OkButton;
-    private TextView TextCafe;
-    private TextView TextOrder;
-    private TextView TextTake;
+    private String order[];
+    private ListView listView;
+    private ArrayAdapter<String> arrayAdapter;
 
     private ArrayList<String> data;
 
@@ -53,23 +55,36 @@ public class OrderCheckFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_order_check, container, false);
         final Context contextRegister = container.getContext();
-
+        order = new String[10];
         // Inflate the layout for this fragment
         cafe_name = getArguments().getString("cafe_name");
-        order = getArguments().getString("order");
+        order = getArguments().getStringArray("order");
+        Num = getArguments().getString("Num");
         take = getArguments().getString("take");
 
-        mAuth= FirebaseAuth.getInstance();
+        mPostReference = FirebaseDatabase.getInstance().getReference();
+
+
         data = new ArrayList<String>();
+        listView = (ListView)view.findViewById(R.id.checklist);
+        data.add("카페: "+cafe_name);
+        for (int i=0; i<Integer.parseInt(Num); i++) {
+            String a = order[i];
+            data.add(a);
+        }
+        data.add(take);
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, data);
+        listView.setAdapter(arrayAdapter);
+
+
+
+
+        mAuth= FirebaseAuth.getInstance();
         uid = mAuth.getCurrentUser().getUid();
         mPostReference = FirebaseDatabase.getInstance().getReference();
 
-        TextCafe = (TextView)view.findViewById(R.id.textView6);
-        TextOrder = (TextView)view.findViewById(R.id.textView7);
-        TextTake = (TextView)view.findViewById(R.id.textView8);
-        TextCafe.setText("카페: "+cafe_name);
-        TextOrder.setText("메뉴: "+order);
-        TextTake.setText(take);
+
 
         OkButton = (Button) view.findViewById(R.id.button2);
 
@@ -83,8 +98,8 @@ public class OrderCheckFragment extends Fragment {
                 Map<String, Object> postValues = null;
 
                 state = "current";
-                Userorderdata post = new Userorderdata(cafe_name, order, state, take);
-                postValues = post.toMap();
+                //Userorderdata post = new Userorderdata(cafe_name, order, state, take);
+                //postValues = post.toMap();
                 String order_id = mPostReference.push().getKey();
 
 
@@ -92,7 +107,7 @@ public class OrderCheckFragment extends Fragment {
                 mPostReference.updateChildren(childUpdates);
 
                 state = "";
-                order = "";
+                //order = "";
                 take = "";
                 Fragment ReserveFragment = new ReserveFragment();
 
