@@ -63,7 +63,6 @@ public class User_Finished_Order extends Fragment {
         listView.setAdapter(arrayAdapter);
         getFirebaseDatabase();
 
-
         return view;
     }
 
@@ -84,14 +83,11 @@ public class User_Finished_Order extends Fragment {
                         Log.d("getFirebaseDatabase", "key: " + key);
                         Log.d("getFirebaseDatabase", "info: " + info[0] + info[1] + info[2]);
                     }
-
                 }
                 arrayAdapter.clear();
                 arrayAdapter.addAll(data);
                 arrayAdapter.notifyDataSetChanged();
             }
-
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
