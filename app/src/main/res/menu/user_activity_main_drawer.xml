@@ -20,25 +20,15 @@
             android:icon="@drawable/ic_star"
             android:title="충전" />
     </group>
-
-    <item android:title="Communicate">
+    <item android:title="Mode Change">
         <menu>
             <item
-                android:id="@+id/nav_check"
-                android:icon="@drawable/ic_check"
-                android:title="조회" />
-            <item
-                android:id="@+id/nav_setting"
-                android:icon="@drawable/ic_menu_manage"
-                android:title="설정" />
+                android:id="@+id/nav_cvt2mgr"
+                android:icon="@drawable/ic_backkey"
+                android:title="매니저 모드" />
         </menu>
     </item>
 
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Import" />
 
 </menu>

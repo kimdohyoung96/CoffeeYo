@@ -72,6 +72,9 @@ public class ManagerActivity extends AppCompatActivity
     String uid;
     String currentCafeName;
     int flag;
+    String mymoney = "";
+    String myemail = "";
+    ArrayList<String[]> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +96,14 @@ public class ManagerActivity extends AppCompatActivity
         uid = intent.getStringExtra("uid");
 
         mPostReference = FirebaseDatabase.getInstance().getReference();
+
+        drawer = (DrawerLayout)findViewById(R.id.drawer_layout1);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view1);
+        navigationView.setNavigationItemSelectedListener(this);
 
         flag = 0;
         getFirebaseDatabaseCheckMyCafe();
@@ -131,16 +142,9 @@ public class ManagerActivity extends AppCompatActivity
             }
         });
 
-        drawer = (DrawerLayout)findViewById(R.id.drawer_layout1);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view1);
-        navigationView.setNavigationItemSelectedListener(this);
-
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content_main, loadingMFragment);
+
         transaction.addToBackStack(null);
         transaction.commit();
     }
@@ -163,6 +167,31 @@ public class ManagerActivity extends AppCompatActivity
                             currentCafeName = info;
                             flag = 1;
                         }
+                    }
+                }
+                list.clear();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) { //노드 다시 읽어서 추가
+                    String key = postSnapshot.getKey();
+                    FirebasePost get = postSnapshot.getValue(FirebasePost.class);
+                    list.add(new String[]{get.email, get.name, get.uid, get.money, get.cafe_name});
+
+
+                    Log.d("getFirebaseDatabase", "key: " + key);
+                    Log.d("getFirebaseDatabase", "info: " + list.get(0)[2] + list.get(0)[3]);
+
+                }
+                for(int j = 0 ; j < list.size(); j++) {
+                    if (uid.equals(list.get(j)[2])) {
+                        myemail = list.get(j)[0];
+                        mymoney = list.get(j)[3];
+                        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view1);
+                        View headerView = navigationView.getHeaderView(0); // 여기가 문제
+                        TextView useremail = (TextView) headerView.findViewById(R.id.myemail);
+                        TextView usermoney = (TextView) headerView.findViewById(R.id.mymoney);
+                        useremail.setText(" Email : " + myemail);
+                        useremail.setSelected(true);
+                        usermoney.setText(" Money : " + mymoney + " Won");
+                        usermoney.setSelected(true);
                     }
                 }
             }
@@ -254,6 +283,10 @@ public class ManagerActivity extends AppCompatActivity
             transaction.replace(R.id.content_main, congestionFragment);
             transaction.addToBackStack(null);
             transaction.commit();
+        }  else if (id == R.id.nav_cvt2usr) {
+            Toast.makeText(ManagerActivity.this, "매니저 모드를 선택하셨습니다.", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(ManagerActivity.this, UserActivity.class).putExtra("uid",uid);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer_layout1);
