@@ -40,11 +40,13 @@ public class ReserveMFragment extends Fragment {
     ListView currentOrderInfo;
     TextView myCafeInfo;
     TextView myCafeCongestion;
-    TextView myCafeMenu;
+    ListView myCafeMenu;
     String cafename;
     int flag;
     ArrayList<String> currentOrderList;
-    ArrayAdapter<String> arrayAdapter;
+    ArrayAdapter<String> orderArrayAdapter;
+    ArrayList<String> menuList;
+    ArrayAdapter<String> menuArrayAdapter;
     String clientS;
     String orderNumS;
     Context contextRegister;
@@ -90,11 +92,16 @@ public class ReserveMFragment extends Fragment {
 
         myCafeInfo = (TextView)view.findViewById(R.id.myCafe);
         myCafeCongestion = (TextView)view.findViewById(R.id.myCafeCongestion);
-        myCafeMenu = (TextView)view.findViewById(R.id.myCafeMenu);
+        myCafeMenu = (ListView) view.findViewById(R.id.myCafeMenu);
         currentOrderInfo = (ListView)view.findViewById(R.id.listView);
+
+        menuList = new ArrayList<String>();
+        menuArrayAdapter = new ArrayAdapter<String>(contextRegister, android.R.layout.simple_list_item_1);
+        myCafeMenu.setAdapter(menuArrayAdapter);
+
         currentOrderList = new ArrayList<String>();
-        arrayAdapter = new ArrayAdapter<String>(contextRegister, android.R.layout.simple_list_item_1);
-        currentOrderInfo.setAdapter(arrayAdapter);
+        orderArrayAdapter = new ArrayAdapter<String>(contextRegister, android.R.layout.simple_list_item_1);
+        currentOrderInfo.setAdapter(orderArrayAdapter);
 
         flag = ((ManagerActivity)getActivity()).getFlag();
         uid = ((ManagerActivity)getActivity()).getUid();
@@ -190,20 +197,22 @@ public class ReserveMFragment extends Fragment {
         final ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child(cafename).exists()){
-                    myCafeMenu.setText("");
-                    String result = "";
-                    for(DataSnapshot snapshot : dataSnapshot.child(cafename+"/menu/").getChildren()){
-                        String key = snapshot.getKey();
-                        result = result + "\n" + key;
-                    }
-                    myCafeMenu.setText(result);
+                menuList.clear();
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    String key = snapshot.getKey();
+                    CafeMenu get = snapshot.getValue(CafeMenu.class);
+                    String[] menu = {get.menu_name, get.price};
+                    String result = "Menu: " + menu[0] + "\nPrice: " + menu[1];
+                    menuList.add(result);
                 }
+                menuArrayAdapter.clear();
+                menuArrayAdapter.addAll(menuList);
+                menuArrayAdapter.notifyDataSetChanged();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {            }
         };
-        ((ManagerActivity)getActivity()).mPostReference.child("cafe_list").addValueEventListener(postListener);
+        ((ManagerActivity)getActivity()).mPostReference.child("cafe_list/"+cafename+"/menu").addValueEventListener(postListener);
     }
 
     public void getFirebaseDatabaseCurrentOrderInfo(){
@@ -222,9 +231,9 @@ public class ReserveMFragment extends Fragment {
                             currentOrderList.add(result);
                         }
                     }
-                    arrayAdapter.clear();
-                    arrayAdapter.addAll(currentOrderList);
-                    arrayAdapter.notifyDataSetChanged();
+                    orderArrayAdapter.clear();
+                    orderArrayAdapter.addAll(currentOrderList);
+                    orderArrayAdapter.notifyDataSetChanged();
                 }
             }
             @Override

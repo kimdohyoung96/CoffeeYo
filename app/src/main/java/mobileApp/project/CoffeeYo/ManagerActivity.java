@@ -141,7 +141,7 @@ public class ManagerActivity extends AppCompatActivity
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content_main, loadingMFragment);
-        //transaction.addToBackStack(null);
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 
@@ -237,18 +237,22 @@ public class ManagerActivity extends AppCompatActivity
         if(id == R.id.nav_register){
             Toast.makeText(ManagerActivity.this, "카페 등록/변경", Toast.LENGTH_SHORT).show();
             transaction.replace(R.id.content_main, registerFragment);
+            transaction.addToBackStack(null);
             transaction.commit();
         }
         else if(id == R.id.nav_cafemenu){
             transaction.replace(R.id.content_main, cafemenuFragment);
+            transaction.addToBackStack(null);
             transaction.commit();
         }
         else if(id == R.id.nav_reserved){
             transaction.replace(R.id.content_main, orderFragment);
+            transaction.addToBackStack(null);
             transaction.commit();
         }
         else if(id == R.id.nav_congestion){
             transaction.replace(R.id.content_main, congestionFragment);
+            transaction.addToBackStack(null);
             transaction.commit();
         }
 

@@ -53,6 +53,28 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="가격"
+                android:textAlignment="center"/>
+
+            <EditText
+                android:id="@+id/price"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:hint="가격을 입력하시오."
+                android:singleLine = "true"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <Button
