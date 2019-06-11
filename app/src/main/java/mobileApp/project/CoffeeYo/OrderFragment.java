@@ -81,10 +81,9 @@ public class OrderFragment extends Fragment {
 
         flag = ((ManagerActivity)getActivity()).getFlag();
         if(flag == 0){
-            Toast.makeText(contextRegister, "Cafe is not registered yet.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(contextRegister, "등록된 카페가 없습니다", Toast.LENGTH_SHORT).show();
         }
         else{
-            Toast.makeText(contextRegister, "finished orders", Toast.LENGTH_SHORT).show();
             cafename = ((ManagerActivity)getActivity()).getCurrentCafeName();
             getFirebaseDatabaseOldOrderInfo();
         }

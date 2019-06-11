@@ -21,8 +21,10 @@
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
             android:text="완료된 주문 내역"
             android:textSize="30dp"
+            android:background="@color/common_google_signin_btn_text_dark_disabled"
             android:gravity="center" />
 
         <ListView

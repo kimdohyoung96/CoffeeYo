@@ -106,7 +106,7 @@ public class RegisterFragment extends Fragment {
                 latitudeS = latitudeE.getText().toString();
 
                 if ((cafename.length() * longitudeS.length() * latitudeS.length()) == 0) {
-                    Toast.makeText(contextRegister, "Data is missing", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(contextRegister, "필요한 모든 데이터를 입력해주세요", Toast.LENGTH_SHORT).show();
                 } else {
                     // set cafe_name
                     ((ManagerActivity)getActivity()).mPostReference.child("/user_list/"+uid+"/cafe_name/").setValue(cafename);

@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:text="메뉴 추가/삭제"
         android:textSize="30dp"
+        android:textAlignment="center"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

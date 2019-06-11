@@ -239,25 +239,21 @@ public class UserActivity extends AppCompatActivity
 
         if (id == R.id.nav_reserve) {
             // Handle the camera action
-            Toast.makeText(UserActivity.this, "이름검색을 선택하셨습니다.", Toast.LENGTH_SHORT).show();
             transaction.replace(R.id.content_main, NameSearch);
+            transaction.addToBackStack(null);
             transaction.commit();
         } else if (id == R.id.nav_menu) {
-            Toast.makeText(UserActivity.this, "주문 내역를 선택하셨습니다.", Toast.LENGTH_SHORT).show();
             transaction.replace(R.id.content_main, User_Finished_Order);
+            transaction.addToBackStack(null);
             transaction.commit();
         } else if (id == R.id.nav_searchmap) {
-            Toast.makeText(UserActivity.this, "지도검색을 선택하셨습니다.", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(UserActivity.this, map_Search.class).putExtra("uid",uid);
+            transaction.addToBackStack(null);
             startActivity(intent);
         } else if (id == R.id.nav_star) {
-            Toast.makeText(UserActivity.this, "충전을 선택하셨습니다.", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(UserActivity.this, NiceMainActivity.class);
+            transaction.addToBackStack(null);
             startActivity(intent);
-        } else if (id == R.id.nav_check) {
-            Toast.makeText(UserActivity.this, "조회를 선택하셨습니다.", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_setting) {
-            Toast.makeText(UserActivity.this, "설정을 선택하셨습니다.", Toast.LENGTH_SHORT).show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

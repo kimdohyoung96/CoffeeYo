@@ -235,7 +235,6 @@ public class ManagerActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if(id == R.id.nav_register){
-            Toast.makeText(ManagerActivity.this, "카페 등록/변경", Toast.LENGTH_SHORT).show();
             transaction.replace(R.id.content_main, registerFragment);
             transaction.addToBackStack(null);
             transaction.commit();

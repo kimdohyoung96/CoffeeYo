@@ -22,6 +22,8 @@
             android:id="@+id/text1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="@color/common_google_signin_btn_text_dark_disabled"
             android:gravity="center"
             android:text="주문 예약 내역"
             android:textSize="30dp" />
@@ -49,6 +51,8 @@
             android:id="@+id/text2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="@color/common_google_signin_btn_text_dark_disabled"
             android:gravity="center"
             android:text="내 카페 정보"
             android:textSize="30dp" />
@@ -56,17 +60,20 @@
         <TextView
             android:id="@+id/myCafe"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textSize="17dp"/>
 
         <TextView
             android:id="@+id/myCafeCongestion"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textSize="17dp"
+            android:layout_marginBottom="10dp"/>
 
         <ListView
             android:id="@+id/myCafeMenu"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 

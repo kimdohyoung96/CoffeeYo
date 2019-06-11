@@ -73,7 +73,7 @@ public class CongestionFragment extends Fragment {
 
         flag = ((ManagerActivity)getActivity()).getFlag();
         if(flag == 0){
-            Toast.makeText(contextRegister, "Cafe is not registered yet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(contextRegister, "등록된 카페가 없습니다", Toast.LENGTH_SHORT).show();
         }
 
         quietB = (RadioButton)view.findViewById(R.id.radio1);
@@ -87,7 +87,7 @@ public class CongestionFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if(flag == 0){
-                    Toast.makeText(contextRegister, "Cafe is not registered yet", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(contextRegister, "등록된 카페가 없습니다", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     cafename = ((ManagerActivity)getActivity()).getCurrentCafeName();
