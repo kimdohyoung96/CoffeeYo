@@ -91,7 +91,7 @@ public class UserActivity extends AppCompatActivity
         data = new ArrayList<String>();
         listView = (ListView)findViewById(R.id.orderlist);
         //uid = intent.getStringExtra("uid");
-
+        classname = intent.getStringExtra("class");
         NameSearch = new NameSearch();
         User_Finished_Order = new User_Finished_Order();
         Bundle bundle1 = new Bundle(1); // 파라미터는 전달할 데이터 개수
