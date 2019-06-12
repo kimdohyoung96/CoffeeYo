@@ -85,12 +85,12 @@ public class OrderFragment extends Fragment {
         }
         else{
             cafename = ((ManagerActivity)getActivity()).getCurrentCafeName();
-            getFirebaseDatabaseOldOrderInfo();
+            //getFirebaseDatabaseOldOrderInfo();
         }
 
         return view;
     }
-
+/*
     public void getFirebaseDatabaseOldOrderInfo(){
         final ValueEventListener postListener = new ValueEventListener() {
             @Override
@@ -117,7 +117,7 @@ public class OrderFragment extends Fragment {
         };
         ((ManagerActivity)getActivity()).mPostReference.child("user_list").addValueEventListener(postListener);
     }
-
+*/
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

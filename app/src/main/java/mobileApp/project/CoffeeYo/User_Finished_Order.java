@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,12 +28,13 @@ public class User_Finished_Order extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private DatabaseReference mPostReference;
+    private FirebaseAuth mAuth;
 
 
     String uid, state;
     ListView listView;
-    ArrayList<String> data;
-    ArrayAdapter<String> arrayAdapter;
+    ArrayList<MemoItem> data;
+    MemoAdapter memoAdapter;
 
     public User_Finished_Order() {
         // Required empty public constructor
@@ -55,12 +57,15 @@ public class User_Finished_Order extends Fragment {
         final Context contextRegister = container.getContext();
         uid = getArguments().getString("uid");
 
-        data = new ArrayList<String>();
+        data = new ArrayList<MemoItem>();
         listView = (ListView)view.findViewById(R.id.orderlist);
         mPostReference = FirebaseDatabase.getInstance().getReference();
 
-        arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1);
-        listView.setAdapter(arrayAdapter);
+        mAuth= FirebaseAuth.getInstance();
+        uid = mAuth.getCurrentUser().getUid();
+
+        memoAdapter = new MemoAdapter(getContext(), data);
+        listView.setAdapter(memoAdapter);
         getFirebaseDatabase();
 
 
@@ -73,22 +78,28 @@ public class User_Finished_Order extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.d("onDataChange", "Data is Updated");
                 data.clear();
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    String key = postSnapshot.getKey();
-                    Orderfirebase get = postSnapshot.getValue(Orderfirebase.class);
-                    String[] info = {get.cafe_name, get.order, get.state};
+                ArrayList<MemoItem> memos = new ArrayList<MemoItem>();
+
+                for (DataSnapshot postListener : dataSnapshot.getChildren()) {
+                    String key = postListener.getKey();
+                    Orderfirebase get = postListener.getValue(Orderfirebase.class);
+                    String[] info = {get.cafe_name, get.take, get.state};
                     state = "old";
+                    String menu_count = "";
                     if (state.equals(info[2])) {
-                        String result = info[0] + ": " + info[1];
-                        data.add(result);
+                        CafemenuCount get1 = postListener.child("menu").getValue(CafemenuCount.class);
+                        menu_count = menu_count+get1.cafe_menu +": "+get1.count+"개"+"  ";
                         Log.d("getFirebaseDatabase", "key: " + key);
-                        Log.d("getFirebaseDatabase", "info: " + info[0] + info[1] + info[2]);
+                        Log.d("getFirebaseDatabase", "info: " + info[0] + info[1] + info[2]+menu_count);
+                        MemoItem result = new MemoItem(info[0],info[1],menu_count);
+                        memos.add(result);
                     }
 
                 }
-                arrayAdapter.clear();
-                arrayAdapter.addAll(data);
-                arrayAdapter.notifyDataSetChanged();
+                memoAdapter = new MemoAdapter(getContext(), memos);
+                listView.setAdapter(memoAdapter);
+                memoAdapter.notifyDataSetChanged();
+
             }
 
 
