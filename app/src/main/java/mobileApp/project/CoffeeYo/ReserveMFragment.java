@@ -106,8 +106,8 @@ public class ReserveMFragment extends Fragment {
         flag = ((ManagerActivity)getActivity()).getFlag();
         uid = ((ManagerActivity)getActivity()).getUid();
         if(flag == 0){
-            myCafeInfo.setText("Not registered yet.");
-            Toast.makeText(contextRegister, "Cafe is not registered yet.", Toast.LENGTH_SHORT).show();
+            myCafeInfo.setText("Not registered yet");
+            Toast.makeText(contextRegister, "등록한 카페가 없습니다", Toast.LENGTH_SHORT).show();
         }
         else{
             cafename = ((ManagerActivity)getActivity()).getCurrentCafeName();
@@ -130,7 +130,7 @@ public class ReserveMFragment extends Fragment {
                 Log.d("currentOrderInfo", "orderNum:"+orderNumS);
 
                 changeFirebaseDatabaseOrder();
-                Toast.makeText(contextRegister,"주문을 완료했습니다.",Toast.LENGTH_SHORT).show();
+                Toast.makeText(contextRegister,"주문을 완료했습니다",Toast.LENGTH_SHORT).show();
             }
         });
 

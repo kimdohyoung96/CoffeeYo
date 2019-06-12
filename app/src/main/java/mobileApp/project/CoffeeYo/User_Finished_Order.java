@@ -68,27 +68,24 @@ public class User_Finished_Order extends Fragment {
     }
 
     public void getFirebaseDatabase() {
-        try {
         final ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                    Log.d("onDataChange", "Data is Updated");
-                    data.clear();
-                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                        String key = postSnapshot.getKey();
-                        Orderfirebase get = postSnapshot.getValue(Orderfirebase.class);
-                        String[] info = {get.cafe_name, get.order, get.state};
-                        state = "old";
-                        if (state.equals(info[2])) {
-                            String result = info[0] + ": " + info[1];
-                            data.add(result);
-                            Log.d("getFirebaseDatabase", "key: " + key);
-                            Log.d("getFirebaseDatabase", "info: " + info[0] + info[1] + info[2]);
-                        }
-
+                Log.d("onDataChange", "Data is Updated");
+                data.clear();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    String key = postSnapshot.getKey();
+                    Orderfirebase get = postSnapshot.getValue(Orderfirebase.class);
+                    String[] info = {get.cafe_name, get.order, get.state};
+                    state = "old";
+                    if (state.equals(info[2])) {
+                        String result = info[0] + ": " + info[1];
+                        data.add(result);
+                        Log.d("getFirebaseDatabase", "key: " + key);
+                        Log.d("getFirebaseDatabase", "info: " + info[0] + info[1] + info[2]);
                     }
 
+                }
                 arrayAdapter.clear();
                 arrayAdapter.addAll(data);
                 arrayAdapter.notifyDataSetChanged();
@@ -100,7 +97,6 @@ public class User_Finished_Order extends Fragment {
             }
         };
         mPostReference.child("user_list").child(uid).child("order").addValueEventListener(postListener);
-        }catch(Exception e){}
     }
 
 

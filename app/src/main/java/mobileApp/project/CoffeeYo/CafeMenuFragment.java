@@ -74,7 +74,7 @@ public class CafeMenuFragment extends Fragment {
 
         flag = ((ManagerActivity)getActivity()).getFlag();
         if(flag == 0){
-            Toast.makeText(contextRegister, "Cafe is not registered yet.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(contextRegister, "등록된 카페가 없습니다", Toast.LENGTH_SHORT).show();
         }
 
         addMenuB = (Button) view.findViewById(R.id.add_menu);
@@ -86,14 +86,14 @@ public class CafeMenuFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if(flag == 0){
-                    Toast.makeText(contextRegister, "Cafe is not registered yet.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(contextRegister, "등록된 카페가 없습니다", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     cafename = ((ManagerActivity)getActivity()).getCurrentCafeName();
                     menuS = menuE.getText().toString();
                     priceS = priceE.getText().toString();
                     if(menuS.length() == 0 || priceS.length() == 0){
-                        Toast.makeText(contextRegister, "Data is missing", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(contextRegister, "필요한 모든 데이터를 입력해주세요", Toast.LENGTH_SHORT).show();
                     } else {
                         postFirebaseDatabaseCafeMenu(true);
                         Toast.makeText(contextRegister, "메뉴 추가 완료", Toast.LENGTH_SHORT).show();
@@ -107,13 +107,13 @@ public class CafeMenuFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (flag == 0){
-                    Toast.makeText(contextRegister, "Cafe is not registered yet.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(contextRegister, "등록된 카페가 없습니다", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     cafename = ((ManagerActivity)getActivity()).getCurrentCafeName();
                     menuS = menuE.getText().toString();
                     if(menuS.length() == 0){
-                        Toast.makeText(contextRegister, "Data is missing", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(contextRegister, "필요한 모든 데이터를 입력해주세요", Toast.LENGTH_SHORT).show();
                     } else {
                         postFirebaseDatabaseCafeMenu(false);
                         Toast.makeText(contextRegister, "메뉴 삭제 완료", Toast.LENGTH_SHORT).show();

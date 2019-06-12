@@ -43,10 +43,12 @@ import com.google.firebase.database.ValueEventListener;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ReserveFragment.OnFragmentInteractionListener,
-        User_Finished_Order.OnFragmentInteractionListener, NameSearch.OnFragmentInteractionListener, User_Order.OnFragmentInteractionListener {
+        User_Finished_Order.OnFragmentInteractionListener, NameSearch.OnFragmentInteractionListener, User_Order.OnFragmentInteractionListener, LoadingCFragment.OnFragmentInteractionListener {
     private Fragment User_Finished_Order;
     private Fragment NameSearch;
     private Fragment ReserveFragment;
@@ -55,6 +57,8 @@ public class UserActivity extends AppCompatActivity
     private DatabaseReference mPostReference;
     String mymoney = "";
     String myemail = "";
+    String myname = "";
+    String mycafe_name = "";
     ListView listView;
     ArrayList<String> data;
     ArrayAdapter<String> arrayAdapter;
@@ -110,6 +114,8 @@ public class UserActivity extends AppCompatActivity
             transaction.commit();
         }else{
             uid = intent.getStringExtra("uid");
+            cafename = intent.getStringExtra("cafe_name");
+
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.content_main, ReserveFragment);
             bundle.putString("uid", uid);
@@ -252,11 +258,13 @@ public class UserActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_star) {
             Toast.makeText(UserActivity.this, "충전을 선택하셨습니다.", Toast.LENGTH_SHORT).show();
+            postFirebaseDatabase(true);
             Intent intent = new Intent(UserActivity.this, NiceMainActivity.class);
+
             startActivity(intent);
-        } else if (id == R.id.nav_cvt2mgr) {
+        }  else if (id == R.id.nav_cvt2mgr) {
             Toast.makeText(UserActivity.this, "매니저 모드를 선택하셨습니다.", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(UserActivity.this, ManagerActivity.class).putExtra("uid",uid);
+            Intent intent = new Intent(UserActivity.this, ManagerActivity.class).putExtra("uid",uid).putExtra("cafe_name",mycafe_name).putExtra("class","user");
             startActivity(intent);
         }
 
@@ -267,6 +275,17 @@ public class UserActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+    public void postFirebaseDatabase(boolean add){ //firebase database로 데이터를 보내는 함수.
+        Map<String, Object> childUpdates = new HashMap<>();
+        Map<String, Object> postValues = null;
+        String money = String.valueOf(Integer.parseInt(mymoney) + 10000);
+        if(add){
+            FirebasePost post = new FirebasePost(myemail, myname, uid, money, mycafe_name);
+            postValues = post.toMap();
+        }
+        childUpdates.put("/user_list/" + uid, postValues); //여기서 추가 - 이름을 뭘로할지 /memo_list/title 의 이름으로 만들어짐.
+        mPostReference.updateChildren(childUpdates);
     }
     public void signOut() {
 
@@ -334,6 +353,8 @@ public class UserActivity extends AppCompatActivity
                     if (uid.equals(list.get(j)[2])) {
                         myemail = list.get(j)[0];
                         mymoney = list.get(j)[3];
+                        myname = list.get(j)[1];
+                        mycafe_name = list.get(j)[4];
                         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
                         View headerView = navigationView.getHeaderView(0);
                         TextView useremail = (TextView) headerView.findViewById(R.id.myemail);

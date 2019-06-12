@@ -74,6 +74,7 @@ public class ManagerActivity extends AppCompatActivity
     int flag;
     String mymoney = "";
     String myemail = "";
+    String cafe_name = "";
     ArrayList<String[]> list = new ArrayList<>();
 
     @Override
@@ -94,7 +95,7 @@ public class ManagerActivity extends AppCompatActivity
 
         Intent intent = getIntent();
         uid = intent.getStringExtra("uid");
-
+        cafe_name = intent.getStringExtra("cafe_name");
         mPostReference = FirebaseDatabase.getInstance().getReference();
 
         drawer = (DrawerLayout)findViewById(R.id.drawer_layout1);
@@ -284,8 +285,8 @@ public class ManagerActivity extends AppCompatActivity
             transaction.addToBackStack(null);
             transaction.commit();
         }  else if (id == R.id.nav_cvt2usr) {
-            Toast.makeText(ManagerActivity.this, "매니저 모드를 선택하셨습니다.", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(ManagerActivity.this, UserActivity.class).putExtra("uid",uid);
+            Toast.makeText(ManagerActivity.this, "유저 모드를 선택하셨습니다.", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(ManagerActivity.this, UserActivity.class).putExtra("uid",uid).putExtra("cafe_name",cafe_name).putExtra("class","manager");
             startActivity(intent);
         }
 

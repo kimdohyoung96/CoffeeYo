@@ -193,6 +193,8 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
                                 // 마커 생성
                                 MarkerOptions mOptions2 = new MarkerOptions();
                                 mOptions2.title("search result");
+
+
                                 mOptions2.snippet(str);
                                 mOptions2.position(point);
                                 google.clear();
@@ -378,8 +380,8 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
             case 1:
                 if((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)){
                     onMapReady(google);
-               // prepareMap();
-               // drawMap();
+                    // prepareMap();
+                    // drawMap();
                 }
                 break;
             default:
