@@ -137,20 +137,21 @@ public class LoadingCFragment extends Fragment {
             if (uid.equals(list.get(j)[2])) {
                 String money = String.valueOf(Integer.parseInt(list.get(j)[3]) - Integer.parseInt(Sum));
 
-                FirebasePost post1 = new FirebasePost(list.get(j)[0], list.get(j)[1], uid, money , "0");
-                postValues = post1.toMap();
-                childUpdates.put("/user_list/" + uid, postValues);
-                mPostReference.updateChildren(childUpdates);
-                Log.d("뺌", "onCreateView: ");
+                //FirebasePost post1 = new FirebasePost(list.get(j)[0], list.get(j)[1], uid, money , "0");
+                //postValues = post1.toMap();
+                //childUpdates.put("/user_list/" + uid, postValues);
+                mPostReference.child("user_list/"+uid+"/money").setValue(money);
+                //mPostReference.updateChildren(childUpdates);
                 btn.setVisibility(View.VISIBLE);
             }
             if (cafe_name.equals(list.get(j)[4])) {
                 String money = String.valueOf(Integer.parseInt(list.get(j)[3]) + Integer.parseInt(Sum));
 
-                FirebasePost post2 = new FirebasePost(list.get(j)[0], list.get(j)[1], list.get(j)[2], money , "0");
-                postValues = post2.toMap();
-                childUpdates.put("/user_list/" + list.get(j)[2], postValues);
-                mPostReference.updateChildren(childUpdates);
+                //FirebasePost post2 = new FirebasePost(list.get(j)[0], list.get(j)[1], list.get(j)[2], money , "0");
+                //postValues = post2.toMap();
+                //childUpdates.put("/user_list/" + list.get(j)[2], postValues);
+                mPostReference.child("user_list/"+uid+"/money").setValue(money);
+                //mPostReference.updateChildren(childUpdates);
                 Log.d("더함", "onCreateView: ");
                 btn.setVisibility(View.VISIBLE);
             }

@@ -31,7 +31,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ManagerActivity"
-            android:screenOrientation="portrait" />
+             />
         <activity
             android:name=".NiceMainActivity"
             android:launchMode="singleTop">

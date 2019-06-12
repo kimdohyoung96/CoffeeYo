@@ -32,8 +32,10 @@ public class ReserveFragment extends Fragment {
 
     String uid, state;
     ListView listView;
-    ArrayList<MemoItem> data;
-    MemoAdapter memoAdapter;
+    //ArrayList<MemoItem> data;
+    //MemoAdapter memoAdapter;
+    ArrayList<String> currentOrderList;
+    ArrayAdapter<String> orderArrayAdapter;
 
     public ReserveFragment() {
         // Required empty public constructor
@@ -53,17 +55,20 @@ public class ReserveFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_reserve, container, false);
         final Context contextRegister = container.getContext();
-        data = new ArrayList<MemoItem>();
+        //data = new ArrayList<MemoItem>();
         listView = (ListView)view.findViewById(R.id.orderlist);
         mPostReference = FirebaseDatabase.getInstance().getReference();
 
         mAuth= FirebaseAuth.getInstance();
         uid = mAuth.getCurrentUser().getUid();
 
-        memoAdapter = new MemoAdapter(getContext(), data);
-        listView.setAdapter(memoAdapter);
-        getFirebaseDatabase();
+        //memoAdapter = new MemoAdapter(getContext(), data);
+        //listView.setAdapter(memoAdapter);
 
+        currentOrderList = new ArrayList<String>();
+        orderArrayAdapter = new ArrayAdapter<String>(contextRegister, android.R.layout.simple_list_item_1);
+        listView.setAdapter(orderArrayAdapter);
+        getFirebaseDatabase();
 
         return view;
     }
@@ -72,38 +77,63 @@ public class ReserveFragment extends Fragment {
         final ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d("onDataChange", "Data is Updated");
+                currentOrderList.clear();
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Orderfirebase get = snapshot.getValue(Orderfirebase.class);
+                    String[] order = {get.cafe_name, get.state, get.take};
+                    if(order[1].equals("current")) {
+                        String menu_list = "";
+                        for(DataSnapshot snapshot1 : snapshot.child("menu").getChildren()) {
+                            CafemenuCount get1 = snapshot1.getValue(CafemenuCount.class);
+                            String[] menu = {get1.cafe_menu, get1.count};
+                            menu_list = menu_list + menu[0] + ": " + menu[1] + "개 ";
+                        }
+                        String result = order[0] + "\n" + menu_list + "\n" + order[2];
+                        currentOrderList.add(result);
+                    }
+                }
+                orderArrayAdapter.clear();
+                orderArrayAdapter.addAll(currentOrderList);
+                orderArrayAdapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {            }
+        };
+        mPostReference.child("user_list/"+uid+"/order").addValueEventListener(postListener);
+    }
+
+    /*public void getFirebaseDatabase() {
+        final ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 data.clear();
                 ArrayList<MemoItem> memos = new ArrayList<MemoItem>();
-
                 for (DataSnapshot postListener : dataSnapshot.getChildren()) {
                     String key = postListener.getKey();
                     Orderfirebase get = postListener.getValue(Orderfirebase.class);
                     String[] info = {get.cafe_name, get.take, get.state};
                     state = "current";
-                    String menu_count = "";
                     if (state.equals(info[2])) {
-
-                        CafemenuCount get1 = postListener.child("menu").getValue(CafemenuCount.class);
-                        menu_count = menu_count+get1.cafe_menu +": "+get1.count+"개"+"  ";
-                        Log.d("getFirebaseDatabase", "key: " + key);
-                        Log.d("getFirebaseDatabase", "info: " + info[0] + info[1] + info[2]+menu_count);
+                        String menu_count = "";
+                        for(DataSnapshot snapshot1 : postListener.child("menu").getChildren()){
+                            String orderNum = snapshot1.getKey();
+                            CafemenuCount get1 = snapshot1.getValue(CafemenuCount.class);
+                            menu_count = menu_count + get1.cafe_menu + ": " + get1.count + "개" + "  ";
+                        }
                         MemoItem result = new MemoItem(info[0], menu_count, info[1]);
                         memos.add(result);
-
-
                     }
                 }
                 memoAdapter = new MemoAdapter(getContext(), memos);
                 listView.setAdapter(memoAdapter);
                 memoAdapter.notifyDataSetChanged();
-
             }
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {            }
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
         };
         mPostReference.child("user_list").child(uid).child("order").addValueEventListener(postListener);
-    }
+    }*/
 
 
     // TODO: Rename method, update argument and hook method into UI event

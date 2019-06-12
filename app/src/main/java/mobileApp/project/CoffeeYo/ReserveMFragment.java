@@ -111,9 +111,10 @@ public class ReserveMFragment extends Fragment {
         }
         else{
             cafename = ((ManagerActivity)getActivity()).getCurrentCafeName();
+            Log.d("HERE!!!!!", "cafename: "+cafename);
             getFirebaseDatabaseCafeInfo();
             getFirebaseDatabaseCafeMenu();
-            //getFirebaseDatabaseCurrentOrderInfo();
+            getFirebaseDatabaseCurrentOrderInfo();
             getFirebaseDatabaseCongestion();
         }
 
@@ -133,7 +134,6 @@ public class ReserveMFragment extends Fragment {
                 Toast.makeText(contextRegister,"주문을 완료했습니다",Toast.LENGTH_SHORT).show();
             }
         });
-
         return view;
     }
 
@@ -214,7 +214,7 @@ public class ReserveMFragment extends Fragment {
         };
         ((ManagerActivity)getActivity()).mPostReference.child("cafe_list/"+cafename+"/menu").addValueEventListener(postListener);
     }
-/*
+
     public void getFirebaseDatabaseCurrentOrderInfo(){
         final ValueEventListener postListener = new ValueEventListener() {
             @Override
@@ -225,9 +225,15 @@ public class ReserveMFragment extends Fragment {
                     for(DataSnapshot snapshot1 : snapshot.child("order").getChildren()){
                         String orderNum = snapshot1.getKey();
                         Orderfirebase get = snapshot1.getValue(Orderfirebase.class);
-                        String[] order = {get.cafe_name, get.order, get.state, get.take};
-                        if(order[0].equals(cafename) && order[2].equals("current")){
-                            String result = "Client: " + client + "\nOrder number: " + orderNum + "\nOrder: " + order[1] + "\nTake: " + order[3];
+                        String[] order = {get.cafe_name, get.state, get.take};
+                        if(order[0].equals(cafename) && order[1].equals("current")){
+                            String menu_list = "";
+                            for (DataSnapshot snapshot2 : snapshot1.child("menu").getChildren()){
+                                CafemenuCount get1 = snapshot2.getValue(CafemenuCount.class);
+                                String[] menu = {get1.cafe_menu, get1.count};
+                                menu_list = menu_list + menu[0] + " " + menu[1] + "개\n";
+                            }
+                            String result = "Client: " + client + "\nOrder number: " + orderNum + "\n" + menu_list + "Take: " + order[2];
                             currentOrderList.add(result);
                         }
                     }
@@ -241,7 +247,7 @@ public class ReserveMFragment extends Fragment {
         };
         ((ManagerActivity)getActivity()).mPostReference.child("user_list").addValueEventListener(postListener);
     }
-*/
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

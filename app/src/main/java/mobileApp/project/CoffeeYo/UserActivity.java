@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -79,6 +80,9 @@ public class UserActivity extends AppCompatActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_user);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -99,11 +103,11 @@ public class UserActivity extends AppCompatActivity
         Bundle bundle = new Bundle(1); // 파라미터는 전달할 데이터 개수
 
 
-
+        uid = intent.getStringExtra("uid");
         mPostReference = FirebaseDatabase.getInstance().getReference();
         if(classname.equals("map")){
             cafename = intent.getStringExtra("cafe_name");
-            uid = intent.getStringExtra("uid");
+
             Fragment User_Order = new User_Order();
             Bundle bundle2 = new Bundle(1); // 파라미터는 전달할 데이터 개수
             bundle2.putString("cafe_name", cafename);
@@ -113,7 +117,7 @@ public class UserActivity extends AppCompatActivity
             transaction.addToBackStack(null);
             transaction.commit();
         }else{
-            uid = intent.getStringExtra("uid");
+            //uid = intent.getStringExtra("uid");
             cafename = intent.getStringExtra("cafe_name");
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
