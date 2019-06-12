@@ -88,7 +88,7 @@ public class LoadingMFragment extends Fragment {
             public void run() {
                 ((ManagerActivity)getActivity()).transactionFromLoadingToReserveM();
             }
-        }, 3000);
+        }, 1000);
 
         return view;
     }

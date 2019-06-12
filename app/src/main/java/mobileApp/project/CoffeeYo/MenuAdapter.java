@@ -113,4 +113,3 @@ public class MenuAdapter extends RecyclerView.Adapter <MenuAdapter.ViewHolder> {
         }
     }
 }
-
