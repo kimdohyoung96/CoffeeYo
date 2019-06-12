@@ -102,7 +102,7 @@ public class ReserveMFragment extends Fragment {
             cafename = ((ManagerActivity)getActivity()).getCurrentCafeName();
             getFirebaseDatabaseCafeInfo();
             getFirebaseDatabaseCafeMenu();
-            getFirebaseDatabaseCurrentOrderInfo();
+            //getFirebaseDatabaseCurrentOrderInfo();
             getFirebaseDatabaseCongestion();
         }
 
@@ -201,7 +201,7 @@ public class ReserveMFragment extends Fragment {
         };
         ((ManagerActivity)getActivity()).mPostReference.child("cafe_list").addValueEventListener(postListener);
     }
-
+/*
     public void getFirebaseDatabaseCurrentOrderInfo(){
         final ValueEventListener postListener = new ValueEventListener() {
             @Override
@@ -228,7 +228,7 @@ public class ReserveMFragment extends Fragment {
         };
         ((ManagerActivity)getActivity()).mPostReference.child("user_list").addValueEventListener(postListener);
     }
-
+*/
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
