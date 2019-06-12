@@ -104,7 +104,6 @@ public class NameSearch extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Fragment User_Order = new User_Order();
                 cafe_name = parent.getItemAtPosition(position).toString();
-                //cafe_name = data.get(position);
                 Bundle bundle = new Bundle(1); // 파라미터는 전달할 데이터 개수
                 bundle.putString("cafe_name", cafe_name);
                 User_Order.setArguments(bundle);
