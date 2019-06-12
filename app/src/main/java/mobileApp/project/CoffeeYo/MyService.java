@@ -53,8 +53,8 @@ public class MyService extends Service {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     cnt_all++;
                     Orderfirebase get = snapshot.getValue(Orderfirebase.class);
-                    String[] order = {get.cafe_name, get.order, get.state, get.take};
-                    if(order[2].equals("current")){
+                    String state = get.state;
+                    if(state.equals("current")){
                         cnt_current++;
                     }
                 }
@@ -74,7 +74,7 @@ public class MyService extends Service {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "default");
 
         builder.setSmallIcon(R.drawable.ic_cafemain)
-                .setContentText("Your order is ready!")
+                .setContentText("주문하신 메뉴가 완료되었어요!:)")
                 .setContentTitle("COFFEE-YO");
 
         Intent intentNoti = new Intent(this, ManagerActivity.class);
@@ -93,8 +93,6 @@ public class MyService extends Service {
             manager.createNotificationChannel(new NotificationChannel("default", "basic", NotificationManager.IMPORTANCE_DEFAULT));
         }
         manager.notify(0, builder.build());
-
-        Log.d("ALARM!!!", "GREAT!!");
     }
 
     @Override

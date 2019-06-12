@@ -60,7 +60,7 @@ public class User_Order extends Fragment {
         super.onCreate(savedInstanceState);
 
     }
-//////
+    //////
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -99,73 +99,67 @@ public class User_Order extends Fragment {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-                        if (r_btn2.isChecked() == true) {
-                            take = "Take-out";
-                        } else if (r_btn1.isChecked() == true) {
-                            take = "For-here";
+                if (r_btn2.isChecked() == true) {
+                    take = "Take-out";
+                } else if (r_btn1.isChecked() == true) {
+                    take = "For-here";
 
-                        }
-                    }
-                });
+                }
+            }
+        });
 
 
 
 
         YesButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Fragment OrderCheckFragment = new OrderCheckFragment();
-                        Fragment LoadingCFragment = new LoadingCFragment();
-                        Bundle bundle = new Bundle();
-                        Bundle bundle1 = new Bundle();
-                        bundle.putString("cafe_name", cafe_name);
-                        bundle1.putString("cafe_name", cafe_name);
-                        String[] order = new String[10];
-                        int i = menu_list.size();
-                        int Num = 0;
-                        int Sum = 0;
+            @Override
+            public void onClick(View v) {
+                Fragment OrderCheckFragment = new OrderCheckFragment();
+                Fragment LoadingCFragment = new LoadingCFragment();
+                Bundle bundle = new Bundle();
+                Bundle bundle1 = new Bundle();
+                bundle.putString("cafe_name", cafe_name);
+                bundle1.putString("cafe_name", cafe_name);
+                String[] order = new String[10];
+                int i = menu_list.size();
+                int Num = 0;
+                int Sum = 0;
 
-                        for(menuitem men : menu_list){
-                            menu = men.getMenu();
-                            count = men.getCount();
-                            price = men.getPrice();
-                            if (Integer.parseInt(count) >= 1) {
-                                Sum += Integer.parseInt(price) * Integer.parseInt(count);
-                                bundle.putString(menu, count);
-                                bundle1.putString(menu, count);
-                                order[Num]= menu;
-                                Num++;
-                            }
+                for(menuitem men : menu_list){
+                    menu = men.getMenu();
+                    count = men.getCount();
+                    price = men.getPrice();
+                    if (Integer.parseInt(count) >= 1) {
+                        Sum += Integer.parseInt(price) * Integer.parseInt(count);
+                        bundle.putString(menu, count);
+                        bundle1.putString(menu, count);
+                        order[Num]= menu;
+                        Num++;
+                    }
 
-                        }
-                        String su = String.valueOf(Sum);
-                        bundle.putStringArray("order", order);
-                        bundle.putString("Num", String.valueOf(Num));
-                        bundle.putString("take", take);
-                        bundle.putString("Sum",su);
-                        bundle1.putStringArray("order", order);
-                        bundle1.putString("Num", String.valueOf(Num));
-                        bundle1.putString("take", take);
-                        bundle1.putString("Sum",su);
+                }
+                String su = String.valueOf(Sum);
+                bundle.putStringArray("order", order);
+                bundle.putString("Num", String.valueOf(Num));
+                bundle.putString("take", take);
+                bundle.putString("Sum",su);
+                bundle1.putStringArray("order", order);
+                bundle1.putString("Num", String.valueOf(Num));
+                bundle1.putString("take", take);
+                bundle1.putString("Sum",su);
 
-                        OrderCheckFragment.setArguments(bundle);
-                        LoadingCFragment.setArguments(bundle1);
+                OrderCheckFragment.setArguments(bundle);
+                LoadingCFragment.setArguments(bundle1);
 
-                        FragmentManager fragmentManager = getFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.content_main, OrderCheckFragment);
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.content_main, OrderCheckFragment);
 
-                        fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commit();
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
 
-
-
-
-
-
-
-                        cafe_name = "";
-                        take = "";
+                cafe_name = "";
+                take = "";
 
             }
         });
@@ -193,9 +187,12 @@ public class User_Order extends Fragment {
                     Log.d("getFirebaseDatabase", "info: " + get.menu_name + get.price);
                 }
 
-
-
-                String congestion = dataSnapshot.child("congestion").getValue().toString();
+                String congestion;
+                if(dataSnapshot.child("congestion").getValue()!=null) {
+                    congestion = dataSnapshot.child("congestion").getValue().toString();
+                }else{
+                    congestion = "-";
+                }
                 TextCongestion.setText("카페 밀도: "+congestion);
 
 

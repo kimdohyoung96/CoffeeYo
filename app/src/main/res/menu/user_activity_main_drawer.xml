@@ -21,11 +21,13 @@
             android:title="충전" />
     </group>
 
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Import" />
+    <item android:title="Mode Change">
+        <menu>
+            <item
+                android:id="@+id/nav_cvt2mgr"
+                android:icon="@drawable/ic_backkey"
+                android:title="매니저 모드" />
+        </menu>
+    </item>
 
 </menu>

@@ -21,12 +21,13 @@
             android:title="혼잡도 설정" />
     </group>
 
- 
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Import" />
+    <item android:title="Mode Change">
+        <menu>
+            <item
+                android:id="@+id/nav_cvt2usr"
+                android:icon="@drawable/ic_backkey"
+                android:title="유저 모드" />
+        </menu>
+    </item>
 
 </menu>

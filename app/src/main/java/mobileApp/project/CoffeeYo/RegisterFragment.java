@@ -100,7 +100,6 @@ public class RegisterFragment extends Fragment {
         registerB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(contextRegister, "카페 등록/변경 완료", Toast.LENGTH_LONG).show();
                 cafename = nameE.getText().toString();
                 longitudeS = longitudeE.getText().toString();
                 latitudeS = latitudeE.getText().toString();
@@ -128,6 +127,7 @@ public class RegisterFragment extends Fragment {
         childUpdates.put("/cafe_list/" + cafename + "/cafe_info/", postValues);
         ((ManagerActivity)getActivity()).mPostReference.updateChildren(childUpdates);
         clearET();
+        ((ManagerActivity)getActivity()).getFirebaseDatabaseCheckMyCafe();
     }
 
     private void clearET() {

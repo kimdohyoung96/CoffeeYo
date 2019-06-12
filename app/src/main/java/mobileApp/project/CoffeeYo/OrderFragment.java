@@ -85,12 +85,12 @@ public class OrderFragment extends Fragment {
         }
         else{
             cafename = ((ManagerActivity)getActivity()).getCurrentCafeName();
-            //getFirebaseDatabaseOldOrderInfo();
+            getFirebaseDatabaseOldOrderInfo();
         }
 
         return view;
     }
-/*
+
     public void getFirebaseDatabaseOldOrderInfo(){
         final ValueEventListener postListener = new ValueEventListener() {
             @Override
@@ -101,9 +101,15 @@ public class OrderFragment extends Fragment {
                     for (DataSnapshot snapshot1 : snapshot.child("order").getChildren()){
                         String orderNum = snapshot1.getKey();
                         Orderfirebase get = snapshot1.getValue(Orderfirebase.class);
-                        String[] order = {get.cafe_name, get.order, get.state, get.take};
-                        if(order[0].equals(cafename) && order[2].equals("old")){
-                            String result = "Client: " + client + "\nOrder number: " + orderNum + "\nOrder: " + order[1] + "\nTake: " + order[3];
+                        String[] order = {get.cafe_name, get.state, get.take};
+                        if(order[0].equals(cafename) && order[1].equals("old")){
+                            String menu_list = "";
+                            for (DataSnapshot snapshot2 : snapshot1.child("menu").getChildren()){
+                                CafemenuCount get1 = snapshot2.getValue(CafemenuCount.class);
+                                String[] menu = {get1.cafe_menu, get1.count};
+                                menu_list = menu_list + menu[0] + " " + menu[1] + "개 ";
+                            }
+                            String result = "Client: " + client + "\nOrder number: " + orderNum + "\n" + menu_list + "\n" + order[2];
                             oldOrderList.add(result);
                         }
                     }
@@ -117,7 +123,7 @@ public class OrderFragment extends Fragment {
         };
         ((ManagerActivity)getActivity()).mPostReference.child("user_list").addValueEventListener(postListener);
     }
-*/
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

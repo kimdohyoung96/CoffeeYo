@@ -30,34 +30,37 @@
 
         <RadioGroup
             android:id="@+id/radioGroup"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_gravity="center">
 
-            <RadioButton
-                android:id="@+id/radio1"
-                android:text="한산"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:checked="true"/>
+                <RadioButton
+                    android:id="@+id/radio1"
+                    android:text="한산"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:layout_marginRight="20dp"/>
 
-            <RadioButton
-                android:id="@+id/radio2"
-                android:text="보통"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <RadioButton
+                    android:id="@+id/radio2"
+                    android:text="보통"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-            <RadioButton
-                android:id="@+id/radio3"
-                android:text="혼잡"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <RadioButton
+                    android:id="@+id/radio3"
+                    android:text="혼잡"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"/>
 
-            <RadioButton
-                android:id="@+id/radio4"
-                android:text="만석"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <RadioButton
+                    android:id="@+id/radio4"
+                    android:text="만석"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
         </RadioGroup>
 
@@ -67,7 +70,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="혼잡도 설정"
-            android:layout_marginTop="30dp"/>
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center"/>
 
     </LinearLayout>
 
