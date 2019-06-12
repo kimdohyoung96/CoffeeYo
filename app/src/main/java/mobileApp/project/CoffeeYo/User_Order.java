@@ -115,23 +115,16 @@ public class User_Order extends Fragment {
                     @Override
                     public void onClick(View v) {
                         Fragment OrderCheckFragment = new OrderCheckFragment();
+                        Fragment LoadingCFragment = new LoadingCFragment();
                         Bundle bundle = new Bundle();
+                        Bundle bundle1 = new Bundle();
                         bundle.putString("cafe_name", cafe_name);
+                        bundle1.putString("cafe_name", cafe_name);
                         String[] order = new String[10];
                         int i = menu_list.size();
                         int Num = 0;
                         int Sum = 0;
-                        /*
-                        for (int j=0; j < i; j++) {
-                            menu = menu_list.get()[0];
-                            count = ((TextView) recyclerView.findViewHolderForAdapterPosition(j).itemView.findViewById(R.id.count)).getText().toString();
-                            price = menu_list[j][1];
-                            if (Integer.parseInt(count) >= 1) {
-                                order[Num]= menu+": "+count+"개";
-                                Num++;
-                                }
-                            }
-                            */
+
                         for(menuitem men : menu_list){
                             menu = men.getMenu();
                             count = men.getCount();
@@ -139,6 +132,7 @@ public class User_Order extends Fragment {
                             if (Integer.parseInt(count) >= 1) {
                                 Sum += Integer.parseInt(price) * Integer.parseInt(count);
                                 bundle.putString(menu, count);
+                                bundle1.putString(menu, count);
                                 order[Num]= menu;
                                 Num++;
                             }
@@ -149,8 +143,13 @@ public class User_Order extends Fragment {
                         bundle.putString("Num", String.valueOf(Num));
                         bundle.putString("take", take);
                         bundle.putString("Sum",su);
+                        bundle1.putStringArray("order", order);
+                        bundle1.putString("Num", String.valueOf(Num));
+                        bundle1.putString("take", take);
+                        bundle1.putString("Sum",su);
 
                         OrderCheckFragment.setArguments(bundle);
+                        LoadingCFragment.setArguments(bundle1);
 
                         FragmentManager fragmentManager = getFragmentManager();
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -158,6 +157,11 @@ public class User_Order extends Fragment {
 
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
+
+
+
+
+
 
 
                         cafe_name = "";

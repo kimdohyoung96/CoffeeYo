@@ -30,7 +30,7 @@ public class OrderCheckFragment extends Fragment {
 
     private DatabaseReference mPostReference;
     private FirebaseAuth mAuth;
-    private String cafe_name, uid, Num, state, take, count = "";
+    private String cafe_name, uid, Num, state, take, count, Sum = "";
     private Button OkButton;
     private String order[];
     private ListView listView;
@@ -61,6 +61,7 @@ public class OrderCheckFragment extends Fragment {
         order = getArguments().getStringArray("order");
         Num = getArguments().getString("Num");
         take = getArguments().getString("take");
+        Sum = getArguments().getString("Sum");
 
         mPostReference = FirebaseDatabase.getInstance().getReference();
 
@@ -74,6 +75,7 @@ public class OrderCheckFragment extends Fragment {
             data.add(a+"  :"+count+"개");
         }
         data.add(take);
+        data.add(Sum+"원");
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, data);
         listView.setAdapter(arrayAdapter);
