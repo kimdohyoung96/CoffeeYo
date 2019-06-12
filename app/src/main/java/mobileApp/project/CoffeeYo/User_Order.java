@@ -41,7 +41,6 @@ public class User_Order extends Fragment {
     private OnFragmentInteractionListener mListener;
     private DatabaseReference mPostReference;
     private FirebaseAuth mAuth;
-    final int[] i = {0};
     private String cafe_name, take, menu, count, price = "";
     private ArrayList<menuitem> menu_list;
     private RecyclerView recyclerView;
@@ -119,20 +118,38 @@ public class User_Order extends Fragment {
                         Bundle bundle = new Bundle();
                         bundle.putString("cafe_name", cafe_name);
                         String[] order = new String[10];
+                        int i = menu_list.size();
                         int Num = 0;
-                        for (int j=0; j < i[0]; j++) {
-                            menu = ((TextView) recyclerView.findViewHolderForAdapterPosition(j).itemView.findViewById(R.id.menutext)).getText().toString();
+                        int Sum = 0;
+                        /*
+                        for (int j=0; j < i; j++) {
+                            menu = menu_list.get()[0];
                             count = ((TextView) recyclerView.findViewHolderForAdapterPosition(j).itemView.findViewById(R.id.count)).getText().toString();
-                            price = ((TextView) recyclerView.findViewHolderForAdapterPosition(j).itemView.findViewById(R.id.price)).getText().toString();
+                            price = menu_list[j][1];
                             if (Integer.parseInt(count) >= 1) {
                                 order[Num]= menu+": "+count+"개";
                                 Num++;
                                 }
                             }
+                            */
+                        for(menuitem men : menu_list){
+                            menu = men.getMenu();
+                            count = men.getCount();
+                            price = men.getPrice();
+                            if (Integer.parseInt(count) >= 1) {
+                                Sum += Integer.parseInt(price) * Integer.parseInt(count);
+                                bundle.putString(menu, count);
+                                order[Num]= menu;
+                                Num++;
+                            }
 
+                        }
+                        String su = String.valueOf(Sum);
                         bundle.putStringArray("order", order);
                         bundle.putString("Num", String.valueOf(Num));
                         bundle.putString("take", take);
+                        bundle.putString("Sum",su);
+
                         OrderCheckFragment.setArguments(bundle);
 
                         FragmentManager fragmentManager = getFragmentManager();
@@ -167,8 +184,7 @@ public class User_Order extends Fragment {
 
                     String key = postListener.getKey();
                     CafeMenudatabase get = postListener.getValue(CafeMenudatabase.class);
-                    menu_list.add(new menuitem(get.menu_name, get.price));
-                    i[0]++;
+                    menu_list.add(new menuitem(get.menu_name, get.price, "0"));
                     Log.d("getFirebaseDatabase", "key: " + key);
                     Log.d("getFirebaseDatabase", "info: " + get.menu_name + get.price);
                 }
