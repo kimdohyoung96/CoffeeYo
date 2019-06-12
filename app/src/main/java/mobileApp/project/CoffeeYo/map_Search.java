@@ -320,7 +320,7 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
                 @Override//info 눌렀을때 무슨행동으로 넘어갈지.
                 public void onInfoWindowClick(Marker marker) {
                     if(infowindow.containsKey(marker.getTitle())){
-                        Intent intent = new Intent(map_Search.this, UserActivity.class).putExtra("cafe_name",marker.getTitle()).putExtra("class","map").putExtra("uid","uid");
+                        Intent intent = new Intent(map_Search.this, UserActivity.class).putExtra("cafe_name",marker.getTitle()).putExtra("class","map").putExtra("uid",uid);
                         Log.d("A->B 액티비티먼저전환", "onInfoWindowClick: cafename : " + marker.getTitle());
                         startActivity(intent);
                     }
