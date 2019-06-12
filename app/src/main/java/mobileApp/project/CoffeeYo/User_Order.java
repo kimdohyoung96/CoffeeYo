@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.SignInButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -49,7 +50,10 @@ public class User_Order extends Fragment {
     private RadioButton r_btn1, r_btn2;
     private RadioGroup radioGroup;
     private Button YesButton;
+    public String mymoney = "";
+    public String uid = "";
 
+    ArrayList<String[]> list = new ArrayList<>();
 
     public User_Order() {
         // Required empty public constructor
@@ -66,7 +70,8 @@ public class User_Order extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user__order, container, false);
-
+        mAuth= FirebaseAuth.getInstance();
+        uid = mAuth.getCurrentUser().getUid();
 
         cafe_name = getArguments().getString("cafe_name");
         menu_list = new ArrayList<menuitem>();
@@ -87,7 +92,8 @@ public class User_Order extends Fragment {
         });
 
         mPostReference = FirebaseDatabase.getInstance().getReference();
-
+        getFirebaseDatabase();
+        getFirebaseDatabase1();
         radioGroup = (RadioGroup)view.findViewById(R.id.radioGroup);
         r_btn1 = (RadioButton)view.findViewById(R.id.r_btn1);
         r_btn2 = (RadioButton)view.findViewById(R.id.r_btn2);
@@ -125,7 +131,7 @@ public class User_Order extends Fragment {
                 int Num = 0;
                 int Sum = 0;
 
-                for(menuitem men : menu_list){
+                for (menuitem men : menu_list) {
                     menu = men.getMenu();
                     count = men.getCount();
                     price = men.getPrice();
@@ -133,34 +139,43 @@ public class User_Order extends Fragment {
                         Sum += Integer.parseInt(price) * Integer.parseInt(count);
                         bundle.putString(menu, count);
                         bundle1.putString(menu, count);
-                        order[Num]= menu;
+                        order[Num] = menu;
                         Num++;
                     }
+                }
+                for (int j = 0; j < list.size(); j++) {
+                    if (uid.equals(list.get(j)[2])) {
+                        mymoney = list.get(j)[3];
+                    }
+                }
+                if (Integer.parseInt(mymoney) > Sum) {
+                    String su = String.valueOf(Sum);
+                    bundle.putStringArray("order", order);
+                    bundle.putString("Num", String.valueOf(Num));
+                    bundle.putString("take", take);
+                    bundle.putString("Sum", su);
+                    bundle1.putStringArray("order", order);
+                    bundle1.putString("Num", String.valueOf(Num));
+                    bundle1.putString("take", take);
+                    bundle1.putString("Sum", su);
+
+                    OrderCheckFragment.setArguments(bundle);
+                    LoadingCFragment.setArguments(bundle1);
+
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.content_main, OrderCheckFragment);
+
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+
+                    cafe_name = "";
+                    take = "";
 
                 }
-                String su = String.valueOf(Sum);
-                bundle.putStringArray("order", order);
-                bundle.putString("Num", String.valueOf(Num));
-                bundle.putString("take", take);
-                bundle.putString("Sum",su);
-                bundle1.putStringArray("order", order);
-                bundle1.putString("Num", String.valueOf(Num));
-                bundle1.putString("take", take);
-                bundle1.putString("Sum",su);
-
-                OrderCheckFragment.setArguments(bundle);
-                LoadingCFragment.setArguments(bundle1);
-
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.content_main, OrderCheckFragment);
-
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-
-                cafe_name = "";
-                take = "";
-
+                else{
+                    Toast.makeText(getContext(), "잔액이 부족합니다.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -206,8 +221,32 @@ public class User_Order extends Fragment {
             }
         };
         mPostReference.child("cafe_list").child(cafe_name).addValueEventListener(postListener);
-    }
 
+
+    }
+    public void getFirebaseDatabase1() {
+        final ValueEventListener postListener1 = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) { //만약에 데이터가 추가되거나 삭제되거나 바뀌면 실행됨.
+                Log.d("onDataChange", "Data is Updated");
+                list.clear();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) { //노드 다시 읽어서 추가
+                    String key = postSnapshot.getKey();
+                    FirebasePost get = postSnapshot.getValue(FirebasePost.class);
+                    list.add(new String[]{get.email, get.name, get.uid, get.money, get.cafe_name});
+
+
+                    Log.d("getFirebaseDatabase", "key: " + key);
+                    Log.d("getFirebaseDatabase", "info: " + list.get(0)[2] + list.get(0)[3]);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        };
+        mPostReference.child("user_list").addValueEventListener(postListener1); //id_list 의 서브트리부터 밑으로만 접근하겟다.
+    }
 
 
 

@@ -13,10 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <service
-            android:name=".MyServiceM"
-            android:enabled="true"
-            android:exported="true"></service>
-        <service
             android:name=".MyService"
             android:enabled="true"
             android:exported="true" />
