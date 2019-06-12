@@ -30,7 +30,7 @@ public class OrderCheckFragment extends Fragment {
 
     private DatabaseReference mPostReference;
     private FirebaseAuth mAuth;
-    private String cafe_name, uid, Num, state, take = "";
+    private String cafe_name, uid, Num, state, take, count = "";
     private Button OkButton;
     private String order[];
     private ListView listView;
@@ -70,7 +70,8 @@ public class OrderCheckFragment extends Fragment {
         data.add("카페: "+cafe_name);
         for (int i=0; i<Integer.parseInt(Num); i++) {
             String a = order[i];
-            data.add(a);
+            count = getArguments().getString(a);
+            data.add(a+"  :"+count+"개");
         }
         data.add(take);
 
@@ -98,8 +99,8 @@ public class OrderCheckFragment extends Fragment {
                 Map<String, Object> postValues = null;
 
                 state = "current";
-                //Userorderdata post = new Userorderdata(cafe_name, order, state, take);
-                //postValues = post.toMap();
+                Userorderdata post = new Userorderdata(cafe_name, state, take);
+                postValues = post.toMap();
                 String order_id = mPostReference.push().getKey();
 
 
@@ -109,6 +110,28 @@ public class OrderCheckFragment extends Fragment {
                 state = "";
                 //order = "";
                 take = "";
+
+                for (int i=0; i<Integer.parseInt(Num); i++) {
+                    String a = order[i];
+                    count = getArguments().getString(a);
+
+
+                    Map<String, Object> childUpdates2 = new HashMap<>();
+                    Map<String, Object> postValues2 = null;
+
+                    userorderorder post2 = new userorderorder(a, count);
+                    postValues2 = post2.toMap();
+                    String menu_id = mPostReference.push().getKey();
+
+
+                    childUpdates2.put("/user_list/" + uid + "/order/" +order_id+ "/menu/" + menu_id, postValues2);
+                    mPostReference.updateChildren(childUpdates2);
+
+                    a = "";
+                    count = "";
+
+                }
+
                 Fragment ReserveFragment = new ReserveFragment();
 
                 FragmentManager fragmentManager = getFragmentManager();

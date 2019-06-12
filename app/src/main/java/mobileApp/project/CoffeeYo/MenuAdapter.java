@@ -19,7 +19,7 @@ public class MenuAdapter extends RecyclerView.Adapter <MenuAdapter.ViewHolder> {
 
     private ArrayList<menuitem> items = new ArrayList<>();
     Context context;
-
+    MenuAdapter.ViewHolder vv;
     private ItemClick itemClick;
     public interface ItemClick {
         public void onClick(View view,int position);
@@ -43,25 +43,25 @@ public class MenuAdapter extends RecyclerView.Adapter <MenuAdapter.ViewHolder> {
         return viewHolder;
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull MenuAdapter.ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(@NonNull final MenuAdapter.ViewHolder viewHolder, final int position) {
 
         menuitem item = items.get(position);
-
+        //vv = viewHolder;
         viewHolder.menuName.setText(item.getMenu());
         viewHolder.price.setText("["+item.getPrice()+"원]");
-
+        viewHolder.count.setText(item.getCount());
         final int[] i = {0};
-        final TextView count = viewHolder.count;
-        count.setText(String.valueOf(i[0]));
+
 
         viewHolder.addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(itemClick != null){
                     itemClick.onClick(v, position);
-                    i[0]++;
-                    count.setText(String.valueOf(i[0]));
+
+                    int k = Integer.parseInt(items.get(position).getCount().toString());
+                    items.get(position).setCount(String.valueOf(k+1));
+                    viewHolder.count.setText(items.get(position).getCount());
                 }
             }
         });
@@ -71,9 +71,12 @@ public class MenuAdapter extends RecyclerView.Adapter <MenuAdapter.ViewHolder> {
             public void onClick(View v) {
                 if(itemClick != null) {
                     itemClick.onClick(v, position);
-                    if (i[0] != 0) {
-                        i[0]--;
-                        count.setText(String.valueOf(i[0]));
+
+
+                    int k = Integer.parseInt(items.get(position).getCount().toString());
+                    if(k != 0) {
+                        items.get(position).setCount(String.valueOf(k - 1));
+                        viewHolder.count.setText(items.get(position).getCount());
                     }
                 }
             }
