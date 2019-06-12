@@ -68,7 +68,6 @@ public class User_Finished_Order extends Fragment {
         listView.setAdapter(memoAdapter);
         getFirebaseDatabase();
 
-
         return view;
     }
 
@@ -95,15 +94,12 @@ public class User_Finished_Order extends Fragment {
                         memos.add(result);
                     }
 
-
                 }
                 memoAdapter = new MemoAdapter(getContext(), memos);
                 listView.setAdapter(memoAdapter);
                 memoAdapter.notifyDataSetChanged();
 
             }
-
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }

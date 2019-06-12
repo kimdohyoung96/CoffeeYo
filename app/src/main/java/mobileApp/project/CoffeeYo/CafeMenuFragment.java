@@ -30,8 +30,9 @@ public class CafeMenuFragment extends Fragment {
     Button addMenuB;
     Button deleteMenuB;
     EditText menuE;
+    EditText priceE;
     String  cafename;
-    String menuS;
+    String menuS, priceS;
     int flag;
 
     public CafeMenuFragment() {
@@ -72,22 +73,27 @@ public class CafeMenuFragment extends Fragment {
         final Context contextRegister = container.getContext();
 
         flag = ((ManagerActivity)getActivity()).getFlag();
+        if(flag == 0){
+            Toast.makeText(contextRegister, "등록된 카페가 없습니다", Toast.LENGTH_SHORT).show();
+        }
 
         addMenuB = (Button) view.findViewById(R.id.add_menu);
         deleteMenuB = (Button) view.findViewById(R.id.delete_menu);
         menuE = (EditText) view.findViewById(R.id.menu);
+        priceE = (EditText) view.findViewById(R.id.price);
 
         addMenuB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(flag == 0){
-                    Toast.makeText(contextRegister, "Cafe is not registered yet.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(contextRegister, "등록된 카페가 없습니다", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     cafename = ((ManagerActivity)getActivity()).getCurrentCafeName();
                     menuS = menuE.getText().toString();
-                    if(menuS.length() == 0){
-                        Toast.makeText(contextRegister, "Data is missing", Toast.LENGTH_SHORT).show();
+                    priceS = priceE.getText().toString();
+                    if(menuS.length() == 0 || priceS.length() == 0){
+                        Toast.makeText(contextRegister, "필요한 모든 데이터를 입력해주세요", Toast.LENGTH_SHORT).show();
                     } else {
                         postFirebaseDatabaseCafeMenu(true);
                         Toast.makeText(contextRegister, "메뉴 추가 완료", Toast.LENGTH_SHORT).show();
@@ -101,13 +107,13 @@ public class CafeMenuFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (flag == 0){
-                    Toast.makeText(contextRegister, "Cafe is not registered yet.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(contextRegister, "등록된 카페가 없습니다", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     cafename = ((ManagerActivity)getActivity()).getCurrentCafeName();
                     menuS = menuE.getText().toString();
                     if(menuS.length() == 0){
-                        Toast.makeText(contextRegister, "Data is missing", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(contextRegister, "필요한 모든 데이터를 입력해주세요", Toast.LENGTH_SHORT).show();
                     } else {
                         postFirebaseDatabaseCafeMenu(false);
                         Toast.makeText(contextRegister, "메뉴 삭제 완료", Toast.LENGTH_SHORT).show();
@@ -122,15 +128,19 @@ public class CafeMenuFragment extends Fragment {
 
     private void postFirebaseDatabaseCafeMenu(boolean add){
         if(add) {
-            ((ManagerActivity)getActivity()).mPostReference.child("/cafe_list/"+cafename+"/menu/"+menuS).setValue(menuS);
+            ((ManagerActivity)getActivity()).mPostReference.child("/cafe_list/"+cafename+"/menu/"+menuS+"/menu_name").setValue(menuS);
+            ((ManagerActivity)getActivity()).mPostReference.child("/cafe_list/"+cafename+"/menu/"+menuS+"/price").setValue(priceS);
         } else {
-            ((ManagerActivity) getActivity()).mPostReference.child("/cafe_list/"+cafename+"/menu/"+menuS).setValue(null);
+            ((ManagerActivity) getActivity()).mPostReference.child("/cafe_list/"+cafename+"/menu/"+menuS+"/menu_name").setValue(null);
+            ((ManagerActivity)getActivity()).mPostReference.child("/cafe_list/"+cafename+"/menu/"+menuS+"/price").setValue(null);
         }
     }
 
     private void clearET(){
         menuE.setText("");
         menuS = "";
+        priceE.setText("");
+        priceS = "";
     }
 
 

@@ -8,7 +8,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
+
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class LaunchApp extends AppCompatActivity {
     private final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1001;
@@ -16,6 +19,7 @@ public class LaunchApp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch_app);
+
         int permssionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
 
         if (permssionCheck!= PackageManager.PERMISSION_GRANTED) {

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -13,7 +14,9 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -30,12 +33,19 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -54,7 +64,7 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
     private GoogleMap google = null;
     LatLng now = null;
     List<Marker> prevMarkers;
-
+    private DatabaseReference mPostReference;
     private ImageButton button;
     private Button curbutton;
     private EditText edittext;
@@ -64,8 +74,10 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
     double curlatitude;
     double curlongitude;
     LatLng currentPosition = new LatLng(37.56, 126.97);
-
-
+    String cafename;
+    ArrayList<String[]> list = new ArrayList<>();
+    HashMap<String, String> infowindow = new HashMap<String, String>();
+    String uid = "";
     @Override
     public void onLocationChanged(Location location) {
     }
@@ -91,12 +103,15 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_search);
+        mPostReference = FirebaseDatabase.getInstance().getReference();
+        getFirebaseDatabase();
         edittext = (EditText)findViewById(R.id.editPlace);
         button = (ImageButton) findViewById(R.id.button);
         curbutton = (Button)findViewById(R.id.curbutton);
         prevMarkers = new ArrayList<>(); //마커 목록들
 
         Intent intent = getIntent();
+        uid = intent.getStringExtra("uid");
         FragmentManager fragmentManager = getFragmentManager();
         MapFragment mapFragment = (MapFragment) fragmentManager
                 .findFragmentById(R.id.map);
@@ -124,6 +139,7 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
     @Override
     public void onMapReady(final GoogleMap map) {
         google = map;
+
         final LatLng SEOUL = new LatLng(37.56, 126.97);
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(SEOUL);
@@ -153,70 +169,162 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
             button.setOnClickListener(new Button.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String str = edittext.getText().toString();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String str = edittext.getText().toString();
 
-                    List<Address> addr = null;
-                    geocoder = new Geocoder(map_Search.this, Locale.getDefault());
-                    try {
-                        // editText에 입력한 텍스트(주소, 지역, 장소 등)을 지오 코딩을 이용해 변환
-                        addr = geocoder.getFromLocationName(
-                                str, // 주소
-                                1); // 최대 검색 결과 개수
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    if (addr != null) {
-                        Address address = addr.get(0);
-                        double lat = address.getLatitude();
-                        double log = address.getLongitude();
-                        // 좌표(위도, 경도) 생성
-                        LatLng point = new LatLng(lat, log);
-                        // 마커 생성
-                        MarkerOptions mOptions2 = new MarkerOptions();
-                        mOptions2.title("search result");
-                        mOptions2.snippet(str);
-                        mOptions2.position(point);
-                        // 마커 추가
-                        google.addMarker(mOptions2);
-                        // 해당 좌표로 화면 줌
-                        google.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 15));
-                        showPlaceInformation(point);
-                        MarkerOptions markerOptions3 = new MarkerOptions();
-                        markerOptions3.position(SEOUL);
-                        markerOptions3.title("서울");
-                        markerOptions3.snippet("한국의 수도");
+                            List<Address> addr = null;
+                            geocoder = new Geocoder(map_Search.this, Locale.getDefault());
+                            try {
+                                // editText에 입력한 텍스트(주소, 지역, 장소 등)을 지오 코딩을 이용해 변환
+                                addr = geocoder.getFromLocationName(
+                                        str, // 주소
+                                        1); // 최대 검색 결과 개수
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            if (addr != null) {
+                                Address address = addr.get(0);
+                                double lat = address.getLatitude();
+                                double log = address.getLongitude();
+                                // 좌표(위도, 경도) 생성
+                                LatLng point = new LatLng(lat, log);
+                                // 마커 생성
+                                MarkerOptions mOptions2 = new MarkerOptions();
+                                mOptions2.title("search result");
 
 
-                        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.mappin);
-                        Bitmap b=bitmapdraw.getBitmap();
-                        Bitmap smallMarker = Bitmap.createScaledBitmap(b, 200, 200, false);
-                        markerOptions3.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+                                mOptions2.snippet(str);
+                                mOptions2.position(point);
+                                google.clear();
+                                CircleOptions circle1KM = new CircleOptions() //원점
+                                        .center(point)
+                                        .radius(1000)      //반지름 단위 : m
+                                        .strokeWidth(1)  //선너비 0f : 선없음
+                                        .fillColor(0x220000FF)
+                                        .visible(true);
+                                google.addCircle(circle1KM);
+                                // 마커 추가
+                                //google.addMarker(mOptions2);
+                                // 해당 좌표로 화면 줌
+                                google.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 15));
+                                Log.d("here circle", "location : "+ point.latitude + " , " + point.longitude);
 
+                                //showPlaceInformation(point);
+                                Location loc = new Location("target");
+                                loc.setLongitude(log);
+                                loc.setLatitude(lat);
+                                int len = list.size();
+                                MarkerOptions marker[] = new MarkerOptions[len];
+                                Log.d("개수", Integer.toString(len));
+                                int i =0;
+                                for(String item[] : list){
+                                    Location loc1 = new Location(item[0]);
+                                    loc1.setLongitude(Double.parseDouble(item[1]));
+                                    loc1.setLatitude(Double.parseDouble(item[2]));
+                                    Log.d("targetloc", "location : "+   loc1.getLatitude()+ " , " + loc1.getLongitude()  );
+                                    double distance = loc1.distanceTo(loc);
+                                    Log.d("targetloc", Double.toString(distance));
+                                    if(distance < 1000){
+                                        Log.d("마커생서어엉", "마커생성어어엉");
+                                        marker[i] = new MarkerOptions();
+                                        LatLng ln = new LatLng(Double.parseDouble(item[2]), Double.parseDouble(item[1]));
+                                        Log.d("targetloc", "location : "+ item[0] + " + "+  item[1]+ " + " + item[2]  );
+                                        marker[i].position(ln);
+                                        marker[i].title(item[0]);
+                                        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.mappin);
+                                        Bitmap b=bitmapdraw.getBitmap();
+                                        Bitmap smallMarker = Bitmap.createScaledBitmap(b, 200, 200, false);
+                                        marker[i].icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+                                        infowindow.put(marker[i].getTitle(), marker[i].getTitle() );
+                                        google.addMarker(marker[i]);
+                                        //infowindow.put(Marker[i].getTitle(),"cafe_id 넣어야함. 나중에 접근할때 infolistener에서 if()");
+                                        //infowindow.containsKey("markertitle ") 있는지 if 문으로 확인하고
+                                        //있으면 cafeid_fragment 로 이동.
+                                        //없으면 toast message 보내면될듯
+                                    }
+                                    i++;
+                                }
 
-                        map.addMarker(markerOptions3);
-                    } else {
-                        Toast.makeText(map_Search.this, "검색할 키워드를 입력하세요", Toast.LENGTH_SHORT).show();
-                    }
+                            } else {
+                                Toast.makeText(map_Search.this, "검색할 키워드를 입력하세요", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
                 }
             });
 
             curbutton.setOnClickListener(new Button.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-                    curlatitude = google.getCameraPosition().target.latitude;
-                    curlongitude = google.getCameraPosition().target.longitude;
-                    currentPosition = new LatLng(curlatitude, curlongitude);
-                    showPlaceInformation(currentPosition);
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //google.clear();
+                            curlatitude = google.getCameraPosition().target.latitude;
+                            curlongitude = google.getCameraPosition().target.longitude;
+                            currentPosition = new LatLng(curlatitude, curlongitude);
+                            //CircleOptions circle1KM = new CircleOptions().center(currentPosition) //원점
+                            //        .radius(1000)      //반지름 단위 : m
+                            //        .strokeWidth(0f)  //선너비 0f : 선없음
+                            //        .fillColor(Color.parseColor("#880000ff"));
+                            //google.addCircle(circle1KM);
+                            //Location loc = new Location("target");
+                            //loc.setLongitude(curlongitude);
+                            //loc.setLatitude(curlatitude);
+                            /*
+                            int len = list.size();
+                            MarkerOptions marker[] = new MarkerOptions[len];
+
+                            int i =0;
+                            for(String item[] : list) {
+                                Location loc1 = new Location(item[0]);
+                                loc1.setLongitude(Double.parseDouble(item[1]));
+                                loc1.setLatitude(Double.parseDouble(item[2]));
+                                Log.d("targetloc", "location : " + loc1.getLatitude() + " , " + loc1.getLongitude());
+                                double distance = loc1.distanceTo(loc);
+                                Log.d("targetloc", Double.toString(distance));
+                                if (distance < 1000) {
+                                    Log.d("마커생서어엉", "마커생성어어엉");
+                                    marker[i] = new MarkerOptions();
+                                    LatLng ln = new LatLng(Double.parseDouble(item[2]), Double.parseDouble(item[1]));
+                                    marker[i].position(ln);
+                                    marker[i].title(item[0]);
+                                    BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.mappin);
+                                    Bitmap b = bitmapdraw.getBitmap();
+                                    Bitmap smallMarker = Bitmap.createScaledBitmap(b, 200, 200, false);
+                                    marker[i].icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+                                    infowindow.put(marker[i].getTitle(), marker[i].getTitle());
+                                    google.addMarker(marker[i]);
+                                    //infowindow.put(Marker[i].getTitle(),"cafe_id 넣어야함. 나중에 접근할때 infolistener에서 if()");
+                                    //infowindow.containsKey("markertitle ") 있는지 if 문으로 확인하고
+
+                                    //있으면 cafeid_fragment 로 이동.
+                                    //없으면 toast message 보내면될듯
+                                }
+                                i++;
+                            }*/
+                            showPlaceInformation(currentPosition);
+                        }
+                    });
+
                 }
             });
 
             google.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override//info 눌렀을때 무슨행동으로 넘어갈지.
                 public void onInfoWindowClick(Marker marker) {
-                    Intent intent = new Intent(Intent.ACTION_DIAL);
-                    intent.setData(Uri.parse("tel:01075178860"));
-                    if (intent.resolveActivity(getPackageManager()) != null) {
+                    if(infowindow.containsKey(marker.getTitle())){
+                        Intent intent = new Intent(map_Search.this, UserActivity.class).putExtra("cafe_name",marker.getTitle()).putExtra("class","map").putExtra("uid","uid");
+                        Log.d("A->B 액티비티먼저전환", "onInfoWindowClick: cafename : " + marker.getTitle());
                         startActivity(intent);
+                    }
+                    else{
+                        Toast.makeText(map_Search.this, "아직 커피요에 등록되지 않은 카페입니다. \n 사장님께 커피요 등록에 관해 문의 바랍니다.\n", Toast.LENGTH_LONG).show();
+
                     }
                 }
             });
@@ -225,7 +333,8 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
 
 
     public void showPlaceInformation(LatLng location) {
-        google.clear();
+        //google.clear();
+
         latitude = location.latitude;
         longitude = location.longitude;
         if (latitude != 0 && longitude != 0) {
@@ -271,8 +380,8 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
             case 1:
                 if((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)){
                     onMapReady(google);
-               // prepareMap();
-               // drawMap();
+                    // prepareMap();
+                    // drawMap();
                 }
                 break;
             default:
@@ -339,5 +448,24 @@ public class map_Search extends AppCompatActivity implements GoogleMap.OnCameraM
         @Override
         public void onProviderDisabled(String provider) {}
     };
+    public void getFirebaseDatabase(){
+        final ValueEventListener postListener = new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                list.clear();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    String key = postSnapshot.getKey();
+                    CafeInfo get = dataSnapshot.child("/"+key+"/cafe_info").getValue(CafeInfo.class);
+                    list.add(new String[]{get.cafe_name, get.cafe_longitude, get.cafe_latitude});
+                    Log.d("겟파베", get.cafe_name +" + "+ get.cafe_longitude+" + "+ get.cafe_latitude);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        };
+        mPostReference.child("cafe_list").addValueEventListener(postListener);
+    }
+
 
 }

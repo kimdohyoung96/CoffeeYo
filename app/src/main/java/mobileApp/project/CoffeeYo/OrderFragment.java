@@ -81,10 +81,9 @@ public class OrderFragment extends Fragment {
 
         flag = ((ManagerActivity)getActivity()).getFlag();
         if(flag == 0){
-            Toast.makeText(contextRegister, "Cafe is not registered yet.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(contextRegister, "등록된 카페가 없습니다", Toast.LENGTH_SHORT).show();
         }
         else{
-            Toast.makeText(contextRegister, "finished orders", Toast.LENGTH_SHORT).show();
             cafename = ((ManagerActivity)getActivity()).getCurrentCafeName();
             //getFirebaseDatabaseOldOrderInfo();
         }
@@ -102,9 +101,9 @@ public class OrderFragment extends Fragment {
                     for (DataSnapshot snapshot1 : snapshot.child("order").getChildren()){
                         String orderNum = snapshot1.getKey();
                         Orderfirebase get = snapshot1.getValue(Orderfirebase.class);
-                        String[] order = {get.cafe_name, get.order, get.state};
+                        String[] order = {get.cafe_name, get.order, get.state, get.take};
                         if(order[0].equals(cafename) && order[2].equals("old")){
-                            String result = "client: " + client + "\nOrder number: " + orderNum + "\norder: " + order[1];
+                            String result = "Client: " + client + "\nOrder number: " + orderNum + "\nOrder: " + order[1] + "\nTake: " + order[3];
                             oldOrderList.add(result);
                         }
                     }

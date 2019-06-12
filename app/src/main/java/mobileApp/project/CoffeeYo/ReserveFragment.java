@@ -83,12 +83,14 @@ public class ReserveFragment extends Fragment {
                     state = "current";
                     String menu_count = "";
                     if (state.equals(info[2])) {
+
                         CafemenuCount get1 = postListener.child("menu").getValue(CafemenuCount.class);
                         menu_count = menu_count+get1.cafe_menu +": "+get1.count+"개"+"  ";
                         Log.d("getFirebaseDatabase", "key: " + key);
                         Log.d("getFirebaseDatabase", "info: " + info[0] + info[1] + info[2]+menu_count);
                         MemoItem result = new MemoItem(info[0], menu_count, info[1]);
                         memos.add(result);
+
 
                     }
                 }
@@ -97,11 +99,8 @@ public class ReserveFragment extends Fragment {
                 memoAdapter.notifyDataSetChanged();
 
             }
-
-
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) {            }
         };
         mPostReference.child("user_list").child(uid).child("order").addValueEventListener(postListener);
     }

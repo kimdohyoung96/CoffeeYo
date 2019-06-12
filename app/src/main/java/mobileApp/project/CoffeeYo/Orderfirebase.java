@@ -7,15 +7,19 @@ public class Orderfirebase {
     public String take;
     public String state;
 
+
     public Orderfirebase(){
         // Default constructor required for calls to DataSnapshot.getValue(FirebasePost.class)
     }
 
+
     public Orderfirebase(String cafe_name, String take, String state) {
+
 
         this.cafe_name = cafe_name;
         this.take = take;
         this.state = state;
+
     }
 
 
