@@ -9,7 +9,7 @@ public class Orderfirebase {
 
 
     public Orderfirebase(){
-        // Default constructor required for calls to DataSnapshot.getValue(FirebasePost.class)
+
     }
 
 

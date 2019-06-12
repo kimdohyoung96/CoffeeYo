@@ -224,15 +224,6 @@ public class UserActivity extends AppCompatActivity
             default :
                 return super.onOptionsItemSelected(null);
         }
-        /*if (id == R.id.action_right_menu) {
-            if (drawer.isDrawerOpen(GravityCompat.END)) {
-                //drawer.closeDrawer(GravityCompat.END);
-            } else {
-                drawer.openDrawer(GravityCompat.END);
-            }
-            return true;
-        }*/
-
 
     }
 

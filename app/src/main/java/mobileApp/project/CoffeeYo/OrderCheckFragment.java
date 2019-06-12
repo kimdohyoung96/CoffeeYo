@@ -113,27 +113,6 @@ public class OrderCheckFragment extends Fragment {
 
                 childUpdates.put("/user_list/" + uid + "/order/"+order_id, postValues);
                 mPostReference.updateChildren(childUpdates);
-                /*
-                for(int j = 0 ; j < list.size(); j++) {
-                    if (uid.equals(list.get(j)[2])) {
-                        String money = String.valueOf(Integer.parseInt(list.get(j)[3]) - Integer.parseInt(Sum));
-
-                        FirebasePost post1 = new FirebasePost(list.get(j)[0], list.get(j)[1], uid, money , "0");
-                        postValues = post1.toMap();
-                        childUpdates.put("/user_list/" + uid, postValues);
-                        mPostReference.updateChildren(childUpdates);
-                    }
-                    if (cafe_name.equals(list.get(j)[4])) {
-                        String money = String.valueOf(Integer.parseInt(list.get(j)[3]) + Integer.parseInt(Sum));
-
-                        FirebasePost post2 = new FirebasePost(list.get(j)[0], list.get(j)[1], list.get(j)[2], money , "0");
-                        postValues = post2.toMap();
-                        childUpdates.put("/user_list/" + list.get(j)[2], postValues);
-                        mPostReference.updateChildren(childUpdates);
-                    }
-                }
-                */
-
 
                 state = "";
                 //order = "";
@@ -173,22 +152,6 @@ public class OrderCheckFragment extends Fragment {
                 FragmentTransaction fragmentTransaction1 = fragmentManager1.beginTransaction();
                 fragmentTransaction1.replace(R.id.content_main, LoadingCFragment);
                 fragmentTransaction1.commit();
-
-/*
-                Fragment ReserveFragment = new ReserveFragment();
-
-                FragmentManager fragmentManager = getFragmentManager();
-                Bundle bundle = new Bundle(); // 파라미터는 전달할 데이터 개수
-                bundle.putString("uid", uid);
-                bundle.putString("cafe_name",cafe_name);
-                bundle.putString("Sum",Sum);
-                ReserveFragment.setArguments(bundle);
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.content_main, ReserveFragment);
-
-                fragmentTransaction.commit();
-*/
-
 
             }
         });

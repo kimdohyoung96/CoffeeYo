@@ -9,7 +9,7 @@ public class Cafenamedatabase {
 
 
     public Cafenamedatabase(){
-        // Default constructor required for calls to DataSnapshot.getValue(FirebasePost.class)
+
     }
 
     public Cafenamedatabase(String cafe_name) {
