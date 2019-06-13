@@ -73,7 +73,7 @@ public class UserActivity extends AppCompatActivity
     FirebaseAuth fb = FirebaseAuth.getInstance();
     GoogleSignInClient mGoogleSignInClient;
     GoogleApiClient mgoogleApiClient;
-
+    String classname = "1";
     String client;
     String orderid;
 
@@ -87,7 +87,8 @@ public class UserActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("User Mode");
         Intent intent = getIntent();
-        String classname = intent.getStringExtra("class");
+
+        classname = intent.getStringExtra("class");
         data = new ArrayList<String>();
         listView = (ListView)findViewById(R.id.orderlist);
         //uid = intent.getStringExtra("uid");
@@ -217,8 +218,9 @@ public class UserActivity extends AppCompatActivity
         switch (item.getItemId()) {
             case R.id.logout :
                 signOut();
-
+                Intent intent = new Intent(UserActivity.this, Login.class);
                 finish();
+                startActivity(intent);
                 return true ;
 
             default :

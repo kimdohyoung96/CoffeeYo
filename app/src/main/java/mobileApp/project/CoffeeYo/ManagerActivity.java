@@ -235,8 +235,9 @@ public class ManagerActivity extends AppCompatActivity
         switch (item.getItemId()) {
             case R.id.logout:
                 signOut();
-
+                Intent intent = new Intent(ManagerActivity.this, Login.class);
                 finish();
+                startActivity(intent);
                 return true;
 
             default:
